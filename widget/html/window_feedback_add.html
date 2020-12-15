@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>意见填写</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="api.closeWin();"><span>&#xe606;</span>意见填写</a>
+    </header>
+    <div class="appeal">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_feedback_add',
+                url: './frame_feedback_add.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: api.frameHeight - 50 - h
+                },
+                pageParam: {
+                    name: 'frame_feedback_add',
+                    id: api.pageParam.id
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+
+        }
+    </script>
+</body>
+
+</html>

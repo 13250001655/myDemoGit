@@ -1,0 +1,2934 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>订单详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            height: auto;
+        }
+
+        .buyer-tips {
+            color: #e05419;
+            padding: 4px 0;
+        }
+
+        .postHp {
+            width: 32%;
+            margin: 0 auto;
+            margin-top: 10px;
+            overflow: hidden;
+            height: 35px;
+            border-radius: 3px;
+            line-height: 35px;
+            display: block;
+            background: #04b848;
+            color: #fff;
+            text-align: center;
+        }
+
+        .postHp_gray {
+            width: 32%;
+            margin: 0 auto;
+            margin-top: 10px;
+            overflow: hidden;
+            height: 35px;
+            border-radius: 3px;
+            line-height: 35px;
+            display: block;
+            background: #ccc;
+            color: #fff;
+            text-align: center;
+        }
+
+        .now-time-p {
+            text-align: center;
+            padding-bottom: 6px;
+            color: #f00;
+            font-size: 14px;
+        }
+
+        .now-time-p #now-time {
+            font-style: normal;
+        }
+
+        .compete-info {
+            line-height: 20px;
+            padding-top: 20px;
+            overflow: hidden;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        #ys-box {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 99999;
+        }
+
+        #ys-box .ys-tips {
+            position: absolute;
+            width: 80%;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 15px 3%;
+        }
+
+        #ys-box .ys-tips p:first-child {
+            padding-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #ys-box .ys-tips p {
+            line-height: 20px;
+        }
+
+        #ys-box .ys-tips p.fk-time {
+            padding-top: 6px;
+            padding-bottom: 20px;
+        }
+
+        #ys-box .ys-tips p i {
+            color: #f00;
+            font-style: normal;
+        }
+
+        #ys-box .ys-tips .ikonw {
+            float: right;
+            color: rgb(66, 172, 224);
+            font-weight: bold;
+        }
+
+        #dataForm #step3 .item #feedback-btn {
+            width: 150px;
+            height: 38px;
+            line-height: 38px;
+            background-color: #ddd;
+            text-align: center;
+            color: #999;
+            border-radius: 4px;
+            margin: 0 auto;
+        }
+
+        #dataForm #step3 .item #feedback-btn.feedback-active {
+            background-color: #04b848;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ys-box">
+        <div class="ys-tips">
+            <p>提示</p>
+            <p>此笔是预售订单，需要<i>先收藏加购</i>，</p>
+            <p class="fk-time">然后在<i id="fk-time"></i>。</p>
+            <div class="ikonw" tapmode onclick="closeTips();">知道了</div>
+        </div>
+    </div>
+
+    <form id="dataForm">
+        <div class="taskboxdetail1">
+            <div id="base">
+                <!-- <P class="tit2"><span>佣金：<i>100金</i></span>手机拼多多 直接开团任务</P>
+        <p class="tit1"><span>任务状态：待操作</span>商家ID:123456</p>
+        <P class="tit1"><span>商品包邮</span>目标商品<i>平台返款</i></P>
+        <div class="item">
+            <div class="tit">夏装潮牌男装ins国潮短袖t恤男潮宽松情侣装嘻哈oversize五分半袖</div>
+            <div class="pic"><img src="../image/aui-icon.png"></div>
+            <div class="txt">
+                <p class="t1">商品成交价格：<i>99元</i></p>
+                <p class="t2">件数：1件</p>
+            </div>
+        </div>
+        <div class="con">
+            <p>商品排序方式：<i>综合</i></p>
+            <p>价格区间：<i>0 - 50元</i></p>
+            <p>商品所在地：<i>全国</i></p>
+            <p>订单留言：<i>暂无留言</i></P>
+        </div>
+        <div class="con">
+            <p>任务类型：<i>关键词(允许复制关键词)</i></p>
+            <p>我们都是好朋友</p>
+        </div>
+        <div class="con">
+          <p>备注图片</p>
+          <div class="pics">
+              <div class="p"><img src="../image/error-img.png" /></div>
+              <div class="p"><img src="../image/error-img.png" /></div>
+              <div class="p"><img src="../image/error-img.png" /></div>
+          </div>
+          <p>商家要求：</P>
+        </div>
+        <div class="con">
+             <p>任务提交倒计时：<i id="time">00:00:00</i></p>
+        </div>
+
+        <div class="con" id="orderbtns">
+            <div class="btns">
+                 <a >提交任务</a>
+                 <a>申诉任务</a>
+                 <a>取消任务</a>
+            </div>
+        </div> -->
+            </div>
+        </div>
+
+        <div id="step1" class="taskboxdetail2">
+            <!-- <div class="tit">第一步：接手任务</div>
+    <div class="con">
+        <div class="item">
+            <span>888888</span>
+            任务编号
+        </div>
+        <div class="item">
+            <span>2019-12-12 14:13:28</span>
+            接单时间
+        </div>
+        <div class="item">
+            <span>闪闪的红星</span>
+            接单账号
+        </div>
+        <div class="item">
+            <span>99元</span>
+            商品金额
+        </div>
+    </div> -->
+        </div>
+
+        <div id="step2" class="taskboxdetail2 close">
+            <!-- <div class="tit">第二步：订单付款</div>
+            <div class="con">
+            <div class="item">
+            <span>
+                <div class="p"><img src="../image/tb03.png"></div>
+                <div class="p"><img src="../image/tb03.png"></div>
+            </span>
+            货比一家
+        </div>
+        <div class="item">
+          <span>
+              <div class="p"><img src="../image/tb03.png"></div>
+              <div class="p"><img src="../image/tb03.png"></div>
+          </span>
+            浏览店铺
+        </div>
+        <div class="item">
+          <span>
+              <div class="p"><img src="../image/tb03.png"></div>
+              <div class="p"><img src="../image/tb03.png"></div>
+          </span>
+            收藏店铺和宝贝
+        </div>
+        <div class="item">
+          <span>
+              <div class="p"><img src="../image/tb03.png"></div>
+          </span>
+            购物车图片
+        </div>
+        <div class="item">
+          <span>
+              <div class="p"><img src="../image/tb03.png"></div>
+              <div class="p"><img src="../image/tb03.png"></div>
+          </span>
+            聊天下单
+        </div>
+        <div class="item">
+          <span>
+              <input type="input" name="platform_order" id="input_platform_order" placeholder="请输入" value="">
+          </span>
+            订单号
+        </div>
+        <p class="t1">商家确定订单前，可以点击更换图片</p>
+    </div> -->
+        </div>
+
+        <div id="step3" class="taskboxdetail2 close">
+            <!-- <div class="tit">第三步：商家确认订单</div>
+    <div class="con">
+        <div class="item">
+            <span>121212121</span>
+            淘宝订单号
+        </div>
+        <div class="item">
+          <span>系统返款</span>
+            返款方式
+        </div>
+        <div class="item">
+          <span>100</span>
+            返款金额
+        </div>
+        <p class="t2">24小时商家未确定，系统自动返款 <a class="close">催返款</a></p>
+    </div> -->
+        </div>
+
+        <div id="step4" class="taskboxdetail2 close">
+            <!-- <div class="tit">第四步：收货好评</div>
+    <div class="con">
+        <div class="item">
+          <span>
+              <div class="p"><img src="../image/tb03.png"></div>
+              <div class="p"><img src="../image/tb03.png"></div>
+          </span>
+            收货并好评
+        </div>
+        <p class="t1">此单图片好评</p>
+        <div class="item1">
+            <div class="gg">规格：1234566</div>
+            <div class="p"><img src="../image/tb03.png"></div>
+            <div class="p"><img src="../image/tb03.png"></div>
+            <div class="p"><img src="../image/tb03.png"></div>
+            <div class="p"><img src="../image/tb03.png"></div>
+            <div class="p"><img src="../image/tb03.png"></div>
+            <div class="hp">好评：我们我们我</div>
+            <div class="gg">视频：</div>
+            <div class="vv">
+                 <video controls="" controlslist="nodownload" id="video01" loop="" width="100%"><source src="../image/01.mp4" type="video/mp4"></video>
+                 <p><a onclick="saveFile(123)">下载视频</a></p>
+            </div>
+        </div>
+    </div> -->
+        </div>
+
+        <div id="step5" class="taskboxdetail2 close">
+            <!-- <div class="tit">第五步：任务完成</div>
+    <div class="con">
+        <div class="item">
+          <span>
+          </span>
+            获取佣金
+        </div>
+    </div> -->
+        </div>
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        var ttt;
+        var hp_ttt;
+        var now_ttt;
+        var global_dpqc = '';
+        var global_isCheck = 0;
+        var global_category_id = 0;
+        var global_isAllPic = 0;
+        var global_answer = '';
+        var global_isCheck_url = 0;
+        var global_task_id = 0;
+        var global_isNeed_electronic = 0;
+        var global_good_price = 0;
+        var global_order_number = 0;
+        var global_platform = 0;
+        var global_isCheck_answer = 0;
+        var global_platform_id = 0;
+        var global_limitbuytime = 0;
+        var global_order_time = 0;
+        var global_tkl_num_1 = 0;
+        var global_tkl_num_2 = 0;
+
+        apiready = function() {
+            getOrder();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                clearInterval(ttt);
+                clearInterval(hp_ttt);
+                clearInterval(now_ttt);
+                getOrder();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function getOrder() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/getorder/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: api.pageParam.id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    if (!isempty(data['id'])) {
+                        global_dpqc = data['shopname'];
+                        global_category_id = data['category_id'];
+                        global_isAllPic = data["isneedscreenshot"];
+                        global_task_id = data['task_id'];
+                        global_isNeed_electronic = data['electronic'];
+                        global_answer = data['detailedquestions'] ? data['detailedquestions'] : '';
+                        global_good_price = data['good_price'];
+                        global_order_number = data['tb_number'];
+                        global_platform = data['platform'];
+                        global_platform_id = data['platform'];
+                        global_limitbuytime = data['limitbuytime'];
+                        global_order_time = data['order_time'];
+                        global_tkl_num_1 = data['tkl_num_1'];
+                        global_tkl_num_2 = data['tkl_num_2'];
+
+                        var str = "";
+                        str = str + '<P class="tit2"><span>佣金：<i>' + data["yj_price"] + '</i></span>' + data["category"] + '</P>';
+                        str = str + '<p class="tit1"><span>状态：' + data["_status"] + '</span>商家ID:' + data["business_id"] + '</p>';
+                        if (data['freeshopping'] == 2) {
+                            str = str + '<P class="tit1"><span>商品包邮</span>目标商品<i>平台返款</i></P>';
+                        } else {
+                            str = str + '<P class="tit1"><span>商品不包邮</span>目标商品<i>平台返款</i></P>';
+                        }
+
+                        if (data['producturl1'] != "") {
+                            str = str + '<div class="item">';
+                            var productname = data["productname1"].split('');
+                            for (var i = 0; i < productname.length; i++) {
+                                if (i % 2 != 0) {
+                                    productname[i] = '*';
+                                }
+                            }
+                            str = str + '<div class="tit">' + productname.join('') + '</div>';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl1"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                if (data['status'] <= 2) {
+                                    var bj_price = data['productactualprice1'];
+                                    str = str + '<p class="t1">商品成交价格：<i>' + computedPrice(bj_price) + '元</i></p>';
+                                } else {
+                                    str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice1'] + '元</i></p>';
+                                }
+                                str = str + '<p class="t2">件数：' + data["productcount1"] + '件</p>';
+                            }
+
+                            if (data['status'] <= 2) {
+                                var search_price = data['productpublicprice1'];
+                                str = str + '<p class="t1">搜索展示价格：<i>' + computedPrice(search_price) + '元</i></p>';
+                            } else {
+                                str = str + '<p class="t1">搜索展示价格：<i>' + data['productpublicprice1'] + '元</i></p>';
+                            }
+
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl2']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl2"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                if (data['status'] <= 2) {
+                                    var bj_price = data['productactualprice2'];
+                                    str = str + '<p class="t1">商品成交价格：<i>' + computedPrice(bj_price) + '元</i></p>';
+                                } else {
+                                    str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice2'] + '元</i></p>';
+                                }
+                                str = str + '<p class="t2">件数：' + data["productcount2"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl3']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl3"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                if (data['status'] <= 2) {
+                                    var bj_price = data['productactualprice3'];
+                                    str = str + '<p class="t1">商品成交价格：<i>' + computedPrice(bj_price) + '元</i></p>';
+                                } else {
+                                    str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice3'] + '元</i></p>';
+                                }
+                                str = str + '<p class="t2">件数：' + data["productcount3"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl4']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl4"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                if (data['status'] <= 2) {
+                                    var bj_price = data['productactualprice4'];
+                                    str = str + '<p class="t1">商品成交价格：<i>' + computedPrice(bj_price) + '元</i></p>';
+                                } else {
+                                    str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice4'] + '元</i></p>';
+                                }
+                                str = str + '<p class="t2">件数：' + data["productcount4"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl5']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl5"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                if (data['status'] <= 2) {
+                                    var bj_price = data['productactualprice5'];
+                                    str = str + '<p class="t1">商品成交价格：<i>' + computedPrice(bj_price) + '元</i></p>';
+                                } else {
+                                    str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice5'] + '元</i></p>';
+                                }
+                                str = str + '<p class="t2">件数：' + data["productcount5"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl6']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl6"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                if (data['status'] <= 2) {
+                                    var bj_price = data['productactualprice6'];
+                                    str = str + '<p class="t1">商品成交价格：<i>' + computedPrice(bj_price) + '元</i></p>';
+                                } else {
+                                    str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice6'] + '元</i></p>';
+                                }
+                                str = str + '<p class="t2">件数：' + data["productcount6"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+
+                        // 竞品商品信息
+                        if (global_category_id == 6) {
+                            if (data['competeshopname1']) {
+                                str = str + '<p class="compete-info">竞争对手商品信息</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<div class="tit">' + data['competeproductname1'] + '</div>';
+                                str = str + '<div class="pic"><img src="' + geturl(data["competeimageurl1"]) + '"></div>';
+                                str = str + '<div class="txt">';
+                                str = str + '<p class="t1">店铺名称：<i>' + data['competeshopname1'] + '</i></p>';
+                                str = str + '</div>';
+                                str = str + '</div>';
+                            }
+                            if (data['competeshopname2']) {
+                                str = str + '<div class="item">';
+                                str = str + '<div class="tit">' + data['competeproductname2'] + '</div>';
+                                str = str + '<div class="pic"><img src="' + geturl(data["competeimageurl2"]) + '"></div>';
+                                str = str + '<div class="txt">';
+                                str = str + '<p class="t1">店铺名称：<i>' + data['competeshopname2'] + '</i></p>';
+                                str = str + '</div>';
+                                str = str + '</div>';
+                            }
+                            if (data['competeshopname3']) {
+                                str = str + '<div class="item">';
+                                str = str + '<div class="tit">' + data['competeproductname3'] + '</div>';
+                                str = str + '<div class="pic"><img src="' + geturl(data["competeimageurl3"]) + '"></div>';
+                                str = str + '<div class="txt">';
+                                str = str + '<p class="t1">店铺名称：<i>' + data['competeshopname3'] + '</i></p>';
+                                str = str + '</div>';
+                                str = str + '</div>';
+                            }
+                            str = str + '<p style="padding-top: 16px;">浏览其它商品个数：' + data['competebrowsenum'] + '个</p>';
+                        }
+
+                        str = str + '<div class="con">';
+
+                        if (data['ordermethod'] == 1) {
+                            str = str + '<p>商品排序方式：<i>销量</i></p>';
+                        } else if (data['ordermethod'] == 3) {
+                            str = str + '<p>商品排序方式：<i>综合直通车</i></p>';
+                        } else {
+                            str = str + '<p>商品排序方式：<i>综合</i></p>';
+                        }
+                        if (data['receivingnum'] > 0) {
+                            str = str + '<p>收货人数：<i>' + data['receivingnum'] + '</i>人</p>';
+                        }
+                        if (data['startprice'] != 0 || data['endprice'] != 0) {
+                            str = str + '<p>价格区间：<i>' + data['startprice'] + ' - ' + data['endprice'] + '元</i></p>';
+                        }
+                        if (data['goodsaddress']) {
+                            str = str + '<p>商品所在地：<i>' + data['goodsaddress'] + '</i></p>';
+                        }
+                        if (data['sku']) {
+                            str = str + '<p>规格：<i>' + data['sku'] + '</i></p>';
+                        }
+                        if (data['ordermsg']) {
+                            str = str + '<p>订单留言：<i>' + data['ordermsg'] + '</i></p>';
+                        } else {
+                            str = str + '<p>订单留言：<i>暂无留言</i></p>';
+                        }
+                        if (data['limitbuytime'] != 0) {
+                            str = str + '<p>付款时间：<i>隔' + data['limitbuytime'] + '天</i></P>';
+                        }
+                        if (data['electronic'] == 1) {
+                            str = str + '<p>商品是否需要电子凭证码：<i>是</i></p>';
+                        }
+
+                        str = str + '</div>';
+
+                        str = str + '<div class="con">';
+                        if (global_category_id != 4) {
+                            if (data['keytype'] == 2) {
+                                if (global_category_id == 11 || global_category_id == 18) {
+                                    str = str + '<p>订单类型：<i>抖音二维码</i></p>';
+                                } else {
+                                    str = str + '<p>订单类型：<i>二维码</i></p>';
+                                }
+                                str = str + '<img  id="taskewm1" tapmode onclick=openPicture("taskewm1") src="' + myurl + data["keyword"] + '" height="150">';
+                            } else if (data['keytype'] == 1) {
+                                if (data['isallowcopy'] == 1) {
+                                    str = str + '<p>订单类型：<i>淘口令(允许复制关键词)</i></p>';
+                                } else {
+                                    str = str + '<p>订单类型：<i>淘口令</i></p>';
+                                }
+                                str = str + '<p id="taskkeyword">' + data["keyword"] + '</p>';
+                                if (data['isallowcopy'] == 1) {
+                                    str = str + '<p class="taskcopy" tapmode onclick="copy()">复制淘口令</p>';
+                                }
+                            } else if (data['keytype'] == 0) {
+                                if (data['isallowcopy'] == 1) {
+                                    str = str + '<p>订单类型：<i>关键词(允许复制关键词)</i></p>';
+                                } else {
+                                    str = str + '<p>订单类型：<i>关键词</i></p>';
+                                }
+                                str = str + '<p id="taskkeyword">' + data["keyword"] + '</p>';
+                                if (data['isallowcopy'] == 1) {
+                                    str = str + '<p class="taskcopy" tapmode onclick="copy()">复制关键词</p>';
+                                }
+                            }
+                        } else {
+                            // 淘宝特殊任务
+                            if (data['keytype'] == 3) {
+                                str = str + '<p>订单类型：<i>聚划算</i></p>';
+                            } else if (data['keytype'] == 4) {
+                                str = str + '<p>订单类型：<i>淘金币</i></p>';
+                            } else if (data['keytype'] == 5) {
+                                str = str + '<p>订单类型：<i>天天特价</i></p>';
+                            } else if (data['keytype'] == 6) {
+                                str = str + '<p>订单类型：<i>淘抢购</i></p>';
+                            } else if (data['keytype'] == 7) {
+                                str = str + '<p>订单类型：<i>其他渠道</i></p>';
+                            }
+
+                            if (!isempty(data["stepimgurl1"]) || !isempty(data["stepimgurl2"]) || !isempty(data["stepimgurl3"]) || !isempty(data["stepimgurl4"]) || !isempty(data["stepimgurl5"])) {
+                                str = str + '<p>搜索商品步骤图片（点击图片可查看放大图）</p>';
+                                str = str + '<div class="special-item clearfix">';
+                            }
+                            if (!isempty(data["stepimgurl1"])) {
+                                str = str + '<div class="p"><img id="stepimgurl1" onclick=openPicture("stepimgurl1") src="' + myurl + data["stepimgurl1"] + '"></div>';
+                            }
+                            if (!isempty(data["stepimgurl2"])) {
+                                str = str + '<div class="p"><img id="stepimgurl2" onclick=openPicture("stepimgurl2") src="' + myurl + data["stepimgurl2"] + '"></div>';
+                            }
+                            if (!isempty(data["stepimgurl3"])) {
+                                str = str + '<div class="p"><img id="stepimgurl3" onclick=openPicture("stepimgurl3") src="' + myurl + data["stepimgurl3"] + '"></div>';
+                            }
+                            if (!isempty(data["stepimgurl4"])) {
+                                str = str + '<div class="p"><img id="stepimgurl4" onclick=openPicture("stepimgurl4") src="' + myurl + data["stepimgurl4"] + '"></div>';
+                            }
+                            if (!isempty(data["stepimgurl5"])) {
+                                str = str + '<div class="p"><img id="stepimgurl5" onclick=openPicture("stepimgurl5") src="' + myurl + data["stepimgurl5"] + '"></div>';
+                            }
+                            if (!isempty(data["stepimgurl1"]) || !isempty(data["stepimgurl2"]) || !isempty(data["stepimgurl3"]) || !isempty(data["stepimgurl4"]) || !isempty(data["stepimgurl5"])) {
+                                str = str + '</div>';
+                            }
+                        }
+
+                        if (global_category_id == 19) {
+                            if (data['live_id']) {
+                                str = str + '<p>直播ID：<i>' + data['live_id'] + '</i></p>';
+                            }
+                        }
+
+                        str = str + '</div>';
+
+                        str = str + '<div class="con">';
+                        if (data['isforceconfirm'] == 1) {
+                            str = str + '<p><i>7天内收货</i></p>';
+                        }
+                        if (data['isforceconfirm2'] == 1) {
+                            str = str + '<p><i>2天内收货</i></p>';
+                        }
+                        if (data['isneedscreenshot'] == 1) {
+                            str = str + '<p><i>全程需要截图</i></p>';
+                        }
+                        if (data['category_id'] < 100) {
+                            if (data['isallowcoupon'] == 1) {
+                                if (data['platform'] == 1 || data['platform'] == 3) {
+                                    str = str + '<p><i>允许使用优惠券</i></p>';
+                                } else if (data['platform'] == 2) {
+                                    if (data["couponcode"]) {
+                                        str = str + '<p>允许使用优惠券 <i id="coupon-name">' + data["couponcode"] + '</i></p>';
+                                        str = str + '<p class="taskcopy" tapmode onclick="copyCouponName()">复制优惠券名称/网址</p>';
+                                    } else {
+                                        str = str + '<p><i>允许使用优惠券</i></p>';
+                                    }
+                                }
+                            } else {
+                                str = str + '<p><i>禁止使用优惠券</i></p>';
+                            }
+                        }
+                        if (data["isshoparound"] == 1) {
+                            str = str + '<p><i>需要货比二家</i></p>';
+                        }
+                        if (data['ischat'] == 1) {
+                            str = str + '<p><i>需要假聊</i></p>';
+                        }
+                        if (data['issaveshop'] == 1) {
+                            str = str + '<p><i>需要收藏店铺</i></p>';
+                        }
+                        if (data['issaveproduct'] == 1) {
+                            str = str + '<p><i>需要收藏宝贝</i></p>';
+                        }
+                        if (data['issavecart'] == 1) {
+                            str = str + '<p><i>需要加购物车</i></p>';
+                        }
+                        if (global_category_id < 100) {
+                            if (data['iscreditcard'] == 1) {
+                                str = str + '<p><i>允许使用信用卡</i></p>';
+                            } else {
+                                str = str + '<p><i>不允许使用信用卡</i></p>';
+                            }
+                            if (data['ishuabei'] == 1) {
+                                str = str + '<p><i>允许使用淘宝花呗或京东白条</i></p>';
+                            } else {
+                                str = str + '<p><i>不允许使用淘宝花呗或京东白条</i></p>';
+                            }
+                        }
+                        str = str + '</div>';
+                        str = str + '<div class="con">';
+                        if (data['iimgurl1'] || data['iimgurl2'] || data['iimgurl3']) {
+                            str = str + '<p>备注图片</p>';
+                            str = str + '<div class="pics">';
+                            if (data['iimgurl1']) {
+                                str = str + '<div class="p"><img id="bzmg1" tapmode onclick=openPicture("bzmg1") src="' + myurl + data['iimgurl1'] + '" /></div>';
+                            } else {
+                                str = str + '<div class="p"><img src="../image/error-img.png" /></div>';
+                            }
+                            if (data['iimgurl2']) {
+                                str = str + '<div class="p"><img id="bzmg2" tapmode onclick=openPicture("bzmg2") src="' + myurl + data['iimgurl2'] + '" /></div>';
+                            } else {
+                                str = str + '<div class="p"><img src="../image/error-img.png" /></div>';
+                            }
+                            if (data['iimgurl3']) {
+                                str = str + '<div class="p"><img id="bzmg3" tapmode onclick=openPicture("bzmg3") src="' + myurl + data['iimgurl3'] + '" /></div>';
+                            } else {
+                                str = str + '<div class="p"><img src="../image/error-img.png" /></div>';
+                            }
+                            str = str + '</div>';
+                        }
+
+                        if (data["iremark"]) {
+                            var iremark = data["iremark"];
+                            // iremark = iremark.replace(/[A-Za-z0-9]/g, '*');
+                            str = str + '<p>商家要求：<i>' + iremark + '</i></P>';
+                        } else {
+                            str = str + '<p>商家要求：<i>暂无</i></P>';
+                        }
+                        str = str + '</div>';
+                        if (data["status"] == 2) {
+                            str = str + '<div class="con">';
+                            str = str + '<p>订单提交倒计时：<i id="time">00:59:59</i></p>';
+                            str = str + '</div>';
+                            timer(parseInt(data['expiration_date']), 'time');
+                        }
+
+                        str = str + '<div class="con" id="orderbtns">';
+                        str = str + '<div class="btns">';
+                        if (data["status"] >= 2 && data["status"] <= 6) {
+                            str = str + '<a id="post-order" tapmode onclick="postOrder(' + data["status"] + ',' + data["issaveshop"] + ',' + data["issaveproduct"] + ',' + data["ischat"] + ',' + data["isneedscreenshot"] + ',' + data[
+                                    "freeshopping"] +
+                                ')">提交订单</a>';
+                        } else {
+                            str = str + '<a class="close">提交订单</a>';
+                        }
+                        if (data["status"] < 7 && data["status"] > 2) {
+                            str = str + '<a tapmode onclick="postAppeal(' + data["id"] + ')">申诉订单</a>';
+                        } else {
+                            str = str + '<a class="close">申诉订单</a>';
+                        }
+
+                        if (data["status"] == 2) {
+                            str = str + "<a tapmode onclick='postCancel(" + data["id"] + ', ' + "\"" + data["order_number"] + "\")'>取消订单</a>";
+                        } else {
+                            str = str + '<a class="close">取消订单</a>';
+                        }
+
+                        str = str + '</div>';
+                        if (data["status"] == 2 || data["status"] == 3) {
+                            if (data['now_time'] > 0) {
+                                str = str + '<p class="now-time-p"><i id="now-time">00:59:59</i>后可提交订单</p>';
+                            }
+                        }
+                        str = str + '</div>';
+                        $api.html($api.byId("base"), str);
+
+                        if (data["status"] == 2 || data["status"] == 3) {
+                            if (data['now_time'] > 0) {
+                                $api.css($api.byId('post-order'), 'background-color: #ccc; pointer-events: none');
+                                nowTimer(parseInt(data['now_time']), 'now-time');
+                            }
+                        }
+
+                        if (data["status"] == 2) {
+                            if (data['now_time'] > 0) {
+                                $api.html($api.byId('fk-time'), getFKTime(data['now_time']) + '下单付款');
+                                $api.css($api.byId('ys-box'), 'display: block');
+                            }
+                        }
+
+                        var oTop = $("#orderbtns").offset().top;
+                        var sTop = 0;
+                        $(window).scroll(function() {
+                            sTop = $(this).scrollTop();
+                            if (sTop >= oTop) {
+                                $("#orderbtns").addClass("fdfd");
+                            } else {
+                                $("#orderbtns").removeClass("fdfd");
+                            }
+                        });
+
+                        //第一步订单
+                        str = "";
+                        if (data["status"] == -1) {
+                            $("#step1").addClass("close");
+                        }
+                        str = str + '<div class="tit">第一步：接手订单</div>';
+                        str = str + '<div class="con">';
+                        str = str + '<div class="item">';
+                        // str = str + '<span>' + data["id"] + '</span>任务编号';
+                        str = str + '<span>' + data["order_number"] + '</span>订单编号';
+                        str = str + '</div>';
+                        str = str + '<div class="item">';
+                        str = str + '<span>' + getLocalTime(data["order_time"]) + '</span>接单时间';
+                        str = str + '</div>';
+                        str = str + '<div class="item">';
+                        str = str + '<span>' + data["buyer_name"] + '</span>接单账号';
+                        str = str + '</div>';
+                        str = str + '<div class="item">';
+                        if (data['category_id'] < 100) {
+                            if (data["status"] <= 2) {
+                                var bj_price = data["bj_price"];
+                                str = str + '<span>' + computedPrice(bj_price) + '元</span>商品金额';
+                            } else {
+                                str = str + '<span>' + data["bj_price"] + '元</span>商品金额';
+                            }
+                        } else {
+                            str = str + '<span>' + data["bj_price"] + '元</span>商品金额';
+                        }
+                        str = str + '</div>';
+                        str = str + '</div>';
+
+                        $api.html($api.byId("step1"), str);
+
+                        //第二步
+                        str = "";
+                        if (data["status"] == 2 || data["status"] == 3) {
+                            str = str + '<div class="tit">第二步：订单付款</div>';
+                            str = str + '<div class="con">';
+                            str = str + '<p class="buyer-tips">请确认使用<span id="buyer-name" style="color: #f00;"></span>登录</p>';
+                            str = str + '<p class="buyer-tips">点击搜索框输入指定的关键词</p>';
+                            str = str + '<p class="buyer-tips" style="padding-bottom: 10px;">按要求设置筛选价格区间、所在地、类目等搜索条件缩小查询范围，无需截图</p>';
+
+                            if (global_category_id == 6) {
+                                // 竞品1
+                                if (data["competebuy1"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品1拍下图片","competebuypic1")><img id="competebuypic1" src="' + (!isempty(data["competebuypic1"]) ? data["competebuypic1"] : "../image/tb03.png") +
+                                        '"></div>';
+                                    str = str + '<input type="hidden" name="competebuypic1" id="input_competebuypic1"  value="' + (!isempty(data["competebuypic1"]) ? data["competebuypic1"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品1拍下图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competecollection1"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品1收藏图片","competecollectionpic1")><img id="competecollectionpic1" src="' + (!isempty(data["competecollectionpic1"]) ? data["competecollectionpic1"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competecollectionpic1" id="input_competecollectionpic1"  value="' + (!isempty(data["competecollectionpic1"]) ? data["competecollectionpic1"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品1收藏图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competeshopcart1"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品1加购图片","competeshopcartpic1")><img id="competeshopcartpic1" src="' + (!isempty(data["competeshopcartpic1"]) ? data["competeshopcartpic1"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competeshopcartpic1" id="input_competeshopcartpic1"  value="' + (!isempty(data["competeshopcartpic1"]) ? data["competeshopcartpic1"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品1加购图片';
+                                    str = str + '</div>';
+                                }
+
+                                // 竞品2
+                                if (data["competebuy2"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品2拍下图片","competebuypic2")><img id="competebuypic2" src="' + (!isempty(data["competebuypic2"]) ? data["competebuypic2"] : "../image/tb03.png") +
+                                        '"></div>';
+                                    str = str + '<input type="hidden" name="competebuypic2" id="input_competebuypic2"  value="' + (!isempty(data["competebuypic2"]) ? data["competebuypic2"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品2拍下图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competecollection2"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品2收藏图片","competecollectionpic2")><img id="competecollectionpic2" src="' + (!isempty(data["competecollectionpic2"]) ? data["competecollectionpic2"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competecollectionpic2" id="input_competecollectionpic2"  value="' + (!isempty(data["competecollectionpic2"]) ? data["competecollectionpic2"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品2收藏图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competeshopcart2"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品2加购图片","competeshopcartpic2")><img id="competeshopcartpic2" src="' + (!isempty(data["competeshopcartpic2"]) ? data["competeshopcartpic2"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competeshopcartpic2" id="input_competeshopcartpic2"  value="' + (!isempty(data["competeshopcartpic2"]) ? data["competeshopcartpic2"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品2加购图片';
+                                    str = str + '</div>';
+                                }
+
+                                // 竞品3
+                                if (data["competebuy3"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品3拍下图片","competebuypic3")><img id="competebuypic3" src="' + (!isempty(data["competebuypic3"]) ? data["competebuypic3"] : "../image/tb03.png") +
+                                        '"></div>';
+                                    str = str + '<input type="hidden" name="competebuypic3" id="input_competebuypic3"  value="' + (!isempty(data["competebuypic3"]) ? data["competebuypic3"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品3拍下图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competecollection3"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品3收藏图片","competecollectionpic3")><img id="competecollectionpic3" src="' + (!isempty(data["competecollectionpic3"]) ? data["competecollectionpic3"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competecollectionpic3" id="input_competecollectionpic3"  value="' + (!isempty(data["competecollectionpic3"]) ? data["competecollectionpic3"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品3收藏图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competeshopcart3"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("竞品3加购图片","competeshopcartpic3")><img id="competeshopcartpic3" src="' + (!isempty(data["competeshopcartpic3"]) ? data["competeshopcartpic3"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competeshopcartpic3" id="input_competeshopcartpic3"  value="' + (!isempty(data["competeshopcartpic3"]) ? data["competeshopcartpic3"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '竞品3加购图片';
+                                    str = str + '</div>';
+                                }
+
+                                if (data["competebrowsenum"] > 0) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("浏览其他商品图片","competebrowsepic")><img id="competebrowsepic" src="' + (!isempty(data["competebrowsepic"]) ? data["competebrowsepic"] :
+                                        "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="competebrowsepic" id="input_competebrowsepic"  value="' + (!isempty(data["competebrowsepic"]) ? data["competebrowsepic"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '浏览其它商品个数图片';
+                                    str = str + '</div>';
+                                }
+                            }
+
+
+                            // if (global_category_id < 100) {
+                            // str = str + '<p class="buyer-tips">请在目标商家店铺查找到该店铺的全称，输入完毕后点击“点此核对店铺名称”按钮核对</p>';
+                            str = str + '<div class="item">';
+                            str = str + '<span id="shopname">';
+                            str = str + '';
+                            str = str + '</span>';
+                            str = str + '商家店铺名称';
+                            str = str + '</div>';
+                            // }
+
+                            // str = str + '<div class="item">';
+                            // str = str + '<span>';
+                            // str = str + '<input type="input" name="shop_all_name" id="shop_all_name" placeholder="请输入店铺全称" />';
+                            // str = str + '</span>';
+                            // str = str + '<input type="button" id="checkShop_btn" tapmode onclick="checkShop()" style="padding:5px; background:#CC7E41;color:#fff;border-radius:2px;" value="点此核对店铺名称">';
+                            // str = str + '</div>';
+
+                            if (data['detailedquestions']) {
+                                var baby_detail_value = data['detailedquestions'].split('');
+                                for (var i = 0; i < baby_detail_value.length; i++) {
+                                    if (i % 2 != 0) {
+                                        baby_detail_value[i] = '*';
+                                    }
+                                }
+                                str = str + '<p class="buyer-tips">请在商品详情中找到\"<span style="color: #f00;">' + baby_detail_value.join('') + '</span>\" （共' + baby_detail_value.length + '个字），全部输入到商品详情问答里</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="text" name="isQuestions" id="isQuestions" placeholder="请输入商品详情问答" />';
+                                str = str + '</span>';
+                                str = str + '<input type="button" id="checkAnswer_btn" tapmode onclick="checkAnswer()" style="padding:5px; background:#CC7E41;color:#fff;border-radius:2px;" value="点此核对详情问答">';
+                                str = str + '</div>';
+                            }
+
+                            str = str + '<p class="buyer-tips">请复制目标商品的商品链接或者淘口令，粘贴到商品链接框后，输入完毕后点击“点此核对商品链接”按钮核对</p>';
+                            str = str + '<div class="item" style="height: auto; line-height: 1.6; text-align: center;">';
+                            str = str + '<span style="width: 100%;">';
+                            // str = str + '<input type="input" name="url" id="url" placeholder="请输入商品链接" />';
+                            str = str + '<textarea name="url" id="url" style="resize: none; width: 100%; height: 90px; border: 1px solid #ccc; padding: 6px; box-sizing: border-box;" placeholder="请输入商品链接"></textarea>';
+                            str = str + '</span>';
+                            str = str +
+                                '<input type="button" id="checkUrl_btn" tapmode onclick="checkUrl()" style="float: none; width: 90%; padding: 5px 0; text-align: center; background:#CC7E41;color:#fff;border-radius:2px; margin-bottom: 6px;" value="点此核对商品链接">';
+                            str = str + '</div>';
+
+                            // if (data['limitbuytime'] != 0) {
+                            //     str = str + '<p><i>隔' + data['limitbuytime'] + '天才能付款</i></P>';
+                            // }
+                            if (global_category_id != 9) {
+                                if (data["isshoparound"] == 1) {
+                                    str = str + '<p class="buyer-tips">任意点开二个非目标商品，慢慢浏览至底部，然后分别各截一张商品底部图片</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p" tapmode onclick=showAction("货比二家图片1","hbyj_pic1")><img id="hbyj_pic1" src="' + (!isempty(data["hbyj_pic1"]) ? data["hbyj_pic1"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="hbyj_pic1" id="input_hbyj_pic1"  value="' + (!isempty(data["hbyj_pic1"]) ? data["hbyj_pic1"] : "") + '">';
+                                    str = str + '<div class="p" tapmode onclick=showAction("货比二家图片2","hbyj_pic2")><img id="hbyj_pic2" src="' + (!isempty(data["hbyj_pic2"]) ? data["hbyj_pic2"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '<input type="hidden" name="hbyj_pic2" id="input_hbyj_pic2"  value="' + (!isempty(data["hbyj_pic2"]) ? data["hbyj_pic2"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '货比二家';
+                                    str = str + '</div>';
+                                }
+
+                                if (data["issaveshop"] == 1 || data["issaveproduct"] == 1) {
+                                    str = str + '<p class="buyer-tips">将目标店铺/商品收藏后，进入收藏的店铺/商品页面，在目标店铺/商品所在收藏的页面位置截图</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    if (data["issaveshop"] == 1) {
+                                        str = str + '<div class="p" tapmode onclick=showAction("收藏店铺","scdpsp_pic1")><img id="scdpsp_pic1" src="' + (!isempty(data["scdpsp_pic1"]) ? data["scdpsp_pic1"] : "../image/tb03.png") + '"></div>';
+                                        str = str + '<input type="hidden" name="scdpsp_pic1" id="input_scdpsp_pic1" value="' + (!isempty(data["scdpsp_pic1"]) ? data["scdpsp_pic1"] : "") + '">';
+                                    }
+                                    if (data["issaveproduct"] == 1) {
+                                        str = str + '<div class="p" tapmode onclick=showAction("收藏商品","scdpsp_pic2")><img id="scdpsp_pic2" src="' + (!isempty(data["scdpsp_pic2"]) ? data["scdpsp_pic2"] : "../image/tb03.png") + '"></div>';
+                                        str = str + '<input type="hidden" name="scdpsp_pic2" id="input_scdpsp_pic2"  value="' + (!isempty(data["scdpsp_pic2"]) ? data["scdpsp_pic2"] : "") + '">';
+                                    }
+                                    str = str + '</span>';
+                                    if (data["issaveshop"] == 1) {
+                                        str = str + '收藏店铺';
+                                    }
+                                    if (data["issaveproduct"] == 1) {
+                                        str = str + '收藏商品';
+                                    }
+                                    str = str + '</div>';
+                                }
+
+                                if (data["ischat"] == 1 || data["issavecart"] == 1) {
+                                    if (data["ischat"] == 1 && data["issavecart"] == 0) {
+                                        str = str + '<p class="buyer-tips">请与客服聊几句关于该商品的问题后截图上传</p>';
+                                    } else if (data["ischat"] == 0 && data["issavecart"] == 1) {
+                                        str = str + '<p class="buyer-tips">请将该商品加入购物车后截图上传</p>';
+                                    } else {
+                                        str = str + '<p class="buyer-tips">请与客服聊几句关于该商品的问题，并将该商品加入购物车后，分别截图上传</p>';
+                                    }
+
+                                    str = str + '<p class="buyer-tips"></p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    if (data["ischat"] == 1) {
+                                        str = str + '<div class="p" tapmode onclick=showAction("聊天","chatpay_pic1")><img id="chatpay_pic1" src="' + (!isempty(data["chatpay_pic1"]) ? data["chatpay_pic1"] : "../image/tb03.png") + '"></div>';
+                                        str = str + '<input type="hidden" name="chatpay_pic1" id="input_chatpay_pic1"  value="' + (!isempty(data["chatpay_pic1"]) ? data["chatpay_pic1"] : "") + '">';
+                                    }
+                                    if (data["issavecart"] == 1) {
+                                        str = str + '<div class="p" tapmode onclick=showAction("购物车图片","car_pic1")><img id="car_pic1" src="' + (!isempty(data["car_pic1"]) ? data["car_pic1"] : "../image/tb03.png") + '"></div>';
+                                        str = str + '<input type="hidden" name="car_pic1" id="input_car_pic1"  value="' + (!isempty(data["car_pic1"]) ? data["car_pic1"] : "") + '">';
+                                    }
+                                    str = str + '</span>';
+                                    if (data["ischat"] == 1) {
+                                        str = str + '聊天图片';
+                                    }
+                                    if (data["issavecart"] == 1) {
+                                        str = str + '购物车图片';
+                                    }
+                                    str = str + '</div>';
+                                }
+                            }
+
+                            if (global_category_id == 9) {
+                                str = str + '<p class="buyer-tips">订单号可在订单详情中复制</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="platform_order" id="input_platform_order" placeholder="请输入订单号"  value="' + (!isempty(data["platform_order"]) ? data["platform_order"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '订单号';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">请按实际垫付金额填写，不要乱填，照实填写，否则可能导致被封号</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="actual" id="actual" onkeyup="clearNoNum(this)" placeholder="请输入实付金额" />';
+                                str = str + '</span>';
+                                str = str + '实付金额';
+                                str = str + '</div>';
+                            } else if (global_category_id < 100 && data["isneedscreenshot"] == 1) {
+                                // 需要全程截图
+                                str = str + '<p class="buyer-tips">任意点开三个非目标商品，慢慢浏览至底部，然后分别各截一张商品底部图片</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+
+                                str = str + '<div class="p" tapmode onclick=showAction("货比三家1","hbyj_pic1")><img id="hbyj_pic1" src="' + (!isempty(data["hbyj_pic1"]) ? data["hbyj_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="hbyj_pic1" id="input_hbyj_pic1" value="' + (!isempty(data["hbyj_pic1"]) ? data["hbyj_pic1"] : "") + '">';
+
+                                str = str + '<div class="p" tapmode onclick=showAction("货比三家2","hbyj_pic2")><img id="hbyj_pic2" src="' + (!isempty(data["hbyj_pic2"]) ? data["hbyj_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="hbyj_pic2" id="input_hbyj_pic2" value="' + (!isempty(data["hbyj_pic2"]) ? data["hbyj_pic2"] : "") + '">';
+
+                                str = str + '<div class="p" tapmode onclick=showAction("货比三家3","hbyj_pic3")><img id="hbyj_pic3" src="' + (!isempty(data["hbyj_pic3"]) ? data["hbyj_pic3"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="hbyj_pic3" id="input_hbyj_pic3" value="' + (!isempty(data["hbyj_pic3"]) ? data["hbyj_pic3"] : "") + '">';
+
+                                str = str + '</span>';
+                                str = str + '货比三家';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">1.根据商品主图，价格，名称等条件找到目标商品。从头到尾慢慢浏览停留至少三分钟，并在商品页面底部截图上传</p>';
+                                str = str + '<p class="buyer-tips">2.点击进入店铺按钮，慢慢滑动详情直到店铺底部，浏览一分钟以上并截图上传</p>';
+
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p" tapmode onclick=showAction("浏览店铺","lydpsp_pic1")><img id="lydpsp_pic1" src="' + (!isempty(data["lydpsp_pic1"]) ? data["lydpsp_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="lydpsp_pic1" id="input_lydpsp_pic1" value="' + (!isempty(data["lydpsp_pic1"]) ? data["lydpsp_pic1"] : "") + '">';
+
+                                str = str + '<div class="p" tapmode onclick=showAction("浏览商品","lydpsp_pic2")><img id="lydpsp_pic2" src="' + (!isempty(data["lydpsp_pic2"]) ? data["lydpsp_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="lydpsp_pic2" id="input_lydpsp_pic2" value="' + (!isempty(data["lydpsp_pic2"]) ? data["lydpsp_pic2"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '浏览店铺浏览商品';
+                                str = str + '</div>';
+                            } else if (global_category_id >= 100) {
+                                str = str + '<p class="buyer-tips">1.根据商品主图，价格，名称等条件找到目标商品。从头到尾慢慢浏览停留至少三分钟，并在商品页面底部截图上传</p>';
+                                str = str + '<p class="buyer-tips">2.点击进入店铺按钮，慢慢滑动详情直到店铺底部，浏览一分钟以上并截图上传</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p" tapmode onclick=showAction("浏览店铺","lydpsp_pic1")><img id="lydpsp_pic1" src="' + (!isempty(data["lydpsp_pic1"]) ? data["lydpsp_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="lydpsp_pic1" id="input_lydpsp_pic1" value="' + (!isempty(data["lydpsp_pic1"]) ? data["lydpsp_pic1"] : "") + '">';
+
+                                str = str + '<div class="p" tapmode onclick=showAction("浏览商品","lydpsp_pic2")><img id="lydpsp_pic2" src="' + (!isempty(data["lydpsp_pic2"]) ? data["lydpsp_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="lydpsp_pic2" id="input_lydpsp_pic2"  value="' + (!isempty(data["lydpsp_pic2"]) ? data["lydpsp_pic2"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '浏览店铺浏览商品';
+                                str = str + '</div>';
+                            }
+
+                            if (global_category_id < 100 && global_category_id != 9) {
+                                if (data['platform'] == 1) {
+                                    str = str + '<p class="buyer-tips">请在下单付款之前先货比三家，对目标商品进行慢慢浏览3分钟以上。拍下订单后截付款图片上传</p>';
+                                } else {
+                                    str = str + '<p class="buyer-tips">请在下单付款之后截图，截图必须带有付款后的信息</p>';
+                                }
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p" tapmode onclick=showAction("付款图片","chatpay_pic2")><img id="chatpay_pic2" src="' + (!isempty(data["chatpay_pic2"]) ? data["chatpay_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="chatpay_pic2" id="input_chatpay_pic2"  value="' + (!isempty(data["chatpay_pic2"]) ? data["chatpay_pic2"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '付款图片';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">订单号可在订单详情中复制</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="platform_order" id="input_platform_order" placeholder="请输入订单号"  value="' + (!isempty(data["platform_order"]) ? data["platform_order"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '订单号';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">请按实际垫付金额填写，不要乱填，照实填写，否则可能导致被封号</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="actual" id="actual" onkeyup="clearNoNum(this)" placeholder="请输入实付金额" />';
+                                str = str + '</span>';
+                                str = str + '实付金额';
+                                str = str + '</div>';
+                            }
+
+                            // 淘口令裂变
+                            if (global_category_id == 7) {
+                                str = str + '<div class="item" style="height: auto; line-height: 1.6; text-align: center;">';
+                                str = str + '<span style="width: 100%;">';
+                                str = str + '<textarea name="tkllb" id="input_tkllb" style="resize: none; width: 100%; height: 90px; border: 1px solid #ccc; padding: 6px;  box-sizing: border-box;" placeholder="请输入由您分享后的该商品的淘口令"></textarea>';
+                                str = str + '</span>';
+                                str = str + '</div>';
+                            }
+
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商家确定订单前，可以点击更换图片</p>';
+                            } else {
+                                str = str + '<p class="t1">提交订单后，不能更换图片</p>';
+                            }
+
+                            str = str + '</div>';
+                        } else {
+                            str = str + '<div class="tit">第二步：订单付款</div>';
+                            str = str + '<div class="con">';
+                            str = str + '<p class="buyer-tips">请确认使用<span id="buyer-name" style="color: #f00;"></span>登录</p>';
+                            str = str + '<p class="buyer-tips">点击搜索框输入指定的关键词</p>';
+                            str = str + '<p class="buyer-tips" style="padding-bottom: 10px;">按要求设置筛选价格区间、所在地、类目等搜索条件缩小查询范围，无需截图</p>';
+
+                            if (global_category_id == 6) {
+                                // 竞品1
+                                if (data["competebuy1"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competebuypic1" src="' + (!isempty(data["competebuypic1"]) ? data["competebuypic1"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品1拍下图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competecollection1"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competecollectionpic1" src="' + (!isempty(data["competecollectionpic1"]) ? data["competecollectionpic1"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品1收藏图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competeshopcart1"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competeshopcartpic1" src="' + (!isempty(data["competeshopcartpic1"]) ? data["competeshopcartpic1"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品1加购图片';
+                                    str = str + '</div>';
+                                }
+
+                                // 竞品2
+                                if (data["competebuy2"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competebuypic2" src="' + (!isempty(data["competebuypic2"]) ? data["competebuypic2"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品2拍下图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competecollection2"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competecollectionpic2" src="' + (!isempty(data["competecollectionpic2"]) ? data["competecollectionpic2"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品2收藏图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competeshopcart2"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competeshopcartpic2" src="' + (!isempty(data["competeshopcartpic2"]) ? data["competeshopcartpic2"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品2加购图片';
+                                    str = str + '</div>';
+                                }
+
+                                // 竞品3
+                                if (data["competebuy3"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competebuypic3" src="' + (!isempty(data["competebuypic3"]) ? data["competebuypic3"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品3拍下图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competecollection3"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competecollectionpic3" src="' + (!isempty(data["competecollectionpic3"]) ? data["competecollectionpic3"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品3收藏图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competeshopcart3"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competeshopcartpic3" src="' + (!isempty(data["competeshopcartpic3"]) ? data["competeshopcartpic3"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '竞品3加购图片';
+                                    str = str + '</div>';
+                                }
+                                if (data["competebrowsenum"] > 0) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="competebrowsepic" src="' + (!isempty(data["competebrowsepic"]) ? data["competebrowsepic"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '浏览其它商品个数图片';
+                                    str = str + '</div>';
+                                }
+                            }
+
+                            // if (global_category_id < 100) {
+                            // str = str + '<p class="buyer-tips">请在目标商家店铺查找到该店铺的全称，输入完毕后点击“点此核对店铺名称”按钮核对</p>';
+                            str = str + '<div class="item">';
+                            str = str + '<span id="shopname">';
+                            str = str + '';
+                            str = str + '</span>';
+                            str = str + '商家店铺名称';
+                            str = str + '</div>';
+                            // }
+
+                            // str = str + '<div class="item">';
+                            // str = str + '<span>';
+                            // str = str + '<input type="input"  name="shop_all_name" id="shop_all_name" placeholder="请输入店铺全称" />';
+                            // str = str + '</span>';
+                            // str = str + '<input type="button" id="checkShop_btn" tapmode onclick="checkShop()" style="padding:5px; background:#ccc;color:#fff;border-radius:2px;" value="点此核对店铺名称">';
+                            // str = str + '</div>';
+
+                            if (data['detailedquestions']) {
+                                var baby_detail_value = data['detailedquestions'].split('');
+                                for (var i = 0; i < baby_detail_value.length; i++) {
+                                    if (i % 2 != 0) {
+                                        baby_detail_value[i] = '*';
+                                    }
+                                }
+
+                                str = str + '<p class="buyer-tips">请在商品详情中找到\"<span style="color: #f00;">' + baby_detail_value.join('') + '</span>\" （共' + baby_detail_value.length + '个字），全部输入到商品详情问答里</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="text" name="isQuestions" id="isQuestions" placeholder="请输入商品详情问答" />';
+                                str = str + '</span>';
+                                str = str + '<input type="button" id="checkAnswer_btn" tapmode onclick="checkAnswer()" style="padding:5px; background:#CC7E41;color:#fff;border-radius:2px;" value="点此核对详情问答">';
+                                str = str + '</div>';
+                            }
+
+                            str = str + '<p class="buyer-tips">请复制目标商品的商品链接或者淘口令，粘贴到商品链接框后，输入完毕后点击“点此核对商品链接”按钮核对</p>';
+                            str = str + '<div class="item" style="height: auto; line-height: 1.6; text-align: center;">';
+                            str = str + '<span style="width: 100%;">';
+                            // str = str + '<input type="input" name="url" id="url" placeholder="请输入商品链接" />';
+                            str = str + '<textarea name="url" id="url" style="resize: none; width: 100%; height: 90px; border: 1px solid #ccc; padding: 6px;  box-sizing: border-box;" placeholder="请输入商品链接"></textarea>';
+                            str = str + '</span>';
+                            str = str +
+                                '<input type="button" id="checkUrl_btn" tapmode onclick="checkUrl()" style="float: none; width: 90%; padding: 5px 0; text-align: center; background:#CC7E41;color:#fff;border-radius:2px; margin-bottom: 6px;" value="点此核对商品链接">';
+                            str = str + '</div>';
+
+                            if (global_category_id != 9) {
+                                if (data["isshoparound"] == 1) {
+                                    str = str + '<p class="buyer-tips">任意点开二个非目标商品，慢慢浏览至底部，然后分别各截一张商品底部图片</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<div class="p"><img id="hbyj_pic1" src="' + (!isempty(data["hbyj_pic1"]) ? data["hbyj_pic1"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '<div class="p"><img id="hbyj_pic2" src="' + (!isempty(data["hbyj_pic2"]) ? data["hbyj_pic2"] : "../image/tb03.png") + '"></div>';
+                                    str = str + '</span>';
+                                    str = str + '货比二家';
+                                    str = str + '</div>';
+                                }
+
+                                if (data["issaveshop"] == 1 || data["issaveproduct"] == 1) {
+                                    str = str + '<p class="buyer-tips">将目标店铺/商品收藏后，进入收藏的店铺/商品页面，在目标店铺/商品所在收藏的页面位置截图</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    if (data["issaveshop"] == 1) {
+                                        str = str + '<div class="p"><img id="scdpsp_pic1" src="' + (!isempty(data["scdpsp_pic1"]) ? data["scdpsp_pic1"] : "../image/tb03.png") + '"></div>';
+                                    }
+                                    if (data["issaveproduct"] == 1) {
+                                        str = str + '<div class="p"><img id="scdpsp_pic2" src="' + (!isempty(data["scdpsp_pic2"]) ? data["scdpsp_pic2"] : "../image/tb03.png") + '"></div>';
+                                    }
+                                    str = str + '</span>';
+                                    if (data["issaveshop"] == 1) {
+                                        str = str + '收藏店铺';
+                                    }
+                                    if (data["issaveproduct"] == 1) {
+                                        str = str + '收藏商品';
+                                    }
+                                    str = str + '</div>';
+                                }
+
+                                if (data["ischat"] == 1 || data["issavecart"] == 1) {
+                                    if (data["ischat"] == 1 && data["issavecart"] == 0) {
+                                        str = str + '<p class="buyer-tips">请与客服聊几句关于该商品的问题后截图上传</p>';
+                                    } else if (data["ischat"] == 0 && data["issavecart"] == 1) {
+                                        str = str + '<p class="buyer-tips">请将该商品加入购物车后截图上传</p>';
+                                    } else {
+                                        str = str + '<p class="buyer-tips">请与客服聊几句关于该商品的问题，并将该商品加入购物车后，分别截图上传</p>';
+                                    }
+
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    if (data["ischat"] == 1) {
+                                        str = str + '<div class="p"><img id="chatpay_pic1" src="' + (!isempty(data["chatpay_pic1"]) ? data["chatpay_pic1"] : "../image/tb03.png") + '"></div>';
+                                    }
+                                    if (data["issavecart"] == 1) {
+                                        str = str + '<div class="p"><img id="car_pic1" src="' + (!isempty(data["car_pic1"]) ? data["car_pic1"] : "../image/tb03.png") + '"></div>';
+                                    }
+                                    str = str + '</span>';
+                                    if (data["ischat"] == 1) {
+                                        str = str + '聊天图片';
+                                    }
+                                    if (data["issavecart"] == 1) {
+                                        str = str + '购物车图片';
+                                    }
+                                    str = str + '</div>';
+                                }
+                            }
+
+                            if (global_category_id == 9) {
+                                str = str + '<p class="buyer-tips">订单号可在订单详情中复制</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="platform_order" id="input_platform_order" value="' + (!isempty(data["platform_order"]) ? data["platform_order"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '订单号';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">请按实际垫付金额填写，不要乱填，照实填写，否则可能导致被封号</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="actual" id="actual" />';
+                                str = str + '</span>';
+                                str = str + '实付金额';
+                                str = str + '</div>';
+                            } else if (global_category_id < 100 && data["isneedscreenshot"] == 1) {
+                                str = str + '<p class="buyer-tips">任意点开三个非目标商品，慢慢浏览至底部，然后分别各截一张商品底部图片</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p"><img id="hbyj_pic1" src="' + (!isempty(data["hbyj_pic1"]) ? data["hbyj_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<div class="p"><img id="hbyj_pic2" src="' + (!isempty(data["hbyj_pic2"]) ? data["hbyj_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<div class="p"><img id="hbyj_pic3" src="' + (!isempty(data["hbyj_pic3"]) ? data["hbyj_pic3"] : "../image/tb03.png") + '"></div>';
+                                str = str + '</span>';
+                                str = str + '货比三家';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">1.根据商品主图，价格，名称等条件找到目标商品。从头到尾慢慢浏览停留至少三分钟，并在商品页面底部截图上传</p>';
+                                str = str + '<p class="buyer-tips">2.点击进入店铺按钮，慢慢滑动详情直到店铺底部，浏览一分钟以上并截图上传</p>';
+
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p"><img id="lydpsp_pic1" src="' + (!isempty(data["lydpsp_pic1"]) ? data["lydpsp_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<div class="p"><img id="lydpsp_pic2" src="' + (!isempty(data["lydpsp_pic2"]) ? data["lydpsp_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '</span>';
+                                str = str + '浏览店铺浏览商品';
+                                str = str + '</div>';
+                            } else if (global_category_id >= 100) {
+                                str = str + '<p class="buyer-tips">1.根据商品主图，价格，名称等条件找到目标商品。从头到尾慢慢浏览停留至少三分钟，并在商品页面底部截图上传</p>';
+                                str = str + '<p class="buyer-tips">2.点击进入店铺按钮，慢慢滑动详情直到店铺底部，浏览一分钟以上并截图上传</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p"><img id="lydpsp_pic1" src="' + (!isempty(data["lydpsp_pic1"]) ? data["lydpsp_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<div class="p"><img id="lydpsp_pic2" src="' + (!isempty(data["lydpsp_pic2"]) ? data["lydpsp_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '</span>';
+                                str = str + '浏览店铺浏览商品';
+                                str = str + '</div>';
+                            }
+
+                            if (global_category_id < 100 && global_category_id != 9) {
+                                if (data['platform'] == 1) {
+                                    str = str + '<p class="buyer-tips">请在下单付款之前先货比三家，对目标商品进行慢慢浏览3分钟以上。拍下订单后截付款图片上传</p>';
+                                } else {
+                                    str = str + '<p class="buyer-tips">请在下单付款之后截图，截图必须带有付款后的信息</p>';
+                                }
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p"><img id="chatpay_pic2" src="' + (!isempty(data["chatpay_pic2"]) ? data["chatpay_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '</span>';
+                                str = str + '付款图片';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">订单号可在订单详情中复制</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="platform_order" id="input_platform_order" value="' + (!isempty(data["platform_order"]) ? data["platform_order"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '订单号';
+                                str = str + '</div>';
+
+                                str = str + '<p class="buyer-tips">请按实际垫付金额填写，不要乱填，照实填写，否则可能导致被封号</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<input type="input" name="actual" id="actual" />';
+                                str = str + '</span>';
+                                str = str + '实付金额';
+                                str = str + '</div>';
+                            }
+
+                            // 淘口令裂变
+                            if (global_category_id == 7) {
+                                str = str + '<div class="item" style="height: auto; line-height: 1.6; text-align: center;">';
+                                str = str + '<span style="width: 100%;">';
+                                str = str + '<textarea name="tkllb" id="input_tkllb" style="resize: none; width: 100%; height: 90px; border: 1px solid #ccc; padding: 6px;  box-sizing: border-box;" placeholder="请输入由您分享后的该商品的淘口令"></textarea>';
+                                str = str + '</span>';
+                                str = str + '</div>';
+                            }
+
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商家确定订单前，可以点击更换图片</p>';
+                            } else {
+                                str = str + '<p class="t1">提交订单后，不能更换图片</p>';
+                            }
+
+                            str = str + '</div>';
+                        }
+
+                        $api.html($api.byId("step2"), str);
+
+                        if (global_category_id < 100) {
+                            $api.val($api.byId('actual'), data['bj_price']);
+                        }
+
+                        if (data["status"] >= 3) {
+                            $("#step2").removeClass("close");
+                            // 核对店铺名称
+                            // $api.val($api.byId('shop_all_name'), data['shopname']);
+                            // $api.attr($api.byId('shop_all_name'), 'readonly', 'true');
+                            // global_isCheck = 1;
+                            // $api.css($api.byId('checkShop_btn'), 'color: #fff; background-color: #ccc; pointer-events: none;');
+
+                            // 核对商品链接
+                            $api.val($api.byId('url'), data['producturl1']);
+                            $api.attr($api.byId('url'), 'readonly', 'true');
+                            global_isCheck_url = 1;
+                            $api.css($api.byId('checkUrl_btn'), 'color: #fff; background-color: #ccc; pointer-events: none;');
+
+                            // 核对详情问答
+                            if (data['detailedquestions']) {
+                                $api.val($api.byId('isQuestions'), data['detailedquestions']);
+                                $api.attr($api.byId('isQuestions'), 'readonly', 'true');
+                                global_isCheck_answer = 1;
+                                $api.css($api.byId('checkAnswer_btn'), 'color: #fff; background-color: #ccc; pointer-events: none;');
+                            }
+
+                            if (global_category_id < 100) {
+                                // 实付金额
+                                $api.val($api.byId('actual'), data['actual']);
+                            }
+
+                            // 淘口令裂变
+                            if (global_category_id == 7) {
+                                $api.val($api.byId('input_tkllb'), data['tkllb']);
+                                $api.attr($api.byId('input_tkllb'), 'readonly', 'true');
+                            }
+                        }
+
+                        $api.html($api.byId('buyer-name'), data['buyer_name']);
+
+                        if (data["status"] > 3) {
+                            if (global_category_id < 100) {
+                                // 实付金额
+                                $api.attr($api.byId('actual'), 'readonly', 'true');
+                                // 订单号
+                                $api.attr($api.byId('input_platform_order'), 'readonly', 'true');
+                            }
+                        }
+
+                        var shopNameDom = $api.byId('shopname');
+                        if (shopNameDom) {
+                            var shopNameValue = data['shopname'];
+                            var len = (parseInt(shopNameValue.length) / 2);
+                            var shopNameArr = shopNameValue.split('');
+                            if (len + 1 > shopNameValue.length) {
+                                len = shopNameValue.length - 2;
+                            }
+                            for (var i = 1; i < len + 1; i++) {
+                                shopNameArr[i] = '*';
+                            }
+                            $api.html(shopNameDom, shopNameArr.join(''));
+                        }
+
+                        //第三步
+                        if (global_category_id < 100) {
+                            str = "";
+                            if (data["status"] <= 3) {
+                                str = str + '<div class="tit">第三步：商家确认订单</div>';
+                                str = str + '<div class="con">';
+                                str = str + '<div class="item">';
+                                str = str + '<span></span>';
+                                str = str + '订单号';
+                                str = str + '</div>';
+                                str = str + '<div class="item">';
+                                str = str + '<span></span>';
+                                str = str + '返款方式';
+                                str = str + '</div>';
+                                str = str + '<div class="item">';
+                                str = str + '<span></span>';
+                                str = str + '返款本金';
+                                str = str + '</div>';
+                                if (data["freeshopping"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span></span>';
+                                    str = str + '运费押金';
+                                    str = str + '</div>';
+                                }
+                                // if (data["status"] == 3) {
+                                //     str = str + '<p class="t2">返款金额' + data['return_good'] + '及以下，24小时之内返款<br/>返款金额超过' + data['return_good'] + '，货到返款</p>';
+                                // } else {
+                                //     str = str + '<p class="t1">返款金额' + data['return_good'] + '及以下，24小时之内返款<br/>返款金额超过' + data['return_good'] + '，货到返款</p>';
+                                // }
+
+                                str = str + '</div>';
+                            } else {
+                                $("#step3").removeClass("close");
+                                str = str + '<div class="tit">第三步：商家确认订单</div>';
+                                str = str + '<div class="con">';
+                                if (data["platform_order"]) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>' + data["platform_order"] + '</span>';
+                                    str = str + '订单号';
+                                    str = str + '</div>';
+                                }
+                                str = str + '<div class="item">';
+                                str = str + '<span>' + data["fk_mode"] + '</span>';
+                                str = str + '返款方式';
+                                str = str + '</div>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>' + data["fankuan"] + '</span>';
+                                str = str + '返款本金';
+                                str = str + '</div>';
+                                if (data["freeshopping"] == 1) {
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>' + data["yajin_price"] + '</span>';
+                                    str = str + '运费押金';
+                                    str = str + '</div>';
+                                }
+                                // str = str + '<p class="t1">返款金额' + data['return_good'] + '及以下，24小时之内返款<br/>返款金额超过' + data['return_good'] + '，货到返款</p>';
+
+                                str = str + '<div class="item" style="height: auto; line-height: 20px;">';
+                                str = str + '您将在提交订单后的第二天下午16点之前收到商家的本金转款，没有收到本金的可以联系平台客服，平台将会提醒商家尽快转款！';
+
+                                if (data['fk_time'] > 0) {
+                                    str = str + '<p style="color: #f00; text-align: center; font-size: 14px; padding-top: 6px;">商家已返本金</p>';
+                                } else {
+                                    str = str + '<p style="color: #f00; text-align: center; font-size: 14px; padding-top: 6px;">商家未返本金</p>';
+                                }
+
+                                str = str + '<div class="item" style="margin-top: 10px;">';
+
+                                var feedback_tips = '请先去查询，若本金未到账再来反馈。确定反馈本金未到账？';
+
+                                // 任务完成时间
+                                var yj_time = data['chatpay_time'];
+                                if (yj_time > 0 && data['feedback'] == 0) {
+                                    // 现在的时间
+                                    var now_time = Math.round(new Date().getTime() / 1000).toString(),
+                                        year = new Date(yj_time * 1000).getFullYear(),
+                                        month = new Date(yj_time * 1000).getMonth() + 1,
+                                        day = new Date(yj_time * 1000).getDate(),
+                                        date = year + '-' + month + '-' + day,
+                                        ms = Math.round(new Date(date).getTime() / 1000).toString();
+
+                                    ms = parseInt(ms) + (24 * 60 * 60) + (16 * 60 * 60);
+                                    if (parseInt(now_time) >= parseInt(ms)) {
+                                        str = str + '<div id="feedback-btn" class="feedback-active" tapmode onclick=openFeedBackLayer(' + data['id'] + ',"' + feedback_tips + '")>反馈未到账</div>';
+                                    } else {
+                                        str = str + '<div id="feedback-btn">反馈未到账</div>';
+                                    }
+                                } else {
+                                    str = str + '<div id="feedback-btn">反馈未到账</div>';
+                                }
+
+                                str = str + '</div>';
+                                str = str + '</div>';
+                            }
+
+                            $api.html($api.byId("step3"), str);
+
+                            //第四步
+                            str = "";
+                            if (data["status"] == 5 || data["status"] == 6) {
+                                str = str + '<div class="tit">第四步：收货好评</div>';
+                                str = str + '<div class="con">';
+                                str = str + '<p style="color: #f00; padding-bottom: 6px;">请等待物流签收以后再收货好评，如果物流还没有显示签收就好评的，商家投诉将会封号处理，不予解封。如果物流没有信息七天后可以收货好评。</p>';
+                                str = str + '<p class="buyer-tips">请先对目标商品进行好评，之后将好评后的页面截图上传</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p" tapmode onclick=showAction("好评截图1","hp_pic1")><img id="hp_pic1" src="' + (!isempty(data["hp_pic1"]) ? data["hp_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="hp_pic1" id="input_hp_pic1" value="' + (!isempty(data["hp_pic1"]) ? data["hp_pic1"] : "") + '">';
+
+                                str = str + '<div class="p" tapmode onclick=showAction("好评截图2","hp_pic2")><img id="hp_pic2" src="' + (!isempty(data["hp_pic2"]) ? data["hp_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<input type="hidden" name="hp_pic2" id="input_hp_pic2" value="' + (!isempty(data["hp_pic2"]) ? data["hp_pic2"] : "") + '">';
+                                str = str + '</span>';
+                                str = str + '收货并好评';
+                                str = str + '</div>';
+                                if (data["freeshopping"] == 1) {
+                                    str = str + '<p class="buyer-tips">预先垫付的运费金额，请如实填写</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<input type="number" name="yunfei" id="input_yunfei" placeholder="请输入运费金额"  value="' + (!isempty(data["yunfei"]) ? data["yunfei"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '快递运费';
+                                    str = str + '</div>';
+                                }
+                                if (data["electronic"] == 1) {
+                                    str = str + '<p class="buyer-tips">购买目标商品后获得的电子凭证码</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>';
+                                    str = str + '<input type="text" name="electronic_num" id="input_electronic" placeholder="请输入电子凭证码"  value="' + (!isempty(data["electronic_num"]) ? data["electronic_num"] : "") + '">';
+                                    str = str + '</span>';
+                                    str = str + '电子凭证码';
+                                    str = str + '</div>';
+                                }
+                                if (data["commonkey"] == 2) {
+                                    str = str + '<p class="t1">此单文字好评 </p>';
+                                } else if (data["commonkey"] == 3) {
+                                    str = str + '<p class="t1">此单图片好评 </p>';
+                                } else if (data["commonkey"] == 4) {
+                                    str = str + '<p class="t1">此单视频好评 </p>';
+                                } else {
+                                    str = str + '<p class="t1">此单普通好评 </p>';
+                                }
+
+                                if (data["commonkey"] != 1) {
+                                    str = str + '<div class="item1">';
+                                    if (data["commonkey"] > 2) {
+                                        str = str + '<div class="gg">规格：' + data["sku"] + '</div>';
+                                        if (!isempty(data["imgurl1"])) {
+                                            str = str + '<div class="p"><img id="pjimg1" onclick=openPicture("pjimg1") src="' + myurl + data["imgurl1"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl2"])) {
+                                            str = str + '<div class="p"><img id="pjimg2" onclick=openPicture("pjimg2") src="' + myurl + data["imgurl2"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl3"])) {
+                                            str = str + '<div class="p"><img id="pjimg3" onclick=openPicture("pjimg3") src="' + myurl + data["imgurl3"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl4"])) {
+                                            str = str + '<div class="p"><img id="pjimg4" onclick=openPicture("pjimg4") src="' + myurl + data["imgurl4"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl5"])) {
+                                            str = str + '<div class="p"><img id="pjimg5" onclick=openPicture("pjimg5") src="' + myurl + data["imgurl5"] + '"></div>';
+                                        }
+                                        if (data["commonkey"] == 4) {
+                                            str = str + '<div class="gg">视频：</div>';
+                                            str = str + '<div class="vv">';
+                                            str = str + '<video controls="controls" controlslist="nodownload" id="video01" width="100%"><source src="' + myurl + data["videourl"] + '" type="video/mp4"></video>';
+                                            // str = str + '<p><a href="#">下载视频</a></p>';
+                                            str = str + '<p style="text-align: center;"><a style="display: inline;" tapmode onclick=saveFile("' + myurl + data["videourl"] + '")>点击下载视频</a></p>';
+                                            str = str + '</div>';
+                                        }
+                                    }
+                                    str = str + '<div class="hp">好评：' + data["remark"] + '</div>';
+
+                                    str = str + '</div>';
+                                }
+
+                                str = str + '<a class="postHp" tapmode onclick="postOrder(' + data["status"] + ',' + data["issaveshop"] + ',' + data["issaveproduct"] + ',' + data["ischat"] + ',' + data["isneedscreenshot"] + ',' + data[
+                                    "freeshopping"] + ')">提交好评</a>';
+
+                                if (data['good_price'] == 1) {
+                                    if (data['fh_time'] != 0) {
+                                        str = str + '<p id="postHptext" style="padding: 10px 0 6px 0; color: #f00; text-align: center;">提交好评倒计时：<i id="postHptime" style="font-style: normal;"></i></p>';
+                                    }
+                                } else {
+                                    if (data['fk_time'] != 0) {
+                                        str = str + '<p id="postHptext" style="padding: 10px 0 6px 0; color: #f00; text-align: center;">提交好评倒计时：<i id="postHptime" style="font-style: normal;"></i></p>';
+                                    }
+                                }
+
+                                str = str + '</div>';
+
+                            } else {
+                                str = str + '<div class="tit">第四步：收货好评</div>';
+                                str = str + '<div class="con">';
+                                str = str + '<p style="color: #f00; padding-bottom: 6px;">请等待物流签收以后再收货好评，如果物流还没有显示签收就好评的，商家投诉将会封号处理，不予解封。如果物流没有信息七天后可以收货好评。</p>';
+                                str = str + '<p class="buyer-tips">请先对目标商品进行好评，之后将好评后的页面截图上传</p>';
+                                str = str + '<div class="item">';
+                                str = str + '<span>';
+                                str = str + '<div class="p"><img id="hp_pic1" src="' + (!isempty(data["hp_pic1"]) ? data["hp_pic1"] : "../image/tb03.png") + '"></div>';
+                                str = str + '<div class="p"><img id="hp_pic2" src="' + (!isempty(data["hp_pic2"]) ? data["hp_pic2"] : "../image/tb03.png") + '"></div>';
+                                str = str + '</span>';
+                                str = str + '收货并好评';
+                                str = str + '</div>';
+                                if (data["freeshopping"] == 1) {
+                                    str = str + '<p class="buyer-tips">预先垫付的运费金额，请如实填写</p>';
+                                    str = str + '<div class="item">';
+                                    str = str + '<span>' + data["yunfei"] + '</span>';
+                                    str = str + '快递运费';
+                                    str = str + '</div>';
+                                }
+                                if (data["electronic"] == 1) {
+                                    str = str + '<p class="buyer-tips">购买目标商品后获得的电子凭证码</p>';
+                                    if (data["status"] < 5) {
+                                        str = str + '<div class="item">';
+                                        str = str + '<span>';
+                                        str = str + '<input type="text" name="electronic_num" id="input_electronic" readonly="readonly" />';
+                                        str = str + '</span>';
+                                        str = str + '电子凭证码';
+                                        str = str + '</div>';
+                                    } else if (data["status"] > 6) {
+                                        str = str + '<div class="item">';
+                                        str = str + '<span>';
+                                        str = str + '<input type="text" name="electronic_num" id="input_electronic" readonly="readonly" placeholder="请输入电子凭证码"  value="' + (!isempty(data["electronic_num"]) ? data["electronic_num"] : "") +
+                                            '">';
+                                        str = str + '</span>';
+                                        str = str + '电子凭证码';
+                                        str = str + '</div>';
+                                    }
+                                }
+                                if (data["commonkey"] == 2) {
+                                    str = str + '<p class="t1">此单文字好评 </p>';
+                                } else if (data["commonkey"] == 3) {
+                                    str = str + '<p class="t1">此单图片好评 </p>';
+                                } else if (data["commonkey"] == 4) {
+                                    str = str + '<p class="t1">此单视频好评 </p>';
+                                } else {
+                                    str = str + '<p class="t1">此单普通好评 </p>';
+                                }
+
+                                if (data["commonkey"] != 1) {
+                                    str = str + '<div class="item1">';
+                                    if (data["commonkey"] > 2) {
+                                        str = str + '<div class="gg">规格：' + data["sku"] + '</div>';
+                                        if (!isempty(data["imgurl1"])) {
+                                            str = str + '<div class="p"><img id="pjimg1" onclick=openPicture("pjimg1") src="' + myurl + data["imgurl1"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl2"])) {
+                                            str = str + '<div class="p"><img id="pjimg2" onclick=openPicture("pjimg2") src="' + myurl + data["imgurl2"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl3"])) {
+                                            str = str + '<div class="p"><img id="pjimg3" onclick=openPicture("pjimg3") src="' + myurl + data["imgurl3"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl4"])) {
+                                            str = str + '<div class="p"><img id="pjimg4" onclick=openPicture("pjimg4") src="' + myurl + data["imgurl4"] + '"></div>';
+                                        }
+                                        if (!isempty(data["imgurl5"])) {
+                                            str = str + '<div class="p"><img id="pjimg5" onclick=openPicture("pjimg5") src="' + myurl + data["imgurl5"] + '"></div>';
+                                        }
+                                        if (data["commonkey"] == 4) {
+                                            str = str + '<div class="gg">视频：</div>';
+                                            str = str + '<div class="vv">';
+                                            str = str + '<video controls="controls" controlslist="nodownload" id="video01" width="100%"><source src="' + myurl + data["videourl"] + '" type="video/mp4"></video>';
+                                            // str = str + '<p><a tapmode onclick=saveFile("' + myurl + data["videourl"] + '")>' + myurl + data["videourl"] + '</a></p>';
+                                            str = str + '<p style="text-align: center;"><a style="display: inline;" tapmode onclick=saveFile("' + myurl + data["videourl"] + '")>点击下载视频</a></p>';
+                                            str = str + '</div>';
+                                        }
+                                    }
+                                    str = str + '<div class="hp">好评：' + data["remark"] + '</div>';
+
+                                    str = str + '</div>';
+                                }
+
+                                str = str + '<a class="postHp_gray" class="close">提交好评</a>';
+
+                                str = str + '</div>';
+
+                            }
+
+                            if (data["status"] >= 6) {
+                                $("#step4").removeClass("close");
+                            }
+                            $api.html($api.byId("step4"), str);
+
+                            // 好评倒计时
+                            if (data["status"] == 5 || data["status"] == 6) {
+                                if (data['good_price'] == 1) {
+                                    if (data['fh_time'] != 0) {
+                                        postHptimer(parseInt(data['fh_time']) + (48 * 3600), 'postHptime');
+                                    }
+                                } else {
+                                    if (data['fk_time'] != 0) {
+                                        postHptimer(parseInt(data['fk_time']) + (48 * 3600), 'postHptime');
+                                    }
+                                }
+                            }
+                        }
+
+                        str = "";
+                        if (global_category_id < 100) {
+                            str = str + '<div class="tit">第五步：订单完成</div>';
+                        } else {
+                            str = str + '<div class="tit">第三步：订单完成</div>';
+                        }
+                        str = str + '<div class="con">';
+                        str = str + '<div class="item">';
+                        str = str + '<span>';
+                        str = str + '</span>';
+                        str = str + '获取佣金';
+                        str = str + '</div>';
+                        str = str + '</div>';
+                        $api.html($api.byId("step5"), str);
+
+                        //第五步
+                        if (data["status"] == 7) {
+                            $("#step5").removeClass("close");
+                        }
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 1000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 1000);
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+        //做订单
+        function postOrder(status, shop, product, chat, need, freeshopping) {
+            if (status == 2 || status == 3) {
+                // if (global_isCheck == 0) {
+                //     api.toast({
+                //         msg: '请点击核对店铺名称按钮核对店铺全称',
+                //         duration: 3000,
+                //         location: 'bottom'
+                //     });
+                //     return false;
+                // }
+
+                if (global_category_id == 6) {
+                    for (var i = 1; i <= 3; i++) {
+                        if ($("#input_competebuypic" + i).val() == "") {
+                            api.toast({
+                                msg: '请上传竞品' + i + '拍下图片',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return false;
+                        }
+
+                        if ($("#input_competecollectionpic" + i).val() == "") {
+                            api.toast({
+                                msg: '请上传竞品' + i + '收藏图片',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return false;
+                        }
+
+                        if ($("#input_competeshopcartpic" + i).val() == "") {
+                            api.toast({
+                                msg: '请上传竞品' + i + '加购图片',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return false;
+                        }
+                    }
+
+                    if ($("#input_competebrowsepic").val() == "") {
+                        api.toast({
+                            msg: '请上传浏览其它商品个数图片',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                }
+
+                if (global_answer != '') {
+                    if (global_isCheck_answer == 0) {
+                        api.toast({
+                            msg: '请核对商品详情问答',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                }
+
+                if (global_isCheck_url == 0) {
+                    api.toast({
+                        msg: '请点击核对商品链接按钮核对商品链接',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+
+                //货比三家
+                if ($("#input_hbyj_pic1").val() == "") {
+                    api.toast({
+                        msg: '请上传货比图片1',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                if ($("#input_hbyj_pic2").val() == "") {
+                    api.toast({
+                        msg: '请上传货比图片2',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                if ($("#input_hbyj_pic3").val() == "") {
+                    api.toast({
+                        msg: '请上传货比图片3',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+
+                //收藏商品店铺
+                // if (shop == 1) {
+                if ($("#input_scdpsp_pic1").val() == "") {
+                    api.toast({
+                        msg: '请上传收藏店铺图片',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                // }
+
+                // if (product == 1) {
+                if ($("#input_scdpsp_pic2").val() == "") {
+                    api.toast({
+                        msg: '请上传收藏商品图片',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                // }
+
+                //聊天和支付
+                // if (chat) {
+                if ($("#input_chatpay_pic1").val() == "") {
+                    api.toast({
+                        msg: '请上传聊天图片',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                // }
+
+                //购物车
+                // if (need) {
+                if (global_platform != 3) {
+                    if ($("#input_car_pic1").val() == "") {
+                        api.toast({
+                            msg: '请上传购物车图片',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                }
+                // }
+
+                // if (need) {
+                //浏览目标商品店铺
+                if ($("#input_lydpsp_pic1").val() == "") {
+                    api.toast({
+                        msg: '请上传浏览店铺图片',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                if ($("#input_lydpsp_pic2").val() == "") {
+                    api.toast({
+                        msg: '请上传浏览商品图片',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                // }
+
+                if ($("#input_chatpay_pic2").val() == "") {
+                    api.toast({
+                        msg: '请上传付款图片',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+
+                if (global_category_id < 100) {
+                    if ($("#input_platform_order").val().trim() == "") {
+                        api.toast({
+                            msg: '请输入订单号',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+
+                    // 判断订单号是否正确
+                    if (global_platform == 1) {
+                        var lastFourNumber_1 = getLastFourNumber(global_order_number);
+                        var lastFourNumber_2 = getLastFourNumber($("#input_platform_order").val());
+                        if (lastFourNumber_1 && lastFourNumber_2) {
+                            if (lastFourNumber_1 != lastFourNumber_2) {
+                                api.toast({
+                                    msg: '订单号不正确，请核对是否用接单的号下单，是否串号，或用错买号下单',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                return false;
+                            }
+                        } else {
+                            api.toast({
+                                msg: '订单号不正确，请核对是否用接单的号下单，是否串号，或用错买号下单',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                            return false;
+                        }
+                    }
+                }
+
+                if (global_category_id < 100) {
+                    if ($("#actual").val().trim() == "") {
+                        api.toast({
+                            msg: '请填写实付金额',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                }
+
+                if (global_category_id == 7) {
+                    if ($("#input_tkllb").val().trim() == "") {
+                        api.toast({
+                            msg: '请输入由您分享后的该商品的淘口令',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                }
+
+                var param = dataFrom("dataForm");
+                param["status"] = status;
+
+                api.ajax({
+                    url: myurl + '/index.php/User/Task/postorder/',
+                    method: 'post',
+                    data: {
+                        values: param
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (ret.status == 1) {
+                            // getOrder();
+                            api.closeWin({
+                                name: 'window_task_list_on'
+                            });
+
+                            var gotoTimer = setTimeout(function() {
+                                clearTimeout(gotoTimer);
+                                api.openWin({
+                                    name: 'window_task_list_on',
+                                    url: './window_task_list_on.html',
+                                    pageParam: {
+                                        name: 'window_task_list_on',
+                                        pt_id: global_platform,
+                                        task_progress: 1
+                                    }
+                                });
+                                api.closeWin({
+                                    name: 'window_task_detail'
+                                });
+                            }, 2000);
+
+                            var jsfun_order = 'getOrderNum()';
+                            api.execScript({
+                                name: 'window_task',
+                                frameName: 'frame_task',
+                                script: jsfun_order
+                            });
+                        }
+                    } else {
+                        api.toast({
+                            msg: '网络错误',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+
+            } else if (status == 4) //待发货
+            {
+                api.toast({
+                    msg: '请等待商家发货',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            } else if (status == 5 || status == 6) //待好评
+            {
+
+                if ($("#input_hp_pic1").val() == "") {
+                    api.toast({
+                        msg: '请上传好评截图1',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                if ($("#input_hp_pic2").val() == "") {
+                    api.toast({
+                        msg: '请上传好评截图2',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+                if (global_isNeed_electronic == 1) {
+                    if ($("#input_electronic").val().trim() == "") {
+                        api.toast({
+                            msg: '请输入电子凭证码',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    }
+                }
+
+                if (freeshopping == 1) {
+                    if ($("#input_yunfei").val() == "") {
+                        api.toast({
+                            msg: '请填写快递运费',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+                    } else if (isNaN($("#input_yunfei").val())) {
+
+                        api.toast({
+                            msg: '请填写快递运费，快递费为数字',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        return false;
+
+                    }
+                }
+
+                var param = dataFrom("dataForm");
+                param["status"] = status;
+
+                api.ajax({
+                    url: myurl + '/index.php/User/Task/postorder/',
+                    method: 'post',
+                    data: {
+                        values: param
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (ret.status == 1) {
+                            getOrder();
+
+                            var jsfun_order = 'getOrderNum()';
+                            api.execScript({
+                                name: 'window_task',
+                                frameName: 'frame_task',
+                                script: jsfun_order
+                            });
+                        }
+                    } else {
+                        api.toast({
+                            msg: '网络错误',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+
+            }
+        }
+
+        //申述订单
+        function postAppeal(id) {
+            api.openWin({
+                name: 'window_appeal_add',
+                url: './window_appeal_add.html',
+                pageParam: {
+                    name: 'window_appeal_add',
+                    id: id
+                }
+            });
+
+        }
+
+        //取消撤销订单
+        function postCancel(id, order_number) {
+            items = ['达不到商家备注要求', '商品找不到', '不想做了'];
+            api.actionSheet({
+                title: "撤销订单将可能影响完成率",
+                cancelTitle: '取消',
+                buttons: items
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.buttonIndex < 4) {
+                        api.showProgress();
+                        api.ajax({
+                            url: myurl + '/index.php/User/Task/ordercancel/',
+                            method: 'post',
+                            data: {
+                                values: {
+                                    username: $api.getStorage("username"),
+                                    userid: $api.getStorage("userid"),
+                                    id: id,
+                                    revoke: items[ret.buttonIndex - 1]
+                                }
+                            }
+                        }, function(ret, err) {
+                            api.hideProgress();
+                            if (ret) {
+                                api.toast({
+                                    msg: ret.msg,
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                                if (ret.status == 1) {
+                                    api.notification({
+                                        notify: {
+                                            title: '您撤销了订单',
+                                            content: '您主动撤销了订单编号为：' + order_number + '的订单！'
+                                        }
+                                    });
+
+                                    var jsfun = 'getList()';
+                                    api.execScript({
+                                        name: 'window_task_list_on',
+                                        frameName: 'frame_task_item_0',
+                                        script: jsfun
+                                    });
+
+                                    api.execScript({
+                                        name: 'window_account_taobao_info',
+                                        frameName: 'frame_account_taobao_info',
+                                        script: jsfun
+                                    });
+
+                                    var jsfun_order = 'getOrderNum()';
+                                    api.execScript({
+                                        name: 'window_task',
+                                        frameName: 'frame_task',
+                                        script: jsfun_order
+                                    });
+
+                                    var jsfun_Num = 'getTaskNum()';
+                                    api.execScript({
+                                        name: 'window_task_list_on',
+                                        script: jsfun_Num
+                                    });
+
+                                    setTimeout(function() {
+                                        api.closeWin();
+                                    }, 2000);
+                                }
+                            } else {
+                                api.toast({
+                                    msg: '网络错误',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function postHptimer(endtime, id) {
+            var time = Math.round(new Date().getTime() / 1000).toString();
+            intHpDiff = parseInt(endtime) - parseInt(time);
+            //alert(intHpDiff);
+            if (intHpDiff > 0) {
+                hp_ttt = window.setInterval(function() {
+                    var day = 0,
+                        hour = 0,
+                        minute = 0,
+                        second = 0; //时间默认值
+                    if (intHpDiff > 0) {
+                        $api.css($api.dom('.postHp'), 'background-color: #ccc; pointer-events: none');
+                        day = Math.floor(intHpDiff / (60 * 60 * 24));
+                        hour = Math.floor(intHpDiff / (60 * 60)) - (day * 24);
+                        minute = Math.floor(intHpDiff / 60) - (day * 24 * 60) - (hour * 60);
+                        second = Math.floor(intHpDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                        hour = day * 24 + hour;
+                        if (hour <= 9) {
+                            hour = '0' + hour;
+                        }
+                        if (minute <= 9) {
+                            minute = '0' + minute;
+                        }
+                        if (second <= 9) {
+                            second = '0' + second;
+                        }
+                        $('#' + id).html(hour + ":" + minute + ":" + second);
+                        intHpDiff--;
+                    } else {
+                        $api.css($api.dom('.postHp'), 'background-color: #04b848; pointer-events: auto');
+                        clearInterval(hp_ttt);
+                        $('#' + id).html("可提交好评");
+                    }
+                }, 1000);
+            } else {
+                $api.css($api.dom('.postHp'), 'background-color: #04b848; pointer-events: auto');
+                clearInterval(hp_ttt);
+                $('#' + id).html("可提交好评");
+            }
+        }
+
+        function nowTimer(endtime, id) {
+            var time = Math.round(new Date().getTime() / 1000).toString();
+            intNowDiff = parseInt(endtime) - parseInt(time);
+            if (intNowDiff > 0) {
+                now_ttt = window.setInterval(function() {
+                    var day = 0,
+                        hour = 0,
+                        minute = 0,
+                        second = 0; //时间默认值
+                    if (intNowDiff > 0) {
+                        $api.css($api.byId('post-order'), 'background-color: #ddd; color: #999; pointer-events: none');
+                        day = Math.floor(intNowDiff / (60 * 60 * 24));
+                        hour = Math.floor(intNowDiff / (60 * 60)) - (day * 24);
+                        minute = Math.floor(intNowDiff / 60) - (day * 24 * 60) - (hour * 60);
+                        second = Math.floor(intNowDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                        hour = day * 24 + hour;
+                        if (hour <= 9) {
+                            hour = '0' + hour;
+                        }
+                        if (minute <= 9) {
+                            minute = '0' + minute;
+                        }
+                        if (second <= 9) {
+                            second = '0' + second;
+                        }
+                        $('#' + id).html(hour + ":" + minute + ":" + second);
+                        intNowDiff--;
+                    } else {
+                        $api.css($api.byId('post-order'), 'background-color: #04b848; color: #fff; pointer-events: auto');
+                        clearInterval(now_ttt);
+                        $('#' + id).html("可提交订单");
+                    }
+                }, 1000);
+            } else {
+                $api.css($api.byId('post-order'), 'background-color: #04b848; color: #fff; pointer-events: auto');
+                clearInterval(now_ttt);
+                $('#' + id).html("可提交订单");
+            }
+        }
+
+        function timer(endtime, id) {
+            var time = Math.round(new Date().getTime() / 1000).toString();
+            intDiff = parseInt(endtime) - parseInt(time);
+            //alert(intDiff);
+            if (intDiff > 0) {
+                ttt = window.setInterval(function() {
+                    var day = 0,
+                        hour = 0,
+                        minute = 0,
+                        second = 0; //时间默认值
+                    if (intDiff > 0) {
+                        day = Math.floor(intDiff / (60 * 60 * 24));
+                        hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                        minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                        second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                        hour = day * 24 + hour;
+                        if (hour <= 9) {
+                            hour = '0' + hour;
+                        }
+                        if (minute <= 9) {
+                            minute = '0' + minute;
+                        }
+                        if (second <= 9) {
+                            second = '0' + second;
+                        }
+                        $('#' + id).html(hour + ":" + minute + ":" + second);
+                        intDiff--;
+                    } else {
+                        clearInterval(ttt);
+                        var jsfun = 'getList()';
+                        api.execScript({
+                            name: 'window_task_list_on',
+                            frameName: 'frame_task_item_0',
+                            script: jsfun
+                        });
+
+                        api.execScript({
+                            name: 'window_account_taobao_info',
+                            frameName: 'frame_account_taobao_info',
+                            script: jsfun
+                        });
+
+                        var jsfun_order = 'getOrderNum()';
+                        api.execScript({
+                            name: 'window_task',
+                            frameName: 'frame_task',
+                            script: jsfun_order
+                        });
+
+                        var jsfun_Num = 'getTaskNum()';
+                        api.execScript({
+                            name: 'window_task_list_on',
+                            script: jsfun_Num
+                        });
+
+                        $('#' + id).html("已结束");
+                        $("#orderbtns").hide();
+                    }
+                }, 1000);
+            } else {
+                clearInterval(ttt);
+                var jsfun = 'getList()';
+                api.execScript({
+                    name: 'window_task_list_on',
+                    frameName: 'frame_task_item_0',
+                    script: jsfun
+                });
+
+                api.execScript({
+                    name: 'window_account_taobao_info',
+                    frameName: 'frame_account_taobao_info',
+                    script: jsfun
+                });
+
+                var jsfun_order = 'getOrderNum()';
+                api.execScript({
+                    name: 'window_task',
+                    frameName: 'frame_task',
+                    script: jsfun_order
+                });
+
+                var jsfun_Num = 'getTaskNum()';
+                api.execScript({
+                    name: 'window_task_list_on',
+                    script: jsfun_Num
+                });
+
+                $('#' + id).html("已结束");
+                $("#orderbtns").hide();
+            }
+        }
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi;
+        }
+
+        //获取form数据
+        function dataFrom(id) {
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid"),
+                "id": api.pageParam.id,
+                "category_id": global_category_id,
+                "good_price": global_good_price,
+                "limitbuytime": global_limitbuytime,
+                "order_time": global_order_time,
+                "tkl_num_1": global_tkl_num_1,
+                "tkl_num_2": global_tkl_num_2,
+                "task_id": global_task_id
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function(i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+
+        function saveFile(url) {
+            // var timestamp = new Date().getTime();
+            api.showProgress();
+            api.download({
+                url: url,
+                // savePath: 'fs://test.rar',
+                report: false,
+                cache: false,
+                allowResume: true
+            }, function(ret, err) {
+                if (ret.state == 1) {
+                    api.saveMediaToAlbum({
+                        path: ret.savePath
+                    }, function(ret, err) {
+                        api.hideProgress();
+                        if (ret) {
+                            api.toast({
+                                msg: '视频已保存到本地',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        } else {
+                            api.toast({
+                                msg: '视频保存失败',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    });
+
+                } else {
+                    api.hideProgress();
+                    api.toast({
+                        msg: '下载失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function copyCouponName() {
+            //text为需要复制的文本
+            var text = $("#coupon-name").html();
+            var clipBoard = api.require('clipBoard');
+            clipBoard.set({
+                value: text
+            }, function(ret, err) {
+                if (ret) {
+                    alert("复制优惠券名称/网址成功");
+                } else {
+                    alert("复制优惠券名称/网址失败，请重试");
+                }
+            });
+        }
+
+        function copy() {
+            //text为需要复制的文本
+            var text = $("#taskkeyword").html();
+            var clipBoard = api.require('clipBoard');
+            clipBoard.set({
+                value: text
+            }, function(ret, err) {
+                if (ret) {
+                    alert("复制成功")
+                } else {
+                    alert("复制失败，请重试");
+                }
+            });
+        }
+
+        function checkShop() {
+            var dom = $api.byId('shop_all_name');
+            var value = dom.value;
+            if (value == global_dpqc) {
+                global_isCheck = 1;
+                $api.attr(dom, 'readonly', 'true');
+                $api.css($api.byId('checkShop_btn'), 'color: #fff; background-color: #ccc; pointer-events: none;');
+                api.toast({
+                    msg: '店铺全称核对正确',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else if (value == '') {
+                api.toast({
+                    msg: '请输入店铺全称',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else {
+                api.toast({
+                    msg: '店铺全称不正确',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        }
+
+        function checkUrl() {
+            var dom = $api.byId('url');
+            var value = $api.val($api.byId('url'));
+            if (value.trim() == '') {
+                api.toast({
+                    msg: '请输入商品链接',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            var isTao = 0;
+            if (/.*[\u4e00-\u9fa5]+.*$/.test(value)) {
+                // 是淘口令
+                isTao = 1;
+                value = value.slice(0, 30);
+            } else {
+                // 不是淘口令
+                isTao = 0;
+            }
+
+            // var isTao = 0;
+            // if (/.*[\u4e00-\u9fa5]+.*$/.test(value)) {
+            //     // 是淘口令
+            //     isTao = 1;
+            //     var index = value.lastIndexOf('后');
+            //     if (index == -1) {
+            //         index = value.lastIndexOf('移步到');
+            //     }
+            //     if (index == -1) {
+            //         index = value.lastIndexOf('转移至');
+            //     }
+            //     if (index > -1) {
+            //         index = index - 13;
+            //         value = value.substring(index, index + 13);
+            //     } else {
+            //         api.toast({
+            //             msg: '淘口令有误，请重新输入',
+            //             duration: 2000,
+            //             location: 'bottom'
+            //         });
+            //         return;
+            //     }
+            // } else {
+            //     // 不是淘口令
+            //     isTao = 0;
+            // }
+
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Integral/check_passwords/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        url: value,
+                        task_id: global_task_id,
+                        platform: isTao,
+                        platform_id: global_platform_id,
+                        index: 1
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (ret.status == 1) {
+                        global_isCheck_url = 1;
+                        $api.attr(dom, 'readonly', 'true');
+                        $api.css($api.byId('checkUrl_btn'), 'color: #fff; background-color: #ccc; pointer-events: none;');
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function checkAnswer() {
+            if (global_answer != '') {
+                if ($("#isQuestions").val().trim() == "") {
+                    api.toast({
+                        msg: '请填写商品详情问答',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+
+                if ($("#isQuestions").val() != global_answer) {
+                    api.toast({
+                        msg: '商品详情问答不正确',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                } else {
+                    api.toast({
+                        msg: '商品详情问答核对成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    global_isCheck_answer = 1;
+                    $api.attr($api.byId('isQuestions'), 'readonly', 'true');
+                    $api.css($api.byId('checkAnswer_btn'), 'color: #fff; background-color: #ccc; pointer-events: none;');
+                }
+            }
+        }
+
+        function clearNoNum(obj) {
+            obj.value = obj.value.replace(/[^\d.]/g, ""); //清除"数字"和"."以外的字符
+            obj.value = obj.value.replace(/^\./g, ""); //验证第一个字符是数字而不是
+            obj.value = obj.value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+            obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+            obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3'); //只能输入两个小数
+        }
+
+        function getLastFourNumber(str) {
+            var len = str.length;
+            var newStr = str.substr(len - 4, len);
+            return newStr;
+        }
+
+        function getFKTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            // return y + "-" + m + "-" + d + ' ' + h + ':' + mi;
+            return y + "-" + m + "-" + d;
+        }
+
+        function closeTips() {
+            $api.css($api.byId('ys-box'), 'display: none');
+        }
+
+        function openFeedBackLayer(id, tips) {
+            var dialogBox = api.require('dialogBox');
+            dialogBox.alert({
+                texts: {
+                    title: '是否反馈',
+                    content: tips,
+                    leftBtnTitle: '取消',
+                    rightBtnTitle: '确定'
+                },
+                styles: {
+                    bg: '#fff',
+                    w: 300,
+                    corner: 2,
+                    title: {
+                        marginT: 20,
+                        icon: 'widget://res/gou.png',
+                        iconSize: 40,
+                        titleSize: 14,
+                        titleColor: '#000'
+                    },
+                    content: {
+                        color: '#000',
+                        size: 14
+                    },
+                    left: {
+                        marginB: 7,
+                        marginL: 20,
+                        w: 130,
+                        h: 35,
+                        corner: 2,
+                        bg: '#f2f2f2',
+                        color: '#666',
+                        size: 12
+                    },
+                    right: {
+                        marginB: 7,
+                        marginL: 10,
+                        w: 130,
+                        h: 35,
+                        corner: 2,
+                        bg: '#04b848',
+                        color: '#ffffff',
+                        size: 12
+                    }
+                }
+            }, function(ret) {
+                var dialogBox = api.require('dialogBox');
+                dialogBox.close({
+                    dialogName: 'alert'
+                });
+
+                if (ret.eventType == 'right') {
+                    postFeedBack(id);
+                }
+            });
+        }
+
+        function postFeedBack(id) {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/findordernumber/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        api.toast({
+                            msg: '本金未到账已反馈',
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                        $api.removeCls($api.byId('feedback-btn'), 'feedback-active');
+                        $api.removeAttr($api.byId('feedback-btn'), 'onclick');
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

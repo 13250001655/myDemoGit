@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="backList()"><span>&#xe606;</span>订单详情</a>
+    </header>
+    <div class="task_detail">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_task_detail',
+                url: './frame_task_detail.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: api.frameHeight - 50 - h
+                },
+                pageParam: {
+                    name: 'frame_task_detail.html',
+                    id: api.pageParam.id
+                },
+                allowEdit: true,
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+        }
+
+        function backList() {
+            var jsfun = 'getList()';
+            api.execScript({
+                name: 'window_task_list_on',
+                frameName: 'frame_task_item_0',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'window_task_list_on',
+                frameName: 'frame_task_item_1',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'window_task_list_on',
+                frameName: 'frame_task_item_2',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'window_task_list_on',
+                frameName: 'frame_task_item_3',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'window_task_list_on',
+                frameName: 'frame_task_item_4',
+                script: jsfun
+            });
+            var jsfun_Num = 'getTaskNum()';
+            api.execScript({
+                name: 'window_task_list_on',
+                script: jsfun_Num
+            });
+            api.closeWin();
+        }
+    </script>
+</body>
+
+</html>

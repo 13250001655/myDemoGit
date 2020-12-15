@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>版本信息</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    body{ background: #fff;}
+    </style>
+</head>
+<body>
+<div id="header"></div>
+<header class="head2">
+    <a class="left" tapmode onclick="api.closeWin();"><span>&#xe606;</span>版本信息</a>
+</header>
+<div class="versionbox">
+    <div class="tit">
+        <img src="../icon/icon150x150.png" width="80"><p>当前版本:1.0</p>
+    </div>
+    <div class="con">
+        <p class="t1">版本介绍</p>
+        <p>1、IOS用户注意一定要打开推送提醒，避免错过订单，因超时自动撤销的订单会扣除手续费</p>
+        <p>2、操作订单时注意要按照平台的要求做订单，可以查看常见问题及操作示例学习，不按照要求乱作订单会影响到自己账号的质量并且也会影响到商家店铺及商品，平台会视情节严重成都给予扣除佣金、冻结买号或直接封号的处罚，希望买手遵守规则，大家互赢一起赚钱。</p>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+      var header = document.querySelector('#header');
+      $api.fixStatusBar(header);
+      var h=$api.offset(document.querySelector('#header')).h;
+    };
+
+</script>

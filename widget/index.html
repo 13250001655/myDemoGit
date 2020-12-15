@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>桃花谷首页</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <style>
+        html,
+        body {
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <div id="header"> </div>
+        <div id="mainer" class="flex-con">
+            <div class="accept-task-btn" id="accept-task-btn">
+                <input type="button" id="jiedan" value="接单" tapmode onclick="isBindCert()">
+            </div>
+        </div>
+        <div id="footer">
+            <ul class="clearfix">
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" to="index" class="active"><span>&#xe625;</span>首页</li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" to="user" class=""><span>&#xe61d;<p id="tip-circle"></p></span>我的</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = document.querySelector('#header');
+        $api.fixStatusBar(header);
+        if (api.pageParam.goto == "appeal") {
+            gotoFrame("appeal");
+        } else {
+            gotoFrame("index");
+        }
+
+        confirmPer_1('contacts');
+    }
+
+    function isBindCert() {
+        api.ajax({
+            url: myurl + '/index.php/User/Account/postcert_status/',
+            method: 'post',
+            data: {
+                values: {
+                    username: $api.getStorage("username"),
+                    userid: $api.getStorage("userid")
+                }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                var status = ret.status;
+                if (status == 1) {
+                    api.openWin({
+                        name: 'window_account_taobao_info',
+                        url: './html/window_account_taobao_info.html',
+                        pageParam: {
+                            name: 'window_account_taobao_info'
+                        }
+                    });
+                } else {
+                    confirmPer('contacts');
+                }
+            } else {
+                api.toast({
+                    msg: '网络错误',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+    function confirmPer(perm) {
+        var has = hasPermission(perm);
+        if (!has || !has[0] || !has[0].granted) {
+            api.confirm({
+                title: '提醒',
+                msg: '没有获得' + '通讯录' + "权限\n是否前往设置？",
+                buttons: ['去设置', '取消']
+            }, function(ret, err) {
+                if (1 == ret.buttonIndex) {
+                    reqPermission(perm);
+                }
+            });
+            return false;
+        }
+        api.openWin({
+            name: 'window_account_cert',
+            url: './html/window_account_cert.html',
+            pageParam: {
+                name: 'window_account_cert'
+            }
+        });
+        return true;
+    }
+
+    function hasPermission(one_per) {
+        var perms = new Array();
+        if (one_per) {
+            perms.push(one_per);
+        } else {
+            var prs = document.getElementsByName("p_list");
+            for (var i = 0; i < prs.length; i++) {
+                if (prs[i].checked) {
+                    perms.push(prs[i].value);
+                }
+            }
+        }
+        var rets = api.hasPermission({
+            list: perms
+        });
+        if (!one_per) {
+            return;
+        }
+        return rets;
+    }
+
+    function reqPermission(one_per) {
+        var perms = new Array();
+        if (one_per) {
+            perms.push(one_per);
+        } else {
+            var prs = document.getElementsByName("p_list_r");
+            for (var i = 0; i < prs.length; i++) {
+                if (prs[i].checked) {
+                    perms.push(prs[i].value);
+                }
+            }
+        }
+        api.requestPermission({
+            list: perms,
+            code: 100001
+        }, function(ret, err) {
+            if (ret['list'][0]['granted']) {
+                getContatcs();
+                api.openWin({
+                    name: 'window_account_cert',
+                    url: './html/window_account_cert.html',
+                    pageParam: {
+                        name: 'window_account_cert'
+                    }
+                });
+            }
+        });
+    }
+
+    function gotoFrame(to) {
+        var h = $api.offset(document.querySelector('#header')).h;
+        api.openFrame({
+            name: 'frame_' + to,
+            url: './html/frame_' + to + '.html',
+            rect: {
+                x: 0,
+                y: h,
+                w: "auto",
+                h: $api.dom('#mainer').offsetHeight - 40
+            },
+            pageParam: {
+                name: 'frame_' + to,
+                h: h
+            },
+            bounces: false,
+            // reload: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false
+        });
+
+        if (to == 'index') {
+            var jsfun = 'getIndex()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun
+            });
+            var jsfun_1 = 'getUnreadAmount()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun_1
+            });
+        } else if (to == 'user') {
+            var jsfun = 'getIndex()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun
+            });
+            var jsfun_1 = 'getUnreadAmount()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun_1
+            });
+            var jsfun_2 = 'getAppealNum()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun_2
+            });
+        }
+    }
+
+    function randomSwitchBtn(tag) {
+        if (tag == $api.dom('#footer li.active')) return;
+        var eFootLis = $api.domAll('#footer li'),
+            index = 0;
+        for (var i = 0, len = eFootLis.length; i < len; i++) {
+            if (tag == eFootLis[i]) {
+                index = i;
+            } else {
+                $api.removeCls(eFootLis[i], 'active');
+            }
+        }
+
+        $api.addCls(eFootLis[index], 'active');
+        var to = $api.attr(eFootLis[index], 'to');
+        gotoFrame(to);
+    }
+
+    // 获取通讯录
+    function confirmPer_1(perm) {
+        var has = hasPermission_1(perm);
+        if (!has || !has[0] || !has[0].granted) {
+            return false;
+        }
+        getContatcs();
+        return true;
+    }
+
+    function hasPermission_1(one_per) {
+        var perms = new Array();
+        if (one_per) {
+            perms.push(one_per);
+        } else {
+            var prs = document.getElementsByName("p_list");
+            for (var i = 0; i < prs.length; i++) {
+                if (prs[i].checked) {
+                    perms.push(prs[i].value);
+                }
+            }
+        }
+        var rets = api.hasPermission({
+            list: perms
+        });
+        if (!one_per) {
+            // alert('判断结果：' + JSON.stringify(rets));
+            return;
+        }
+        return rets;
+    }
+
+    // 获得手机通讯录的联系人
+    function getContatcs() {
+        var DVContacts = api.require('DVContacts');
+        DVContacts.allContacts(function(ret, err) {
+            if (ret) {
+                var allContacts = ret['contacts'];
+                if (allContacts && allContacts.length > 0) {
+                    var allContactsArr = [];
+                    for (var i = 0; i < allContacts.length; i++) {
+                        if ((allContacts[i]['fullName'] || allContacts[i]['company']) && allContacts[i]['phones'][0]) {
+                            var allContactsObj = {};
+                            allContactsObj['name'] = $api.trim(allContacts[i]['fullName'] ? allContacts[i]['fullName'] : allContacts[i]['company']);
+                            var phones = allContacts[i]['phones'][0];
+                            for (var key in phones) {
+                                allContactsObj['phone'] = $api.trimAll(phones[key]);
+                            }
+                            allContactsArr.push(allContactsObj);
+                        }
+                    };
+
+                    sendContatcs(allContactsArr);
+                }
+            } else {
+                // console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+    function sendContatcs(allContactsArr) {
+        api.ajax({
+            url: myurl + '/index.php/User/Task/mail_list/',
+            method: 'post',
+            data: {
+                values: {
+                    username: $api.getStorage("username"),
+                    userid: $api.getStorage("userid"),
+                    arr: allContactsArr
+                }
+            }
+        }, function(ret, err) {
+            if (ret) {} else {}
+        });
+    }
+
+    setInterval(function() {
+        resetTaskStatus();
+    }, 60000);
+
+    function resetTaskStatus() {
+        api.ajax({
+            url: myurl + '/index.php/User/Integral/order_time',
+            method: 'post',
+            data: {
+                values: {
+                    username: $api.getStorage("username"),
+                    userid: $api.getStorage("userid")
+                }
+            }
+        }, function(ret, err) {
+
+        });
+    }
+</script>

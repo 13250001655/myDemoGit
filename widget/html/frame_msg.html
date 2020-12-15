@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>消息列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="con" class="msg_con">
+        <ul id="msglist">
+            <!-- <li >
+           <p class="t1"><span>2019-10-10</span>佣金提现：100</p>
+           <p class="t2">状态：待审核</p>
+           <p class="t2">原因：大师傅士大夫是</p>
+       </li> -->
+        </ul>
+        <!-- <div class="nodata"></div> -->
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getList();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Pay/gettxlist/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    var str = "";
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+
+                            str = str + '<li >';
+                            if (data[i]["tixian_type"] == 1) {
+                                str = str + '<p class="t1"><span>' + getLocalTime(data[i]["create_time"]) + '</span>佣金提现：' + data[i]["price"] + '金</p>';
+                            } else {
+                                str = str + '<p class="t1"><span>' + getLocalTime(data[i]["create_time"]) + '</span>本金提现：' + data[i]["price"] + '金</p>';
+                            }
+
+                            if (data[i]["status"] == 1) {
+                                str = str + '<p class="t2">状态：已转款</p>';
+                            } else if (data[i]["status"] == -1) {
+                                str = str + '<p class="t2">状态：未通过</p>';
+                            } else {
+                                str = str + '<p class="t2">状态：待审核</p>';
+                            }
+                            if (!isempty(data[i]["admin_remark"])) {
+                                str = str + '<p class="t2">原因：' + data[i]["admin_remark"] + '</p>';
+                            }
+                            str = str + '</li>';
+                        }
+
+                        $api.html($api.byId('msglist'), str);
+                    } else {
+                        $api.html($api.byId('msglist'), "<li>暂无数据！</li>");
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi;
+        }
+    </script>
+</body>
+
+</html>

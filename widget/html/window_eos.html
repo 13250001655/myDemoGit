@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>截图示例</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="api.closeWin();"><span>&#xe606;</span>截图示例</a>
+    </header>
+    <img src="" id="eos" />
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function () {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+
+            var eos = $api.byId('eos');
+            if (api.pageParam.pt_no == 1) {
+                $api.attr(eos, 'src', '../image/tb-eos.jpg');
+            } else if (api.pageParam.pt_no == 2) {
+                $api.attr(eos, 'src', '../image/jd-eos.jpg');
+            } else if (api.pageParam.pt_no == 3) {
+                $api.attr(eos, 'src', '../image/pdd-eos.jpg');
+            }
+        }
+    </script>
+</body>
+
+</html>

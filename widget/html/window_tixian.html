@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>提现申请</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            /*background-color: #fff;*/
+        }
+
+        .head2 .see-tixiandetail {
+            float: right;
+            font-size: 16px;
+            line-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2 clearfix">
+        <a class="left" tapmode onclick="backIndex();"><span>&#xe606;</span>提现申请</a>
+        <div class="see-tixiandetail" tapmode onclick="openTixianDetail();">提现进度</div>
+    </header>
+    <div class="tixian">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            // NVNavigationBar_open();
+            openFrame();
+        };
+
+        function openTixianDetail() {
+            api.openWin({
+                name: 'window_msg',
+                url: './window_msg.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_msg'
+                }
+            });
+        }
+
+        function openFrame() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_tixian_yongjin',
+                url: './frame_tixian_yongjin.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: "auto"
+                },
+                pageParam: {
+                    name: 'frame_tixian_yongjin'
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+        }
+
+        // function NVNavigationBar_open() {
+        //     var items = [{
+        //         title: '佣金提现',
+        //         bg: '#ffffff',
+        //         // bgSelected: '#04b848'
+        //     }, {
+        //         title: '本金提现',
+        //         bg: '#ffffff',
+        //         // bgSelected: '#04b848'
+        //     }];
+        //
+        //     var header = document.querySelector('#header');
+        //     $api.fixStatusBar(header);
+        //     var h = $api.offset(document.querySelector('#header')).h;
+        //
+        //     var navigationBar = api.require('NVNavigationBar');
+        //     navigationBar.open({
+        //         rect: {
+        //             x: 0,
+        //             y: h + 50,
+        //             w: api.frameWidth,
+        //             h: 40,
+        //         },
+        //         styles: {
+        //             orientation: 'horizontal',
+        //             bg: '',
+        //             bgAlpha: 1,
+        //             font: {
+        //                 size: 20,
+        //                 sizeSelected: 20,
+        //                 color: '#333333',
+        //                 colorSelected: '#04b848',
+        //                 alpha: 1,
+        //                 bold:true
+        //             },
+        //             itemSize: {
+        //                 w: api.winWidth / 2,
+        //             }
+        //         },
+        //         items: items,
+        //         fixedOn: api.frameName,
+        //         id: 'tixian_group',
+        //         selectedIndex: api.pageParam.tixianType,
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             if (ret.eventType == 'click') {
+        //                 fnsetFrameGroupIndex('tixian_group', ret.index);
+        //             }
+        //         } else {}
+        //     });
+        // }
+        //
+        // function openFrame() {
+        //     var header = document.querySelector('#header');
+        //     $api.fixStatusBar(header);
+        //     var h = $api.offset(document.querySelector('#header')).h;
+        //
+        //     api.openFrameGroup({
+        //         name: 'tixian_group',
+        //         rect: {
+        //             x: 0,
+        //             y: 90 + h,
+        //             w: "auto",
+        //             h: "auto"
+        //         },
+        //         preload: 0,
+        //         index: api.pageParam.tixianType,
+        //         scrollEnabled: true,
+        //         bounces: false,
+        //         frames: [{
+        //             name: 'frame_tixian_yongjin',
+        //             url: 'frame_tixian_yongjin.html',
+        //             pageParam: {
+        //                 name: 'frame_tixian_yongjin'
+        //             },
+        //             // bounces: true,
+        //             // customRefreshHeader: 'UIPullRefresh'
+        //         }, {
+        //             name: 'frame_tixian_benjin',
+        //             url: 'frame_tixian_benjin.html',
+        //             pageParam: {
+        //                 name: 'frame_tixian_benjin'
+        //             },
+        //             // bounces: true,
+        //             // customRefreshHeader: 'UIPullRefresh'
+        //         }]
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             if (ret.index > -1) {
+        //                 fnNvnsetSelected(ret.index);
+        //             }
+        //         } else {
+        //             alert(JSON.stringify(err));
+        //         }
+        //     });
+        // }
+        //
+        // function fnNvnsetSelected(index) {
+        //     var NVNavigationBar = api.require('NVNavigationBar');
+        //     NVNavigationBar.setSelected({
+        //         id: 'tixian_group',
+        //         index: index,
+        //         selected: true,
+        //         reload: true
+        //     }, function(ret) {
+        //
+        //     });
+        // }
+        //
+        // function fnsetFrameGroupIndex(name, index) {
+        //     api.setFrameGroupIndex({
+        //         name: name,
+        //         index: index,
+        //         scroll: true,
+        //         reload: true
+        //     });
+        // }
+
+        function backIndex() {
+            api.closeWin();
+            var jsfun = 'getIndex()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun
+            });
+
+            var jsfun_1 = 'getUnreadAmount()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun_1
+            });
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun_1
+            });
+        }
+    </script>
+</body>
+
+</html>

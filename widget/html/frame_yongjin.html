@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>佣金明细</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pricebox1 clearfix">
+        <p class="t1">佣金账户（金）</p>
+        <p class="t2" id="price">0.00</p>
+    </div>
+    <div class="pricedetail">
+
+    </div>
+    <div class="pricedetail_h">
+        <p>本月</p>
+        <p>明细</p>
+    </div>
+    <div id="con" class="pricedetail_c">
+        <ul id="pricelist">
+            <!-- <li></li> -->
+        </ul>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getList();
+            getPrice();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#ccc',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList();
+                getPrice();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function getPrice() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getmember/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        $api.html($api.byId("price"), data.yongjin_price);
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getyongjinlist',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    //alert(ret);
+                    var data = ret.data;
+                    var str = "";
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var remark = data[i]["remark"];
+                            var remarkArr = remark.split('，');
+                            remarkArr.splice(1, 1);
+                            if (data[i]["type"] < 100) {
+                                if (data[i]['admin_remark']) {
+                                    str = str + '<li><p>' + getLocalTime(data[i]["create_time"]) + '</p><p>+' + Math.abs(data[i]["price"]) + '</p><p class="x">' + remarkArr.join('，') + '</p><p style="font-size: 12px; color: #f00;">' + data[i]
+                                        ['admin_remark'] + '</p></li>';
+                                } else {
+                                    str = str + '<li><p>' + getLocalTime(data[i]["create_time"]) + '</p><p>+' + Math.abs(data[i]["price"]) + '</p><p class="x">' + remarkArr.join('，') + '</p></li>';
+                                }
+                            } else {
+                                if (data[i]['admin_remark']) {
+                                    str = str + '<li><p>' + getLocalTime(data[i]["create_time"]) + '</p><p>-' + Math.abs(data[i]["price"]) + '</p><p class="x">' + remarkArr.join('，') + '</p><p style="font-size: 12px; color: #f00;">' + data[i]
+                                        ['admin_remark'] + '</p></li>';
+                                } else {
+                                    str = str + '<li><p>' + getLocalTime(data[i]["create_time"]) + '</p><p>-' + Math.abs(data[i]["price"]) + '</p><p class="x">' + remarkArr.join('，') + '</p></li>';
+                                }
+                            }
+                        }
+
+                        $api.html($api.byId('pricelist'), str);
+                    } else {
+                        $api.html($api.byId('pricelist'), "<li>暂无数据！</li>");
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi;
+        }
+    </script>
+</body>
+
+</html>

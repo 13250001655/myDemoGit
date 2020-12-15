@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>消息列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    body{background:#fff; height:auto;}
+    </style>
+</head>
+<body>
+<form id="dataForm">
+<ul class="appealaddlist">
+    <li>
+      <textarea id="content" name="content" placeholder="请简单填写内容"></textarea>
+    </li>
+    <li>
+      <div class="pic_l" tapmode onclick="showAction('上传申诉图片1','picture1')"><img id="picture1" src="../image/file-img.png" /></div>
+      <input type="hidden" name="picture1" id="input_picture1">
+      <div class="pic_l" tapmode onclick="showAction('上传申诉图片2','picture2')"><img id="picture2" src="../image/file-img.png" /></div>
+      <input type="hidden" name="picture2" id="input_picture2">
+    </li>
+</ul>
+<div class="accountbtn"><input type="button" id="dobtn" tapmode onclick="postAppealMsg()" value="提交"/></div>
+</form>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.min.js"></script>
+<script>
+apiready=function(){
+    //alert(api.pageParam.id);
+}
+function postAppealMsg()
+{
+  var content=$api.byId('content').value;
+  if(content.length==0)
+  {
+    api.toast({
+        msg: '请输入内容',
+        duration: 2000,
+        location: 'bottom'
+    });
+    return false;
+  }
+  api.showProgress();
+  var param=dataFrom("dataForm");
+  param["id"]=api.pageParam.id;
+  param["order_id"]=api.pageParam.order_id;
+   api.ajax({
+       url: myurl+'/index.php/User/Appeal/postappealmsg/',
+       method: 'post',
+       data: {
+           values:param
+       }
+   },function(ret, err){
+       api.hideProgress();
+       if (ret) {
+
+           api.toast({
+               msg: ret.msg,
+               duration: 2000,
+               location: 'bottom'
+           });
+           if(ret.status==1)
+           {
+               setTimeout(function(){
+                  api.closeWin();
+                  var jsfun = 'getShow();';
+                  api.execScript({
+                      name: 'window_appeal_detail',
+                      frameName: 'frame_appeal_detail',
+                      script: jsfun
+                  });
+               },2000);
+           }
+       } else {
+           //alert( JSON.stringify( err ) );
+           api.toast({
+               msg: '网络错误',
+               duration: 2000,
+               location: 'bottom'
+           });
+
+       }
+   });
+
+}
+
+//获取form数据
+function dataFrom(id)
+{
+    var values={"username":$api.getStorage("username"),"userid":$api.getStorage("userid")};
+    var data = $('#'+id).serializeArray();
+    $.each(data,function(i,v){
+        var key=v.name,value=v.value;
+        if(values[key])
+        {
+           values[key]=values[key]+','+value;
+        }
+        else {
+           values[key]=value;
+        }
+    });
+    return values;
+}
+</script>
+</body>
+</html>

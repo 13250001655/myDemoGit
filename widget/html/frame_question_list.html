@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>问题分类</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+            min-height: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="qsearch">
+        <div class="con"><input type="text" id="keyword" placeholder="简单输入问题，如：找回密码" class="input" oninput="keyIpt(this);"><input type="button" id="dosearch" tapmode onclick="search()" value="&#xe6e3;" class="btn"></div>
+    </div>
+    <div class="questionbox4">
+        <ul id="newslist">
+            <!-- <li>
+                <div class="tit" tapmod><span>&#xe668;</span>1、如何才能找回密码呢？</div>
+                <div class="con">
+                    如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢如何才能找回密码呢
+                </div>
+            </li> -->
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function() {
+            getList();
+        }
+
+        function keyIpt(self) {
+            if (self.value == '') {
+                getList();
+            }
+        }
+
+        //搜索
+        function search() {
+            var self = $api.byId('keyword');
+            var value = $api.val(self);
+            if (value.trim() == '') {
+                api.toast({
+                    msg: '请输入要搜索的问题',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (value.trim().length < 2) {
+                api.toast({
+                    msg: '输入的内容不得少于2个字',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/user/Api/get_problem',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        cid: api.pageParam.cid,
+                        title: value.trim()
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    if (data.length > 0) {
+                        var str = "";
+                        for (var i = 0; i < data.length; i++) {
+                            str += "<li><div class='tit' tapmode onclick='toggle(this)'><span>&#xe668;</span>" + (i + 1) + "、" + data[i]["title"] + "</div><div class='con'>" + data[i]["content"] + "</div></li>";
+                        }
+                        $api.html($api.byId('newslist'), str);
+                    } else {
+                        api.toast({
+                            msg: '抱歉，暂未搜索到内容...',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        // function showCon(self) {
+        //     var tit = self;
+        //     var con = tit.parentNode.children[1];
+        //     if (con.style.display === 'block') {
+        //         con.style.display = 'none';
+        //         tit.getElementsByTagName('span')[0].innerHTML = '&#xe668;';
+        //     } else {
+        //         con.style.display = 'block';
+        //         tit.getElementsByTagName('span')[0].innerHTML = '&#xe669;';
+        //     }
+        // }
+
+        //获取数据
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getlist/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        news_cid: api.pageParam.cid
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    if (data.length > 0) {
+                        var str = "";
+                        for (var i = 0; i < data.length; i++) {
+                            str += "<li><div class='tit' tapmode onclick='toggle(this)'><span>&#xe668;</span>" + (i + 1) + "、" + data[i]["title"] + "</div><div class='con'>" + data[i]["content"] + "</div></li>";
+                        }
+                        $api.html($api.byId('newslist'), str);
+                    } else {
+                        $api.html($api.byId('newslist'), "<li><div class='tit'>暂无数据！</div></li>");
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function toggle(self) {
+            $(self).parent().find(".con").toggle();
+            if (!$(self).parent().find(".con").is(":hidden")) {
+                $(self).find("span").html("&#xe669;");
+            } else {
+                $(self).find("span").html("&#xe668;");
+            }
+        }
+    </script>
+</body>
+
+</html>

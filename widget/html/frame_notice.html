@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="con" class="notice_con">
+        <ul id="noticelist">
+            <!-- <li onclick="openNoticeDetail(1)">
+           <p class="t1"><i>平台清权降号公告</i></p>
+           <p class="t2">2019-04-20</p>
+       </li> -->
+        </ul>
+    </div>
+    <p class="nodata-tips">没有更多数据了~</p>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getList();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList()
+                    //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        //获取数据
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getlist/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        news_cid: 1
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    //alert(ret);
+                    var data = ret.data;
+                    var str = "";
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            str = str + '<li tapmode onclick="openNoticeDetail(' + data[i]["id"] + ')">';
+
+                            if (data[i]['is_read']) {
+                                // 已读
+                                str = str + '<p class="t1"><i>' + data[i]["title"] + '</i></p>';
+                            } else {
+                                // 未读
+                                str = str + '<p class="t1"><i>' + data[i]["title"] + '</i><i class="newin">new</i></p>';
+                            }
+
+                            str = str + '<p class="t2">' + getLocalTime(data[i]["create_time"]) + '</p>';
+                            str = str + '</li>';
+                        }
+
+                        $api.html($api.byId('noticelist'), str);
+                    } else {
+                        $api.html($api.byId('noticelist'), "<li><div class='tit'>暂无数据！</div></li>");
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function openNoticeDetail(newsid) {
+            api.openWin({
+                name: 'window_notice_detail',
+                url: './window_notice_detail.html',
+                pageParam: {
+                    name: 'window_notice_detail',
+                    id: newsid,
+                    isShow: 0
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+            s = time.getSeconds();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            if (s < 10) {
+                s = "0" + s;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi + ':' + s;
+        }
+    </script>
+</body>
+
+</html>

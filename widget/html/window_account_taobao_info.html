@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>平台账号</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .head2 .bind-account {
+            float: right;
+            font-size: 16px;
+            line-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2 clearfix">
+        <a class="left" tapmode onclick="closeInfo();"><span>&#xe606;</span>平台账号</a>
+        <div class="bind-account" tapmode onclick="openBindAccount();">绑定账号</div>
+    </header>
+    <div class="info">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_account_taobao_info',
+                url: './frame_account_taobao_info.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: api.frameHeight - 50 - h
+                },
+                pageParam: {
+                    name: 'frame_account_taobao_info'
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+
+        }
+
+        function closeInfo() {
+            api.closeWin();
+        }
+
+        function openBindAccount() {
+            api.openWin({
+                name: 'window_account',
+                url: './window_account.html',
+                pageParam: {
+                    name: 'window_account'
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

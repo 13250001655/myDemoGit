@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>问题分类</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    body{background:#fff; height:auto;}
+    </style>
+</head>
+<body>
+<div class="question_h"><img src="../image/question_head_bg.jpg"/></div>
+<div id="category">
+    <!-- <div class="questionbox3">
+        <div class="tit">账户注册</div>
+        <div class="con">
+            <a>注册</a>
+            <a>验证码</a>
+            <a>安全</a>
+            <a>注销账户</a>
+            <a>注册</a>
+            <a>注册</a>
+        </div>
+    </div> -->
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script>
+apiready=function(){
+   getCategory();
+}
+function getCategory()
+{
+   api.showProgress();
+   api.ajax({
+       url: myurl+'/index.php/User/Api/getcategory/',
+       method: 'post',
+       data: {
+           values: {
+             username:$api.getStorage("username"),
+             userid:$api.getStorage("userid"),
+             news_cid:api.pageParam.cid
+           }
+       }
+   },function(ret, err){
+       api.hideProgress();
+       if (ret) {
+           var data=ret.data;
+           var str="";
+           if(data.length>0)
+           {
+               for (var i = 0; i < data.length; i++) {
+                  str=str+"<div class='questionbox3'>";
+                      str=str+"<div class='tit'>"+data[i]["name"]+"</div>";
+                      str=str+"<div class='con'>";
+                      var zdata=data[i]["data"];
+                      for (var x = 0; x < zdata.length; x++) {
+                          str=str+"<a tapmode onclick='openList("+zdata[x]["id"]+")'>"+zdata[x]["name"]+"</a>";
+                      }
+                      str=str+"</div>";
+                  str=str+"</div>";
+               }
+               $api.html($api.byId('category'), str);
+           }
+           else {
+             $api.html($api.byId('category'), '暂无数据！');
+           }
+
+       } else {
+           api.toast({
+               msg: '网络错误',
+               duration: 2000,
+               location: 'bottom'
+           });
+
+       }
+   });
+
+}
+
+function openList(news_cid)
+{
+  api.openWin({
+      name: 'window_question_list',
+      url: './window_question_list.html',
+      pageParam: {
+          name: 'window_question_list',
+          cid:news_cid
+      }
+  });
+}
+</script>
+</body>
+</html>

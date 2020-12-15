@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>端API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .tip-circle {
+            display: none;
+            float: right;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #f00;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="taskbox">
+        <div class="tit">垫付任务</div>
+        <div class="ftit">淘宝</div>
+        <ul>
+            <li tapmode onclick="openTaskOn(1)">
+                <span class="p1">&#xe6b7;</span>
+                <div>未完成</div>
+                <span class="task-num" id="tb-wei"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+            <li tapmode onclick="openTaskSuccess(1)">
+                <span class="p1">&#xe6b6;</span>
+                <div>已完成</div>
+                <span class="task-num" id="tb-wan"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+            <li tapmode onclick="openTaskCancel(1)">
+                <span class="p1">&#xe6b8;</span>
+                <div>已撤销</div>
+                <span class="task-num" id="tb-che"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+        </ul>
+        <div class="ftit">京东</div>
+        <ul>
+            <li tapmode onclick="openTaskOn(2)">
+                <span class="p1">&#xe6b7;</span>
+                <div>未完成</div>
+                <span class="task-num" id="jd-wei"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+            <li tapmode onclick="openTaskSuccess(2)">
+                <span class="p1">&#xe6b6;</span>
+                <div>已完成</div>
+                <span class="task-num" id="jd-wan"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+            <li tapmode onclick="openTaskCancel(2)">
+                <span class="p1">&#xe6b8;</span>
+                <div>已撤销</div>
+                <span class="task-num" id="jd-che"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+        </ul>
+        <div class="ftit">拼多多</div>
+        <ul>
+            <li tapmode onclick="openTaskOn(3)">
+                <span class="p1">&#xe6b7;</span>
+                <div>未完成</div>
+                <span class="task-num" id="pdd-wei"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+            <li tapmode onclick="openTaskSuccess(3)">
+                <span class="p1">&#xe6b6;</span>
+                <div>已完成</div>
+                <span class="task-num" id="pdd-wan"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+            <li tapmode onclick="openTaskCancel(3)">
+                <span class="p1">&#xe6b8;</span>
+                <div>已撤销</div>
+                <span class="task-num" id="pdd-che"></span>
+                <span class="p2">&#xe603;</span>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getOrderNum();
+        }
+
+        function getOrderNum() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/getTaskOrderCount/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+
+                        var tb = data.tb;
+                        var tb_wei = tb.wei;
+                        if (tb_wei > 999) {
+                            tb_wei = '999';
+                        }
+                        $api.html($api.byId('tb-wei'), tb_wei);
+                        if (tb_wei == 0) {
+                            $api.css($api.byId('tb-wei'), 'display: none');
+                        } else {
+                            $api.css($api.byId('tb-wei'), 'display: block');
+                        }
+
+                        var tb_wan = tb.wan;
+                        if (tb_wan > 999) {
+                            tb_wan = '999';
+                        }
+                        $api.html($api.byId('tb-wan'), tb_wan);
+                        if (tb_wan == 0) {
+                            $api.css($api.byId('tb-wan'), 'display: none');
+                        } else {
+                            $api.css($api.byId('tb-wan'), 'display: block');
+                        }
+
+                        var tb_che = tb.che;
+                        if (tb_che > 999) {
+                            tb_che = '999';
+                        }
+                        $api.html($api.byId('tb-che'), tb_che);
+                        if (tb_che == 0) {
+                            $api.css($api.byId('tb-che'), 'display: none');
+                        } else {
+                            $api.css($api.byId('tb-che'), 'display: block');
+                        }
+
+
+                        var jd = data.jd;
+                        var jd_wei = jd.wei;
+                        if (jd_wei > 999) {
+                            jd_wei = '999';
+                        }
+                        $api.html($api.byId('jd-wei'), jd_wei);
+                        if (jd_wei == 0) {
+                            $api.css($api.byId('jd-wei'), 'display: none');
+                        } else {
+                            $api.css($api.byId('jd-wei'), 'display: block');
+                        }
+
+                        var jd_wan = jd.wan;
+                        if (jd_wan > 999) {
+                            jd_wan = '999';
+                        }
+                        $api.html($api.byId('jd-wan'), jd_wan);
+                        if (jd_wan == 0) {
+                            $api.css($api.byId('jd-wan'), 'display: none');
+                        } else {
+                            $api.css($api.byId('jd-wan'), 'display: block');
+                        }
+
+                        var jd_che = jd.che;
+                        if (jd_che > 999) {
+                            jd_che = '999';
+                        }
+                        $api.html($api.byId('jd-che'), jd_che);
+                        if (jd_che == 0) {
+                            $api.css($api.byId('jd-che'), 'display: none');
+                        } else {
+                            $api.css($api.byId('jd-che'), 'display: block');
+                        }
+
+
+                        var pdd = data.pdd;
+                        var pdd_wei = pdd.wei;
+                        if (pdd_wei > 999) {
+                            pdd_wei = '999';
+                        }
+                        $api.html($api.byId('pdd-wei'), pdd_wei);
+                        if (pdd_wei == 0) {
+                            $api.css($api.byId('pdd-wei'), 'display: none');
+                        } else {
+                            $api.css($api.byId('pdd-wei'), 'display: block');
+                        }
+
+                        var pdd_wan = pdd.wan;
+                        if (pdd_wan > 999) {
+                            pdd_wan = '999';
+                        }
+                        $api.html($api.byId('pdd-wan'), pdd_wan);
+                        if (pdd_wan == 0) {
+                            $api.css($api.byId('pdd-wan'), 'display: none');
+                        } else {
+                            $api.css($api.byId('pdd-wan'), 'display: block');
+                        }
+
+                        var pdd_che = pdd.che;
+                        if (pdd_che > 999) {
+                            pdd_che = '999';
+                        }
+                        $api.html($api.byId('pdd-che'), pdd_che);
+                        if (pdd_che == 0) {
+                            $api.css($api.byId('pdd-che'), 'display: none');
+                        } else {
+                            $api.css($api.byId('pdd-che'), 'display: block');
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+
+        //未完成
+        function openTaskOn(pt_id) {
+            api.openWin({
+                name: 'window_task_list_on',
+                url: './window_task_list_on.html',
+                pageParam: {
+                    name: 'window_task_list_on',
+                    pt_id: pt_id
+                }
+            });
+
+        }
+        //已完成
+        function openTaskSuccess(pt_id) {
+            api.openWin({
+                name: 'window_task_list_success',
+                url: './window_task_list_success.html',
+                pageParam: {
+                    name: 'window_task_list_success',
+                    pt_id: pt_id
+                }
+            });
+        }
+        //撤销订单
+        function openTaskCancel(pt_id) {
+            api.openWin({
+                name: 'window_task_list_cancel',
+                url: './window_task_list_cancel.html',
+                pageParam: {
+                    name: 'window_task_list_cancel',
+                    pt_id: pt_id
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

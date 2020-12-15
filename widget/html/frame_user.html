@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+        }
+
+        .user_msg {
+            position: relative;
+        }
+
+        .user_msg p {
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            background-color: #f00;
+            color: #fff;
+            font-size: 12px;
+            text-align: center;
+            line-height: 18px;
+            position: absolute;
+            top: 4px;
+            right: 12px;
+            display: none;
+        }
+
+        .option-container ul li #point-tips {
+            position: absolute;
+            top: -10px;
+            right: 50%;
+            margin-right: -30px;
+            background-color: #f00;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            color: #fff;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="user_msg">
+        <span id="setting" tapmode onclick="openSet();">&#xe616;</span>
+        <span id="msg" tapmode onclick="openPersonalNotice();">&#xe637;</span>
+        <p id="message-num" tapmode onclick="openPersonalNotice();"></p>
+    </div>
+    <div class="user_head">
+        <div class="pic" tapmode onclick="showHead('更换头像', 'head-portrait');"><img id="head-portrait"></div>
+        <input type="hidden" name="head-portrait" id="input_head-portrait" />
+        <div class="txt">
+            <p>ID:<span id="userid"></span></p>
+            <P>用户名：<span id="username"></span></P>
+        </div>
+        <img tapmode onclick="openWechat();" class="user-code" src="../image/user-code-icon.png" />
+    </div>
+
+    <div class="option-container">
+        <ul class="option-info clearfix">
+            <li tapmode onclick="openyj();">
+                <p id="yongjin">0.00</p>
+                <p>佣金余额</p>
+            </li>
+            <li tapmode onclick="openbj();">
+                <p id="leijishouyi">0.00</p>
+                <p>累积收益</p>
+            </li>
+            <li tapmode onclick="openMsg();">
+                <p id="tixianzhong">0</p>
+                <p>提现中</p>
+            </li>
+            <li tapmode onclick="openTask();">
+                <p><img src="../image/all-task-icon.png" /></p>
+                <p>全部任务</p>
+            </li>
+            <li tapmode onclick="openTixian();">
+                <p><img src="../image/wo-yao-tx.png" /></p>
+                <p>我要提现</p>
+            </li>
+        </ul>
+        <ul class="function clearfix">
+            <li tapmode onclick="openAccount();">
+                <p><img src="../image/bind-cert-icon.png" /></p>
+                <p>绑定账号</p>
+            </li>
+            <li tapmode onclick="openFeedback();">
+                <p><img src="../image/advise-icon.png" /></p>
+                <p>意见反馈</p>
+            </li>
+            <li tapmode onclick="openExtension();">
+                <p><img src="../image/tuiguang-icon.png" /></p>
+                <p>推广赚金</p>
+            </li>
+            <li tapmode onclick="openWechat();">
+                <p><img src="../image/personal-code.png" /></p>
+                <p>专属二维码</p>
+            </li>
+        </ul>
+        <ul class="function clearfix">
+            <li tapmode onclick="openQuestion();">
+                <p><img src="../image/help-service-icon.png" /></p>
+                <p>帮助与客服</p>
+            </li>
+            <li tapmode onclick="openFinishPercent();">
+                <p><img src="../image/finish-percent-icon.png" /></p>
+                <p>账号完成率</p>
+            </li>
+            <li tapmode onclick="openAppeal();" style="position: relative;">
+                <p><img src="../image/ss-center.png" /></p>
+                <p>申诉中心</p>
+                <p id="point-tips"></p>
+            </li>
+            <li tapmode onclick="openVersion();">
+                <p><img src="../image/version-icon.png" /></p>
+                <p>版本信息</p>
+            </li>
+        </ul>
+    </div>
+
+    <img tapmode onclick="openQuestion();" class="click-me" src="../image/click-me.png" />
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        var global_wechat_img = '';
+        apiready = function() {
+            $api.html($api.byId("userid"), $api.getStorage("userid"));
+            $api.html($api.byId("username"), $api.getStorage("username"));
+            getIndex();
+            getInfo();
+            getWechatImg();
+            getUnreadAmount();
+            getAppealNum();
+        }
+
+        function getIndex() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Mine/index',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        // 佣金余额
+                        var t_yjye_price = ret.t_yjye_price;
+                        if (t_yjye_price == 0) {
+                            t_yjye_price = '0.00';
+                        }
+                        $api.html($api.byId('yongjin'), t_yjye_price);
+
+                        // 累积收益
+                        var t_ljsy_price = ret.t_ljsy_price;
+                        if (t_ljsy_price == 0) {
+                            t_ljsy_price = '0.00';
+                        }
+                        $api.html($api.byId('leijishouyi'), t_ljsy_price);
+
+                        // 提现中
+                        var t_txz_price = ret.t_txz_price;
+                        if (t_txz_price == 0) {
+                            t_txz_price = '0.00';
+                        }
+                        $api.html($api.byId('tixianzhong'), t_txz_price);
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getInfo() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/user/Integral/get_portrait',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    //  用户头像
+                    var headImg = $api.byId('head-portrait');
+                    var data = ret['data'];
+                    if (data) {
+                        if (data['head_img']) {
+                            $api.attr(headImg, 'src', myurl + data['head_img']);
+                        } else {
+                            $api.attr(headImg, 'src', '../image/user_tx.jpg');
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getWechatImg() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/wechat_img/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    global_wechat_img = geturl(ret.data.ewm);
+                } else {}
+            });
+        }
+
+        function openWechat() {
+            api.openFrame({
+                name: 'frame_wechat',
+                url: './frame_wechat.html',
+                rect: {
+                    x: 0,
+                    y: api.pageParam.h,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    name: 'frame_wechat',
+                    wechat_img: global_wechat_img
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false
+            });
+        }
+
+        function openAccount() {
+            api.openWin({
+                name: 'window_account',
+                url: './window_account.html',
+                pageParam: {
+                    name: 'window_account'
+                }
+            });
+        }
+
+        function openMsg() {
+            api.openWin({
+                name: 'window_msg',
+                url: './window_msg.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_msg'
+                }
+            });
+        }
+
+        function openPersonalNotice() {
+            api.openWin({
+                name: 'window_personal_notice',
+                url: './window_personal_notice.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_personal_notice'
+                }
+            });
+        }
+
+        function openExtension() {
+            api.openWin({
+                name: 'window_extension',
+                url: './window_extension.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_extension'
+                }
+            });
+        }
+
+        function openQuestion() {
+            api.openWin({
+                name: 'window_question',
+                url: './window_question.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_question'
+                }
+            });
+
+        }
+
+        function openSet() {
+            api.openWin({
+                name: 'window_set',
+                url: './window_set.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_set'
+                }
+            });
+        }
+
+        function openVersion() {
+            api.openWin({
+                name: 'window_version',
+                url: './window_version.html',
+                pageParam: {
+                    name: 'window_version'
+                }
+            });
+        }
+
+        function openAppeal() {
+            api.openWin({
+                name: 'window_appeal',
+                url: './window_appeal.html',
+                pageParam: {
+                    name: 'window_appeal'
+                }
+            });
+        }
+
+        function openFinishPercent() {
+            api.openWin({
+                name: 'window_acceptance_rule',
+                url: './window_acceptance_rule.html',
+                pageParam: {
+                    name: 'window_acceptance_rule'
+                }
+            });
+        }
+
+        function openTixian() {
+            api.openWin({
+                name: 'window_tixian',
+                url: './window_tixian.html',
+                pageParam: {
+                    name: 'window_tixian',
+                    tixianType: 0
+                }
+            });
+        }
+
+        function openTask() {
+            api.openWin({
+                name: 'window_task',
+                url: './window_task.html',
+                pageParam: {
+                    name: 'window_task'
+                }
+            });
+        }
+
+        function openFeedback() {
+            api.openWin({
+                name: 'window_feedback',
+                url: './window_feedback.html',
+                pageParam: {
+                    name: 'window_feedback'
+                }
+            });
+        }
+
+        //打开佣金
+        function openyj() {
+            api.openWin({
+                name: 'window_fund_details',
+                url: './window_fund_details.html',
+                pageParam: {
+                    name: 'window_fund_details',
+                    fundType: 0
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        //打开本金
+        function openbj() {
+            api.openWin({
+                name: 'window_fund_details',
+                url: './window_fund_details.html',
+                pageParam: {
+                    name: 'window_fund_details',
+                    fundType: 1
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        function getUnreadAmount() {
+            api.ajax({
+                url: myurl + '/index.php/User/Usermessage/statuswd',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        if (ret.count == 0) {
+                            $api.html($api.byId('message-num'), ret.count);
+                            $api.css($api.byId('message-num'), 'display: none');
+                        } else if (ret.count > 0) {
+                            $api.html($api.byId('message-num'), ret.count);
+                            $api.css($api.byId('message-num'), 'display: block');
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        // 更换头像
+        function showHead(tit, id) {
+            var has = hasPermission_global('camera');
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '相机' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function(ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission_global('camera');
+                    }
+                });
+                return false;
+            }
+
+            var has = hasPermission_global('storage');
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '储存' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function(ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission_global('storage');
+                    }
+                });
+                return false;
+            }
+
+            var items = ['拍照', '从手机相册选择'];
+            var reg = new RegExp("^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$");
+            var imageUrl = $api.attr($api.byId(id), "src");
+            if (reg.test(imageUrl)) //是url
+            {
+                items = ['拍照', '从手机相册选择', '查看大图'];
+            }
+
+            api.actionSheet({
+                title: tit,
+                cancelTitle: '取消',
+                buttons: items
+            }, function(ret, err) {
+                if (ret) {
+                    getImageHead(ret.buttonIndex, id, items.length);
+                }
+            });
+        }
+
+        function getImageHead(sourceType, id, cc) {
+            if (sourceType == 1) { // 拍照
+                //获取一张图片
+                api.getPicture({
+                    sourceType: 'camera', //拍照
+                    encodingType: 'png',
+                    mediaValue: 'pic',
+                    allowEdit: false,
+                    destinationType: 'base64', //返回base64地址
+                    quality: 80,
+                    saveToPhotoAlbum: true
+                }, function(ret, err) {
+                    //var imgSrc = ret.base64Data;  如果是base64，要用这个属性获取地址
+                    // 获取拍照数据并处理
+                    if (ret) {
+                        //alert( JSON.stringify(ret ))
+                        saveImgHead(ret.base64Data, id);
+                        // var imgSrc = ret.data;
+                        // if (imgSrc != "") {
+                        //     var ele=$api.dom('#'+id);
+                        //     $api.attr(ele,'src',imgSrc);
+                        // }
+                    }
+
+                });
+            } else if (sourceType == 2) { // 从相册中选择
+                api.getPicture({
+                    sourceType: 'library', //从相册中选择
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    allowEdit: false,
+                    destinationType: 'base64', //返回base64地址
+                    quality: 80,
+                    saveToPhotoAlbum: true
+                }, function(ret, err) {
+                    // 获取拍照数据并处理
+                    //alert(ret.base64Data);
+                    //var imgSrc = ret.base64Data;  如果是base64，要用这个属性获取地址
+                    if (ret) {
+                        saveImgHead(ret.base64Data, id);
+                        // var imgSrc = ret.data;
+                        // if (imgSrc != "") {
+                        //     var ele=$api.dom('#'+id);
+                        //     $api.attr(ele,'src',imgSrc);
+                        // }
+                    }
+
+                });
+            } else if (sourceType == 3) { // 查看大图
+                if (cc == 3) {
+                    openPicture(id);
+                }
+            }
+        }
+
+        function saveImgHead(path, id) {
+            api.showProgress();
+            //上传剪辑后的图像到服务器
+            api.ajax({
+                // report : false,
+                url: myurl + '/index.php/User/Integral/portrait',
+                //这里是我们约定好的后台上传图片的位置 ，你可以根据你的需求来改
+                method: 'post',
+                cache: 'false',
+                dataTpye: 'json',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        pic: path,
+                    }
+                }
+            }, function(ret, err) {
+                if (ret.status == 1) {
+                    var ele = $api.dom('#' + id);
+                    $api.attr(ele, 'src', myurl + ret.picture);
+                    var ele1 = $api.dom('#input_' + id);
+                    $api.val(ele1, myurl + ret.picture);
+                    api.hideProgress();
+                } else {
+                    api.hideProgress();
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 5000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getAppealNum() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Appeal/getAppealNum',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        if (ret.data > 0) {
+                            $api.html($api.byId('point-tips'), ret.data);
+                            $api.css($api.byId('point-tips'), 'display: block');
+                        } else {
+                            $api.css($api.byId('point-tips'), 'display: none');
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>

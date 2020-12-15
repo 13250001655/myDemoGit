@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告详细</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="api.closeWin();"><span>&#xe606;</span>公告详情</a>
+    </header>
+    <div class="notice">
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            //alert(api.pageParam.id);
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_personal_notice_detail',
+                url: './frame_personal_notice_detail.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: "auto"
+                },
+                pageParam: {
+                    name: 'frame_personal_notice_detail',
+                    id: api.pageParam.id
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>申诉我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .empty {
+            text-align: center;
+            padding: 120px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="appeallist" id="appeallist">
+        <!-- <li>
+        <div class="t1"><span>2019-10-11 12:12:00</span>任务编号：123456</div>
+        <div class="t2">
+            <span>进行中</span>
+            类型：商品错误
+        </div>
+        <div class="t3">
+            <span>查看详情</span>
+            原因：找不到找不到找不到找不到找不到
+        </div>
+    </li> -->
+    </ul>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+
+    <script>
+        apiready = function() {
+            getList();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Appeal/getappeallist1/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        var str = "";
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+
+                                str = str + '<li tapmode onclick="openAppealDetail(' + data[i]["id"] + ')">';
+                                str = str + '<div class="t1"><span>' + getLocalTime(data[i]["create_time"]) + '</span>订单编号：' + data[i]["order_number"] + '</div>';
+                                str = str + '<div class="t2">';
+                                str = str + '<span>' + data[i]["_status"] + '</span>';
+                                str = str + '类型：' + data[i]["_appealtype"] + '';
+                                str = str + '</div>';
+                                str = str + '<div class="t3">';
+                                str = str + '<span>查看详情</span>';
+                                str = str + '原因：' + data[i]["content"].substr(0, 10) + '..';
+                                str = str + '</div>';
+                                str = str + '</li>';
+
+                            }
+
+                            $api.html($api.byId('appeallist'), str);
+                        } else {
+                            $api.html($api.byId('appeallist'), "<li>暂无数据！</li>");
+                        }
+
+                        var jsfun = 'getAppealNum()';
+                        api.execScript({
+                            name: 'index',
+                            frameName: 'frame_user',
+                            script: jsfun
+                        });
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+
+                } else {
+                    //alert( JSON.stringify( err ) );
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        function openAppealDetail(id) {
+            api.openWin({
+                name: 'window_appeal_detail',
+                url: './window_appeal_detail.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_appeal_detail',
+                    id: id
+                }
+            });
+
+        }
+
+        function getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString('chinese', {
+                hour12: false
+            });
+        }
+    </script>
+</body>
+
+</html>

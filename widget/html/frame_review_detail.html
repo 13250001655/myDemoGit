@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>订单详细</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="dataForm">
+        <div class="taskboxdetail1">
+            <div id="base">
+                <!-- <P class="tit2"><span>佣金：<i>100金</i></span>手机拼多多 直接开团任务</P>
+        <p class="tit1"><span>任务状态：待操作</span>商家ID:123456</p>
+        <P class="tit1"><span>商品包邮</span>目标商品<i>平台返款</i></P>
+        <div class="item">
+            <div class="tit">夏装潮牌男装ins国潮短袖t恤男潮宽松情侣装嘻哈oversize五分半袖</div>
+            <div class="pic"><img src="../image/aui-icon.png"></div>
+            <div class="txt">
+                <p class="t1">商品成交价格：<i>99元</i></p>
+                <p class="t2">件数：1件</p>
+            </div>
+        </div>
+        <div class="con">
+            <p>商品排序方式：<i>综合</i></p>
+            <p>价格区间：<i>0 - 50元</i></p>
+            <p>商品所在地：<i>全国</i></p>
+            <p>订单留言：<i>暂无留言</i></P>
+        </div>
+        <div class="con">
+            <p>任务类型：<i>关键词(允许复制关键词)</i></p>
+            <p>我们都是好朋友</p>
+        </div>
+        <div class="con">
+          <p>备注图片</p>
+          <div class="pics">
+              <div class="p"><img src="../image/error-img.png" /></div>
+              <div class="p"><img src="../image/error-img.png" /></div>
+              <div class="p"><img src="../image/error-img.png" /></div>
+          </div>
+          <p>商家要求：</P>
+        </div>
+        <div class="con">
+             <p>任务提交倒计时：<i id="time">00:00:00</i></p>
+        </div>
+
+        <div class="con" id="orderbtns">
+            <div class="btns">
+                 <a >操作任务</a>
+                 <a>申诉任务</a>
+                 <a>取消任务</a>
+            </div>
+        </div> -->
+            </div>
+        </div>
+
+        <div id="step1" class="taskboxdetail2">
+            <!-- <div class="tit">第一步：接手任务</div>
+    <div class="con">
+        <div class="item">
+            <span>888888</span>
+            任务编号
+        </div>
+        <div class="item">
+            <span>2019-12-12 14:13:28</span>
+            接单时间
+        </div>
+        <div class="item">
+            <span>闪闪的红星</span>
+            接单账号
+        </div>
+        <div class="item">
+            <span>99元</span>
+            商品金额
+        </div>
+    </div> -->
+        </div>
+
+        <div id="step2" class="taskboxdetail2 close">
+            <!-- <div class="tit">第五步：任务完成</div>
+    <div class="con">
+        <div class="item">
+          <span>
+          </span>
+            获取佣金
+        </div>
+    </div> -->
+        </div>
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function() {
+            getOrder();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getOrder();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function getOrder() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Reviewmanage/getorder/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: api.pageParam.id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    
+                    if (!isempty(data['id'])) {
+                        var str = "";
+                        var global_category_id = data['category_id'];
+                        if (data['producturl1'] != "") {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="tit">' + data["productname1"] + '</div>';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl1"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice1'] + '元</i></p>';
+                                str = str + '<p class="t2">件数：' + data["productcount1"] + '件</p>';
+                            }
+                            str = str + '<p class="t1">搜索展示价格：<i>' + data['productpublicprice1'] + '元</i></p>';
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl2']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl2"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice2'] + '元</i></p>';
+                                str = str + '<p class="t2">件数：' + data["productcount2"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl3']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl3"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice3'] + '元</i></p>';
+                                str = str + '<p class="t2">件数：' + data["productcount3"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl4']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl4"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice4'] + '元</i></p>';
+                                str = str + '<p class="t2">件数：' + data["productcount4"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl5']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl5"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice5'] + '元</i></p>';
+                                str = str + '<p class="t2">件数：' + data["productcount5"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+                        if (data['producturl6']) {
+                            str = str + '<div class="item">';
+                            str = str + '<div class="pic"><img src="' + geturl(data["imageurl6"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            if (global_category_id < 100) {
+                                str = str + '<p class="t1">商品成交价格：<i>' + data['productactualprice6'] + '元</i></p>';
+                                str = str + '<p class="t2">件数：' + data["productcount6"] + '件</p>';
+                            }
+                            str = str + '</div>';
+                            str = str + '</div>';
+                        }
+
+                        str = str + '<div class="con">';
+                        str = str + '<p>追加订单状态：' + data["_review_type"] + '</p>';
+                        str = str + '</div>';
+                        str = str + '<div class="con" id="orderbtns">';
+                        str = str + '<div class="btns">';
+                        if (data["review_type"] == 2 || data["review_type"] == 3) {
+                            str = str + '<a tapmode onclick="postOrder(' + data["review_type"] + ')">提交任务</a>';
+                        } else {
+                            str = str + '<a class="close">操作订单</a>';
+                        }
+
+                        str = str + '</div>';
+                        str = str + '</div>';
+                        $api.html($api.byId("base"), str);
+
+                        var oTop = $("#orderbtns").offset().top;
+                        var sTop = 0;
+                        $(window).scroll(function() {
+                            sTop = $(this).scrollTop();
+                            if (sTop >= oTop) {
+                                $("#orderbtns").addClass("fdfd");
+                            } else {
+                                $("#orderbtns").removeClass("fdfd");
+                            }
+                        });
+
+                        //第一步
+                        str = "";
+                        if (data["review_type"] == 2 || data["review_type"] == 3) {
+                            str = str + '<div class="tit">第一步：追加好评</div>';
+                            str = str + '<div class="con">';
+                            str = str + '<div class="item">';
+                            str = str + '<span>';
+                            str = str + '<div class="p" tapmode onclick=showAction("好评截图1","rehp_pic1")><img id="rehp_pic1" src="' + (!isempty(data["rehp_pic1"]) ? data["rehp_pic1"] : "../image/tb03.png") + '"></div>';
+                            str = str + '<input type="hidden" name="rehp_pic1" id="input_rehp_pic1" value="' + (!isempty(data["rehp_pic1"]) ? data["rehp_pic1"] : "") + '">';
+
+                            str = str + '</span>';
+                            str = str + '追加好评';
+                            str = str + '</div>';
+                            if (data["recommonkey"] == 2) {
+                                str = str + '<p class="t1">此单文字好评 </p>';
+                            } else if (data["recommonkey"] == 3) {
+                                str = str + '<p class="t1">此单图片好评 </p>';
+                            } else if (data["recommonkey"] == 4) {
+                                str = str + '<p class="t1">此单视频好评 </p>';
+                            } else {
+                                str = str + '<p class="t1">此单普通好评 </p>';
+                            }
+
+                            if (data["recommonkey"] != 1) {
+                                str = str + '<div class="item1">';
+                                if (data["recommonkey"] > 2) {
+                                    str = str + '<div class="gg">规格：' + data["resku"] + '</div>';
+                                    if (!isempty(data["reimgurl1"])) {
+                                        str = str + '<div class="p"><img id="pjimg1" onclick=openPicture("pjimg1") src="' + myurl + data["reimgurl1"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl2"])) {
+                                        str = str + '<div class="p"><img id="pjimg2" onclick=openPicture("pjimg2") src="' + myurl + data["reimgurl2"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl3"])) {
+                                        str = str + '<div class="p"><img id="pjimg3" onclick=openPicture("pjimg3") src="' + myurl + data["reimgurl3"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl4"])) {
+                                        str = str + '<div class="p"><img id="pjimg4" onclick=openPicture("pjimg4") src="' + myurl + data["reimgurl4"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl5"])) {
+                                        str = str + '<div class="p"><img id="pjimg5" onclick=openPicture("pjimg5") src="' + myurl + data["reimgurl5"] + '"></div>';
+                                    }
+                                    if (data["recommonkey"] == 4) {
+                                        str = str + '<div class="gg">视频：</div>';
+                                        str = str + '<div class="vv">';
+                                        str = str + '<video controls="" controlslist="nodownload" id="video01" loop="" width="100%"><source src="' + myurl + data["revideourl"] + '" type="video/mp4"></video>';
+                                        // str = str + '<p><a href="#">下载视频</a></p>';
+                                        str = str + '<p style="text-align: center;"><a style="display: inline;" tapmode onclick=saveFile("' + myurl + data["revideourl"] + '")>点击下载视频</a></p>';
+                                        str = str + '</div>';
+                                    }
+                                }
+                                str = str + '<div class="hp">好评：' + data["reremark"] + '</div>';
+
+                                str = str + '</div>';
+                            }
+
+                            str = str + '</div>';
+
+                        } else {
+
+                            str = str + '<div class="tit">第一步：追加好评</div>';
+                            str = str + '<div class="con">';
+                            str = str + '<div class="item">';
+                            str = str + '<span>';
+                            str = str + '<div class="p"><img id="hp_pic1" src="' + (!isempty(data["rehp_pic1"]) ? data["rehp_pic1"] : "../image/tb03.png") + '"></div>';
+                            str = str + '</span>';
+                            str = str + '追加好评';
+                            str = str + '</div>';
+                            if (data["recommonkey"] == 2) {
+                                str = str + '<p class="t1">此单文字好评 </p>';
+                            } else if (data["recommonkey"] == 3) {
+                                str = str + '<p class="t1">此单图片好评 </p>';
+                            } else if (data["recommonkey"] == 4) {
+                                str = str + '<p class="t1">此单视频好评 </p>';
+                            } else {
+                                str = str + '<p class="t1">此单普通好评 </p>';
+                            }
+
+                            if (data["recommonkey"] != 1) {
+                                str = str + '<div class="item1">';
+                                if (data["recommonkey"] > 2) {
+                                    str = str + '<div class="gg">规格：' + data["sku"] + '</div>';
+                                    if (!isempty(data["reimgurl1"])) {
+                                        str = str + '<div class="p"><img id="pjimg1" onclick=openPicture("pjimg1") src="' + myurl + data["reimgurl1"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl2"])) {
+                                        str = str + '<div class="p"><img id="pjimg2" onclick=openPicture("pjimg2") src="' + myurl + data["reimgurl2"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl3"])) {
+                                        str = str + '<div class="p"><img id="pjimg3" onclick=openPicture("pjimg3") src="' + myurl + data["reimgurl3"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl4"])) {
+                                        str = str + '<div class="p"><img id="pjimg4" onclick=openPicture("pjimg4") src="' + myurl + data["reimgurl4"] + '"></div>';
+                                    }
+                                    if (!isempty(data["reimgurl5"])) {
+                                        str = str + '<div class="p"><img id="pjimg5" onclick=openPicture("pjimg5") src="' + myurl + data["reimgurl5"] + '"></div>';
+                                    }
+                                    if (data["recommonkey"] == 4) {
+                                        str = str + '<div class="gg">视频：</div>';
+                                        str = str + '<div class="vv">';
+                                        str = str + '<video controls="" controlslist="nodownload" id="video01" loop="" width="100%"><source src="' + myurl + data["revideourl"] + '" type="video/mp4"></video>';
+                                        // str = str + '<p><a tapmode onclick=saveFile("' + myurl + data["revideourl"] + '")>' + myurl + data["revideourl"] + '</a></p>';
+                                        str = str + '<p style="text-align: center;"><a style="display: inline;" tapmode onclick=saveFile("' + myurl + data["revideourl"] + '")>点击下载视频</a></p>';
+                                        str = str + '</div>';
+                                    }
+                                }
+                                str = str + '<div class="hp">好评：' + data["reremark"] + '</div>';
+
+                                str = str + '</div>';
+                            }
+                            str = str + '</div>';
+
+                        }
+
+                        $api.html($api.byId("step1"), str);
+
+                        str = "";
+                        str = str + '<div class="tit">第二步：追加订单完成</div>';
+                        str = str + '<div class="con">';
+                        str = str + '<div class="item">';
+                        str = str + '<span>';
+                        str = str + '</span>';
+                        str = str + '获取佣金';
+                        str = str + '</div>';
+                        str = str + '</div>';
+                        $api.html($api.byId("step2"), str);
+
+                        //第五步
+                        if (data["review_type"] == 4) {
+                            $("#step2").removeClass("close");
+                        }
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 1000,
+                            location: 'bottom'
+                        });
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 1000);
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+        //做任务
+        function postOrder(status) {
+            if (status == 2 || status == 3) //待好评
+            {
+
+                if ($("#input_rehp_pic1").val() == "") {
+                    api.toast({
+                        msg: '请上传好评截图1',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return false;
+                }
+
+                var param = dataFrom("dataForm");
+                param["review_type"] = status;
+
+                api.ajax({
+                    url: myurl + '/index.php/User/Reviewmanage/postorder/',
+                    method: 'post',
+                    data: {
+                        values: param
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (ret.status == 1) {
+                            getOrder();
+                        }
+                    } else {
+                        api.toast({
+                            msg: '网络错误',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+
+            }
+        }
+
+        function timer(endtime, id) {
+            var time = Math.round(new Date().getTime() / 1000).toString();
+            intDiff = parseInt(endtime) - parseInt(time);
+            //alert(intDiff);
+            if (intDiff > 0) {
+                window.setInterval(function() {
+                    var day = 0,
+                        hour = 0,
+                        minute = 0,
+                        second = 0; //时间默认值
+                    if (intDiff > 0) {
+                        day = Math.floor(intDiff / (60 * 60 * 24));
+                        hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                        minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                        second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                    }
+                    if (hour <= 9) {
+                        hour = '0' + hour;
+                    }
+                    if (minute <= 9) {
+                        minute = '0' + minute;
+                    }
+                    if (second <= 9) {
+                        second = '0' + second;
+                    }
+                    $('#' + id).html(hour + ":" + minute + ":" + second);
+                    intDiff--;
+                }, 1000);
+            } else {
+                setTimeout(function() {
+                    $('#' + id).html("已结束");
+                }, 1000);
+            }
+        }
+
+        function getLocalTime(nS) {
+            var d = new Date(parseInt(nS) * 1000);
+            y = d.getFullYear();
+            m = d.getMonth() + 1;
+            d = d.getDate();
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            return y + "-" + m + "-" + d;
+        }
+
+        //获取form数据
+        function dataFrom(id) {
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid"),
+                "id": api.pageParam.id
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function(i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+
+        function saveFile(url) {
+            // var timestamp = new Date().getTime();
+            api.showProgress();
+            api.download({
+                url: url,
+                // savePath: 'fs://test.rar',
+                report: false,
+                cache: false,
+                allowResume: true
+            }, function(ret, err) {
+                if (ret.state == 1) {
+                    api.saveMediaToAlbum({
+                        path: ret.savePath
+                    }, function(ret, err) {
+                        api.hideProgress();
+                        if (ret) {
+                            api.toast({
+                                msg: '视频已保存到本地',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        } else {
+                            api.toast({
+                                msg: '视频保存失败',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    });
+
+                } else {
+                    api.hideProgress();
+                    api.toast({
+                        msg: '下载失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

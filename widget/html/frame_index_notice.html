@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的申诉</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body,
+        html {
+            background-color: transparent;
+        }
+
+        .wechat-container .wechat-inner .wechat-content {
+            padding: 20px 10px;
+        }
+
+        .wechat-container .wechat-inner .wechat-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .wechat-container .wechat-inner .wechat-content .wechat-desc {
+            padding-top: 0;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wechat-container" tapmode onclick="api.closeFrame();">
+        <div class="wechat-inner" tapmode onclick="dontClose(event);">
+            <p class="wechat-title"></p>
+            <div class="wechat-content">
+                <p class="wechat-desc"></p>
+            </div>
+            <div id="wechat-number" tapmode onclick="api.closeFrame();">确定</div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+
+    <script>
+        apiready = function() {
+            getIndexNotice();
+        }
+
+        function getIndexNotice() {
+            api.ajax({
+                url: myurl + '/index.php/User/Public/systemtip',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        $api.html($api.dom('.wechat-title'), ret.title);
+                        $api.html($api.dom('.wechat-desc'), ret.content);
+                    }
+                } else {
+                    alert($api.jsonToStr(err));
+                }
+            });
+        }
+
+        function dontClose(event) {
+            event = event || window.event;
+            event.stopPropagation();
+        }
+    </script>
+</body>
+
+</html>

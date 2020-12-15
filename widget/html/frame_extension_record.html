@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>邀请列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            background: #fff;
+            height: auto;
+        }
+
+        .search-btn {
+            width: 72px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            color: #fff;
+            background-color: #04b848;
+            border-radius: 14px;
+        }
+
+        .extension-level .level-num {
+            float: left;
+            width: 50%;
+            text-align: center;
+            color: #333;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .extension-level .level-num.active {
+            color: #04b848;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="extension-level clearfix">
+        <div tapmode onclick="showCurrentLevel(this, 1);" class="level-num active">一级</div>
+        <div tapmode onclick="showCurrentLevel(this, 2);" class="level-num">二级</div>
+        <!-- <div tapmode onclick="showCurrentLevel(this, 3);" class="level-num">三级</div>
+        <div tapmode onclick="showCurrentLevel(this, 4);" class="level-num">四级</div>
+        <div tapmode onclick="showCurrentLevel(this, 5);" class="level-num">五级</div>
+        <div tapmode onclick="showCurrentLevel(this, 6);" class="level-num">六级</div>
+        <div tapmode onclick="showCurrentLevel(this, 7);" class="level-num">七级</div>
+        <div tapmode onclick="showCurrentLevel(this, 8);" class="level-num">八级</div>
+        <div tapmode onclick="showCurrentLevel(this, 9);" class="level-num">九级</div>
+        <div tapmode onclick="showCurrentLevel(this, 10);" class="level-num">十级</div> -->
+    </div>
+
+    <div class="extension_recordlist_h">
+        <p>手机号</p>
+        <p id="invite-num">邀请人数</p>
+        <p>注册时间</p>
+    </div>
+    <div id="con" class="extension_recordlist_c">
+        <ul id="recordlist">
+            <!-- <li>
+                <p>153****5678</p>
+                <p><span class="search-btn" tapmode onclick="showExtensionNum();">查询</span></p>
+                <p>2019-01-23</p>
+            </li> -->
+        </ul>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        var global_index = 1;
+        apiready = function() {
+            getList(global_index);
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList(global_index);
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        // 获取推广等级对应的推广成员
+        function showCurrentLevel(self, num) {
+            var level_num = $api.domAll('.level-num');
+            for (var i = 0; i < level_num.length; i++) {
+                if ($api.hasCls(level_num[i], 'active')) {
+                    $api.removeCls(level_num[i], 'active');
+                }
+            }
+            $api.addCls(self, 'active');
+            global_index = num;
+            getList(num);
+        }
+
+        // 获取邀请人数
+        function showExtensionNum(id) {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Extension/getordernumber',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        api.toast({
+                            msg: '邀请人数：' + ret.data,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    //alert( JSON.stringify( err ) );
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getList(num) {
+            if (!num) {
+                num = 1;
+            }
+
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Extension/getorderlist/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        level: num
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        var str = "";
+                        if (data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                str = str + '<li class="invite-list">';
+                                var username = data[i]["username"];
+                                var usernameArr = username.split('');
+                                usernameArr[4] = '*';
+                                usernameArr[5] = '*';
+                                usernameArr[6] = '*';
+                                usernameArr[7] = '*';
+                                str = str + '<p>' + usernameArr.join('') + '</p>';
+                                str = str + '<p><span class="search-btn" tapmode onclick="showExtensionNum(' + data[i]["id"] + ');">查询</span></p>';
+                                str = str + '<p>' + getLocalTime(data[i]["create_time"]) + '</p>';
+                                str = str + '</li>';
+                            }
+                            $api.html($api.byId('recordlist'), str);
+                        } else {
+                            $api.html($api.byId('recordlist'), '<li style="height: 30px; line-height: 30px;">暂无数据！</li>');
+                        }
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        $api.html($api.byId('recordlist'), '<li style="height: 30px; line-height: 30px;">暂无数据！</li>');
+                    }
+                    var num = $api.domAll('.invite-list').length;
+                    $api.html($api.byId('invite-num'), '邀请人数(' + num + '人)');
+                } else {
+                    //alert( JSON.stringify( err ) );
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getLocalTime(nS) {
+            var d = new Date(parseInt(nS) * 1000);
+            y = d.getFullYear();
+            m = d.getMonth() + 1;
+            d = d.getDate();
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            return y + "-" + m + "-" + d;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>平台账号</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            height: auto;
+        }
+
+        .account_info_con {
+            background: #fff;
+        }
+
+        .account_info_con .tit {
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .account_info_con .tit p {
+            line-height: 40px;
+            float: left;
+        }
+
+        .account_info_con .tit .question-icon {
+            float: right;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-image: url(../image/question-icon.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin-top: 8px;
+        }
+
+        #taskbtn2 #jiedanclose {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            margin-top: 5px;
+            position: relative;
+        }
+
+        #taskbtn2 #jiedanclose input {
+            position: absolute;
+            top: 9px;
+            left: 9px;
+            width: 62px;
+            height: 62px;
+            line-height: 62px;
+            margin-top: 0;
+        }
+
+        #taskbtn2 #jiedanclose img {
+            animation: mymove 1s linear infinite;
+            -webkit-animation: mymove 1s linear infinite;
+        }
+
+        @keyframes mymove {
+            from {
+                transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -webkit-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+              -ms-transform: rotate(360deg);
+              -moz-transform: rotate(360deg);
+              -webkit-transform: rotate(360deg);
+              -o-transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="con" class="account_info_con">
+        <div class="tit clearfix">
+            <p style="display: none;">ID:<span id="userid">8888</span> | 完成率:<span id="rates">100</span>%</p>
+            <p>设置好每个平台的模式，可以组合多个平台同时接单哦！</p>
+            <span class="question-icon" tapmode onclick="openRule();"></span>
+        </div>
+        <ul id="accountinfolist">
+            <!-- <li>
+        <span class="tb1">&#xe6ff;</span>
+        <div>
+            <p class="t1">淘宝账号</p>
+            <p>今日可以接2单垫付任务</p>
+        </div>
+        <span class="btn">
+            <input type="checkbox" name="chk_taobao" id="chk_taobao1" class="chk_1" value="1" checked /><label for="chk_taobao1"></label>
+        </span>
+      </li>
+      <li>
+        <span class="tb2">&#xe600;</span>
+        <div>
+            <p class="t1">淘宝账号</p>
+            <p>今日可以接2单垫付任务</p>
+        </div>
+        <span class="btn">
+            <input type="checkbox" name="chk_jd" id="chk_jd1" class="chk_1" value="1" checked /><label for="chk_jd1"></label>
+        </span>
+      </li>
+      <li>
+        <span class="tb3">&#xe602;</span>
+        <div>
+            <p class="t1">淘宝账号</p>
+            <p>今日可以接2单垫付任务</p>
+        </div>
+        <span class="btn">
+            <input type="checkbox" name="chk_pdd" id="chk_pdd1" class="chk_1" value="1" checked /><label for="chk_pdd1"></label>
+        </span>
+      </li> -->
+        </ul>
+        <!-- <div class="nodata"></div> -->
+    </div>
+
+    <div class="box4" id="taskbtn1">
+        <p>浏览单可无限接</p>
+        <p>每日接单量上限由系统风控自动判定</p>
+        <p>无需咨询客服原因，回复结果都一样</p>
+        <p id="time-zw">00:00:00</p>
+        <input type="button" id="jiedan" value="接单" tapmode onclick="isOpenContactLimits()">
+    </div>
+    <div class="box4" id="taskbtn2" style="display:none;">
+        <p>浏览单可无限接</p>
+        <p>每日接单量上限由系统风控自动判定</p>
+        <p>无需咨询客服原因，回复结果都一样</p>
+        <p id="time">00:00:00</p>
+        <div class="close" id="jiedanclose" tapmode onclick="openCloseTask()">
+            <img src="../image/circle.png" />
+            <input type="button" value="停止" />
+        </div>
+    </div>
+
+    <!-- 接取任务弹窗 -->
+    <div class="achieving-tasks" style="display: none;">
+        <div class="achieving-tasks-inner">
+            <p class="achieving-tasks-title">来任务啦</p>
+            <ul class="clearfix">
+                <li class="clearfix">
+                    <span>店铺名称：</span>
+                    <span id="shop-name">ZZZZZZ</span>
+                </li>
+                <li class="clearfix">
+                    <span>垫付金额：</span>
+                    <span id="df-money">￥48.00</span>
+                </li>
+                <li class="clearfix">
+                    <span>任务佣金：</span>
+                    <span id="task-money">￥1.88</span>
+                </li>
+                <li class="clearfix">
+                    <span>任务类型：</span>
+                    <span id="task-type">手机淘宝浏览单任务 普通任务</span>
+                </li>
+                <li id="isbrowse" class="clearfix" style="display: none;">
+                    <span style="float: none; color: #e31818;">该订单为浏览单，不计入限制接单量，请知悉。</span>
+                </li>
+                <li id="require-text clearfix">
+                    <span>商家要求：</span>
+                    <span id="store-require" style="float: none; line-height: 20px;">无</span>
+                </li>
+                <li id="require-images" class="clearfix">
+                    <!-- <img id="require-images1" tapmode onclick="openPicture('require-images1');" src="../image/question_li_bg01.jpg" />
+                    <img id="require-images2" tapmode onclick="openPicture('require-images2');" src="../image/question_li_bg02.jpg" />
+                    <img id="require-images3" tapmode onclick="openPicture('require-images3');" src="../image/question_li_bg03.jpg" /> -->
+                </li>
+            </ul>
+            <div class="achieving-tasks-btns clearfix">
+                <div class="tasks-btns-container">
+                    <div class="refuse-btn" tapmode onclick="refuseTask();">拒绝(<span id="djs"></span>)</div>
+                </div>
+                <div class="tasks-btns-container">
+                    <div class="nomore-btn" tapmode onclick="noAcceptToday();">今天不再接此店铺</div>
+                </div>
+                <div class="tasks-btns-container">
+                    <div class="accept-btn" tapmode onclick="acceptTask();">接受</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        var time1, time2;
+        var ms = 0,
+            s = 0,
+            m = 0,
+            h = 0;
+        var dsj_timer;
+        var global_account = ''; // 账号名称
+        var global_shopname = ''; // 店铺名称
+        var global_bj_price = 0; // 垫付金额
+        var global_yjm_price = 0; // 任务佣金
+        var global_category = ''; // 任务类型
+        var global_id = 0; // 任务id
+        var global_category_id = 0; // 任务类型id
+        var global_isimgUrl = ''; // 商家要求图片
+        var global_isremark = ''; // 商家要求文字
+        var global_platform = 0; // 任务对应的平台id
+
+        apiready = function() {
+            getList();
+            openBackTips();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList();
+                openBackTips();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Account/getplatforminfo/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var str = "";
+                    // 第一个淘宝账号
+                    str = str + '<li>';
+                    str = str + '<span tapmode onclick="openAccount();" class="tb1">&#xe6ff;</span>';
+                    str = str + '<div tapmode onclick="openAccount();" >';
+                    if (ret['taobao1']) {
+                        var taobao1 = ret['taobao1'];
+                        if (taobao1["status"] == 1) {
+                            str = str + '<p class="t1">' + taobao1["accname"] + '(审核通过)</p>';
+                        } else if (taobao1["status"] == -1) {
+                            str = str + '<p class="t1">' + taobao1["accname"] + '(审核失败)</p>';
+                        } else if (taobao1["status"] == 0) {
+                            str = str + '<p class="t1">' + taobao1["accname"] + '(待审核)</p>';
+                        } else {
+                            str = str + '<p class="t1">(未绑定)</p>';
+                        }
+                        str = str + '<p>今日已接垫付：' + taobao1["today_order_num"] + '/' + taobao1['order_day_num'] + '单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+
+                        if (taobao1["status"] == 1) {
+                            if (taobao1["flag"] == 1) {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + taobao1["id"] + '" tapmode onclick="postAcc(' + taobao1["id"] + ')" class="chk_1" value="1" checked/><label for="chk_taobao' +
+                                    taobao1["id"] + '"></label>';
+                            } else {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + taobao1["id"] + '" tapmode onclick="postAcc(' + taobao1["id"] + ')" class="chk_1" value="1" /><label for="chk_taobao' + taobao1["id"] +
+                                    '"></label>';
+                            }
+                        } else {
+                            str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(' + taobao1["status"] + ')"></label>';
+                        }
+                    } else {
+                        str = str + '<p class="t1">(未绑定)</p>';
+                        str = str + '<p>今日已接垫付：0/0单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+                        str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(2)"></label>';
+                    }
+
+                    str = str + '</span>';
+                    str = str + '</li>';
+
+                    // 第二个淘宝账号
+                    str = str + '<li>';
+                    str = str + '<span tapmode onclick="openAccount();" class="tb1">&#xe6ff;</span>';
+                    str = str + '<div tapmode onclick="openAccount();" >';
+                    if (ret['taobao2']) {
+                        var taobao2 = ret['taobao2'];
+                        if (taobao2["status"] == 1) {
+                            str = str + '<p class="t1">' + taobao2["accname"] + '(审核通过)</p>';
+                        } else if (taobao2["status"] == -1) {
+                            str = str + '<p class="t1">' + taobao2["accname"] + '(审核失败)</p>';
+                        } else if (taobao2["status"] == 0) {
+                            str = str + '<p class="t1">' + taobao2["accname"] + '(待审核)</p>';
+                        } else {
+                            str = str + '<p class="t1">(未绑定)</p>';
+                        }
+                        str = str + '<p>今日已接垫付：' + taobao2["today_order_num"] + '/' + taobao2['order_day_num'] + '单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+
+                        if (taobao2["status"] == 1) {
+                            if (taobao2["flag"] == 1) {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + taobao2["id"] + '" tapmode onclick="postAcc(' + taobao2["id"] + ')" class="chk_1" value="1" checked/><label for="chk_taobao' +
+                                    taobao2["id"] + '"></label>';
+                            } else {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + taobao2["id"] + '" tapmode onclick="postAcc(' + taobao2["id"] + ')" class="chk_1" value="1" /><label for="chk_taobao' + taobao2["id"] +
+                                    '"></label>';
+                            }
+                        } else {
+                            str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(' + taobao2["status"] + ')"></label>';
+                        }
+                    } else {
+                        str = str + '<p class="t1">(未绑定)</p>';
+                        str = str + '<p>今日已接垫付：0/0单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+                        str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(2)"></label>';
+                    }
+
+                    str = str + '</span>';
+                    str = str + '</li>';
+
+                    // 京东账号
+                    str = str + '<li>';
+                    str = str + '<span tapmode onclick="openAccount();" class="tb2">&#xe600;</span>';
+                    str = str + '<div tapmode onclick="openAccount();" >';
+                    if (ret['2']) {
+                        var jingdong = ret['2'];
+                        if (jingdong["status"] == 1) {
+                            str = str + '<p class="t1">' + jingdong["accname"] + '(审核通过)</p>';
+                        } else if (jingdong["status"] == -1) {
+                            str = str + '<p class="t1">' + jingdong["accname"] + '(审核失败)</p>';
+                        } else if (jingdong["status"] == 0) {
+                            str = str + '<p class="t1">' + jingdong["accname"] + '(待审核)</p>';
+                        } else {
+                            str = str + '<p class="t1">(未绑定)</p>';
+                        }
+                        str = str + '<p>今日已接垫付：' + jingdong["today_order_num"] + '/' + jingdong['order_jd_num'] + '单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+
+                        if (jingdong["status"] == 1) {
+                            if (jingdong["flag"] == 1) {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + jingdong["id"] + '" tapmode onclick="postAcc(' + jingdong["id"] + ')" class="chk_1" value="1" checked/><label for="chk_taobao' +
+                                    jingdong["id"] + '"></label>';
+                            } else {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + jingdong["id"] + '" tapmode onclick="postAcc(' + jingdong["id"] + ')" class="chk_1" value="1" /><label for="chk_taobao' + jingdong["id"] +
+                                    '"></label>';
+                            }
+                        } else {
+                            str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(' + jingdong["status"] + ')"></label>';
+                        }
+                    } else {
+                        str = str + '<p class="t1">(未绑定)</p>';
+                        str = str + '<p>今日已接垫付：0/0单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+                        str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(2)"></label>';
+                    }
+
+                    str = str + '</span>';
+                    str = str + '</li>';
+
+                    // 拼多多账号
+                    str = str + '<li>';
+                    str = str + '<span tapmode onclick="openAccount();" class="tb3">&#xe602;</span>';
+                    str = str + '<div tapmode onclick="openAccount();" >';
+                    if (ret['3']) {
+                        var pinduoduo = ret['3'];
+                        if (pinduoduo["status"] == 1) {
+                            str = str + '<p class="t1">' + pinduoduo["accname"] + '(审核通过)</p>';
+                        } else if (pinduoduo["status"] == -1) {
+                            str = str + '<p class="t1">' + pinduoduo["accname"] + '(审核失败)</p>';
+                        } else if (pinduoduo["status"] == 0) {
+                            str = str + '<p class="t1">' + pinduoduo["accname"] + '(待审核)</p>';
+                        } else {
+                            str = str + '<p class="t1">(未绑定)</p>';
+                        }
+                        str = str + '<p>今日已接垫付：' + pinduoduo["today_order_num"] + '/' + pinduoduo['order_pdd_num'] + '单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+
+                        if (pinduoduo["status"] == 1) {
+                            if (pinduoduo["flag"] == 1) {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + pinduoduo["id"] + '" tapmode onclick="postAcc(' + pinduoduo["id"] + ')" class="chk_1" value="1" checked/><label for="chk_taobao' +
+                                    pinduoduo["id"] + '"></label>';
+                            } else {
+                                str = str + '<input type="checkbox" name="chk_taobao" id="chk_taobao' + pinduoduo["id"] + '" tapmode onclick="postAcc(' + pinduoduo["id"] + ')" class="chk_1" value="1" /><label for="chk_taobao' + pinduoduo[
+                                    "id"] + '"></label>';
+                            }
+                        } else {
+                            str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(' + pinduoduo["status"] + ')"></label>';
+                        }
+                    } else {
+                        str = str + '<p class="t1">(未绑定)</p>';
+                        str = str + '<p>今日已接垫付：0/0单</p>';
+                        str = str + '</div>';
+                        str = str + '<span class="btn">';
+                        str = str + '<input type="checkbox" class="chk_1" value="1" disabled="disabled" /><label tapmode onclick="bindLostTips(2)"></label>';
+                    }
+
+                    str = str + '</span>';
+                    str = str + '</li>';
+
+                    $api.html($api.byId('accountinfolist'), str);
+                    $api.html($api.byId("userid"), ret.member_id);
+                    $api.html($api.byId("rates"), ret.rates);
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getLocalTime(nS) {
+            var d = new Date(parseInt(nS) * 1000);
+            y = d.getFullYear();
+            m = d.getMonth() + 1;
+            d = d.getDate();
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            return y + "-" + m + "-" + d;
+        }
+
+        //变更平台账户状态
+        function postAcc(platform_id) {
+            var flag = 0;
+            if (document.getElementById("chk_taobao" + platform_id).checked) {
+                flag = 1;
+            }
+            api.ajax({
+                url: myurl + '/index.php/User/Account/postplatforminfo/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: platform_id,
+                        flag: flag
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 0) {
+                        api.toast({
+                            msg: '开启账号失败',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        if (flag == 1) {
+                            document.getElementById("chk_taobao" + platform_id).checked = false;
+                        } else {
+                            document.getElementById("chk_taobao" + platform_id).checked = true;
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (flag == 1) {
+                        document.getElementById("chk_taobao" + platform_id).checked = false;
+                    } else {
+                        document.getElementById("chk_taobao" + platform_id).checked = true;
+                    }
+                }
+            });
+
+        }
+
+        function openCloseTask() {
+            window.clearInterval(time1);
+            window.clearInterval(time2);
+            ms = 0, s = 0, m = 0, h = 0;
+            document.getElementById('time').innerHTML = "00:00:00";
+            document.getElementById('taskbtn1').style.display = "block";
+            document.getElementById('taskbtn2').style.display = "none";
+        }
+
+        function openTask() {
+            api.ajax({
+                url: myurl + '/index.php/User/Task/ordernum/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 1000,
+                            location: 'bottom'
+                        });
+                    } else if (ret.status == 3) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 1000,
+                            location: 'bottom'
+                        });
+                    } else {
+                        document.getElementById('taskbtn1').style.display = "none";
+                        document.getElementById('taskbtn2').style.display = "block";
+                        time2 = setInterval(timer, 1000);
+                        time1 = setInterval(function() {
+                            api.ajax({
+                                url: myurl + '/index.php/User/Task/ceshi',
+                                method: 'post',
+                                data: {
+                                    values: {
+                                        username: $api.getStorage("username"),
+                                        userid: $api.getStorage("userid"),
+                                    }
+                                }
+                            }, function(ret, err) {
+                                if (ret) {
+                                    if (ret.status == 0) {
+                                        window.clearInterval(time1);
+                                        window.clearInterval(time2);
+                                        ms = 0, s = 0, m = 0, h = 0;
+                                        document.getElementById('time').innerHTML = "00:00:00";
+                                        document.getElementById('taskbtn1').style.display = "block";
+                                        document.getElementById('taskbtn2').style.display = "none";
+
+                                        global_account = ret.acount.accname; // 账号名称
+                                        var data = ret.data[0][0];
+
+                                        global_shopname = data.shopname; // 店铺名称
+                                        var shopname_arr = data.shopname.split('');
+                                        for (var i = 0; i < shopname_arr.length; i++) {
+                                            if (i % 2 != 0) {
+                                                shopname_arr[i] = '*';
+                                            }
+                                        }
+                                        $api.html($api.byId('shop-name'), shopname_arr.join(''));
+
+                                        var global_bj_price = data['bj_price']; // 垫付金额
+                                        if (data['category_id'] < 100) {
+                                            $api.html($api.byId('df-money'), "￥" + computedPrice(global_bj_price));
+                                        } else {
+                                            $api.html($api.byId('df-money'), "￥" + global_bj_price);
+                                        }
+
+                                        global_yjm_price = data.yjm_price; // 任务佣金
+                                        $api.html($api.byId('task-money'), "￥" + global_yjm_price);
+
+                                        global_category = data.category; // 任务类型
+                                        $api.html($api.byId('task-type'), global_category);
+
+                                        global_id = data.id; // 任务id
+
+                                        global_category_id = data.category_id; // 任务类型id
+
+                                        if (global_category_id >= 100) {
+                                            $api.css($api.byId('isbrowse'), 'display: block');
+                                        } else {
+                                            $api.css($api.byId('isbrowse'), 'display: none');
+                                        }
+
+                                        // 商家要求图片
+                                        global_isimgUrl = '';
+                                        if (data.isimgUrl1) {
+                                            global_isimgUrl += '<img id="require-images1" tapmode onclick=openPicture("require-images1"); src="' + geturl(data.isimgUrl1) + '">';
+                                        }
+                                        if (data.isimgUrl2) {
+                                            global_isimgUrl += '<img id="require-images2" tapmode onclick=openPicture("require-images2"); src="' + geturl(data.isimgUrl2) + '">';
+                                        }
+                                        if (data.isimgUrl3) {
+                                            global_isimgUrl += '<img id="require-images3" tapmode onclick=openPicture("require-images3"); src="' + geturl(data.isimgUrl3) + '">';
+                                        }
+                                        if (global_isimgUrl != '') {
+                                            $api.html($api.byId('require-images'), global_isimgUrl);
+                                        }
+
+                                        // 商家要求文字
+                                        global_isremark = data.isremark;
+                                        if (global_isremark != '') {
+                                            // var iremark = global_isremark.replace(/[A-Za-z0-9]/g, '*');
+                                            $api.html($api.byId('store-require'), global_isremark);
+                                        }
+
+                                        // 任务对应的平台id
+                                        global_platform = data.platform;
+
+                                        // 弹出任务详情界面
+                                        openTaskDetails();
+                                    } else {
+                                        // api.toast({
+                                        //     msg: ret.msg,
+                                        //     duration: 2000,
+                                        //     location: 'bottom'
+                                        // });
+                                    }
+                                } else {
+                                    //alert( JSON.stringify( err ) );
+                                    api.toast({
+                                        msg: '网络错误',
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                }
+                            });
+                        }, 10000);
+                    }
+                } else {
+                    //alert( JSON.stringify( err ) );
+                }
+            });
+
+        }
+
+        function timer() { //定义计时函数
+            ms = ms + 1000; //毫秒
+            if (ms >= 1000) {
+                ms = 0;
+                s = s + 1; //秒
+            }
+            if (s >= 60) {
+                s = 0;
+                m = m + 1; //分钟
+            }
+            if (m >= 60) {
+                m = 0;
+                h = h + 1; //小时
+            }
+            str = toDub(h) + ":" + toDub(m) + ":" + toDub(s);
+            mytime = document.getElementById('time');
+            mytime.innerHTML = str;
+            // document.getElementById('mytime').innerHTML=h+"时"+m+"分"+s+"秒"+ms+"毫秒";
+        }
+
+        function toDub(n) { //补0操作
+            if (n < 10) {
+                return "0" + n;
+            } else {
+                return "" + n;
+            }
+        }
+
+        function openTaskLayer() {
+            var dialogBox = api.require('dialogBox');
+            dialogBox.alert({
+                texts: {
+                    title: '订单提示',
+                    content: '您已经获取到订单，开始操作该订单吗？',
+                    leftBtnTitle: '取消',
+                    rightBtnTitle: '确认'
+                },
+                styles: {
+                    bg: '#fff',
+                    w: 300,
+                    corner: 2,
+                    title: {
+                        marginT: 20,
+                        icon: 'widget://res/gou.png',
+                        iconSize: 40,
+                        titleSize: 14,
+                        titleColor: '#000'
+                    },
+                    content: {
+                        color: '#000',
+                        size: 14
+                    },
+                    left: {
+                        marginB: 7,
+                        marginL: 20,
+                        w: 130,
+                        h: 35,
+                        corner: 2,
+                        bg: '#f2f2f2',
+                        color: '#666',
+                        size: 12
+                    },
+                    right: {
+                        marginB: 7,
+                        marginL: 10,
+                        w: 130,
+                        h: 35,
+                        corner: 2,
+                        bg: '#04b848',
+                        color: '#ffffff',
+                        size: 12
+                    }
+                }
+            }, function(ret) {
+
+                var dialogBox = api.require('dialogBox');
+                dialogBox.close({
+                    dialogName: 'alert'
+                });
+
+                if (ret.eventType == 'right') {
+                    api.openWin({
+                        name: 'window_task_list_on',
+                        url: './window_task_list_on.html',
+                        pageParam: {
+                            name: 'window_task_list_on',
+                            pt_id: global_platform
+                        }
+                    });
+                }
+            });
+        }
+
+        function isOpenContactLimits() {
+            confirmPer('contacts');
+        }
+
+        function confirmPer(perm) {
+            var has = hasPermission(perm);
+            // alert("检测权限 = " + JSON.stringify(has));
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '通讯录' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function(ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission(perm);
+                    }
+                });
+                return false;
+            }
+            openTask();
+            return true;
+        }
+
+        function hasPermission(one_per) {
+            var perms = new Array();
+            if (one_per) {
+                perms.push(one_per);
+            } else {
+                var prs = document.getElementsByName("p_list");
+                for (var i = 0; i < prs.length; i++) {
+                    if (prs[i].checked) {
+                        perms.push(prs[i].value);
+                    }
+                }
+            }
+            var rets = api.hasPermission({
+                list: perms
+            });
+            if (!one_per) {
+                // alert('判断结果：' + JSON.stringify(rets));
+                return;
+            }
+            return rets;
+        }
+
+        function reqPermission(one_per) {
+            var perms = new Array();
+            if (one_per) {
+                perms.push(one_per);
+            } else {
+                var prs = document.getElementsByName("p_list_r");
+                for (var i = 0; i < prs.length; i++) {
+                    if (prs[i].checked) {
+                        perms.push(prs[i].value);
+                    }
+                }
+            }
+            api.requestPermission({
+                list: perms,
+                code: 100001
+            }, function(ret, err) {
+                if (ret['list'][0]['granted']) {
+                    openTask();
+                }
+            });
+        }
+
+        function openRule() {
+            api.openWin({
+                name: 'window_acceptance_rule',
+                url: './window_acceptance_rule.html',
+                pageParam: {
+                    name: 'window_acceptance_rule'
+                }
+            });
+        }
+
+        // 任务详情界面
+        function openTaskDetails() {
+            getSetting();
+            $api.html($api.byId('djs'), 30);
+            $api.css($api.dom('.achieving-tasks'), 'display: block;');
+            clearInterval(dsj_timer);
+
+            dsj_timer = setInterval(function() {
+                var djs = $api.byId('djs');
+                var value = $api.html(djs);
+                $api.html(djs, --value);
+                if (value == 0) {
+                    refuseTask();
+                }
+            }, 1000);
+        }
+
+        // 拒绝任务
+        function refuseTask() {
+            clearInterval(dsj_timer);
+            $api.css($api.dom('.achieving-tasks'), 'display: none;');
+            isOpenContactLimits();
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/refuse',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: global_id,
+                        accname: global_account
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {} else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        // 今日不再接此店铺的任务
+        function noAcceptToday() {
+            clearInterval(dsj_timer);
+            $api.css($api.dom('.achieving-tasks'), 'display: none;');
+            isOpenContactLimits();
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/refuse_shop',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: global_id,
+                        accname: global_account,
+                        shopname: global_shopname
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {} else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        // 接受任务
+        function acceptTask() {
+            clearInterval(dsj_timer);
+            $api.css($api.dom('.achieving-tasks'), 'display: none;');
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/receipt',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: global_id,
+                        accname: global_account
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (ret.status == 1) {
+                        getList();
+                        openTaskLayer();
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function openBackTips() {
+            if ($api.getStorage("hadOpened") == 0) {
+                $api.setStorage('hadOpened', 1);
+                api.openFrame({
+                    name: 'frame_back_tips',
+                    url: './frame_back_tips.html',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: "auto",
+                        h: "auto"
+                    },
+                    pageParam: {
+                        name: 'frame_back_tips'
+                    },
+                    bounces: false,
+                    bgColor: 'rgba(0,0,0,0)',
+                    vScrollBarEnabled: true,
+                    hScrollBarEnabled: true
+                });
+            } else {
+                isTips();
+            }
+        }
+
+        function openAccount() {
+            api.openWin({
+                name: 'window_account',
+                url: './window_account.html',
+                pageParam: {
+                    name: 'window_account'
+                }
+            });
+
+        }
+
+        function getSetting() {
+            var sy = $api.getStorage("isVoiceOpen");
+            var zd = $api.getStorage("isShakeOpen");
+
+            // 是否播放接单音乐或震动
+            if (sy == 1 && zd == 1) {
+                api.notification({
+                    vibrate: [400, 400, 400, 400],
+                    sound: 'widget://res/music.mp3',
+                    // notify: {
+                    //     title: '恭喜您，接单成功！',
+                    //     content: '订单请在1个小时内完成提交！'
+                    // }
+                });
+            } else if (sy == 1 && zd == 0) {
+                api.notification({
+                    sound: 'widget://res/music.mp3',
+                    // notify: {
+                    //     title: '恭喜您，接单成功！',
+                    //     content: '订单请在1个小时内完成提交！'
+                    // }
+                });
+            } else if (sy == 0 && zd == 1) {
+                api.notification({
+                    vibrate: [400, 400, 400, 400],
+                    // notify: {
+                    //     title: '恭喜您，接单成功！',
+                    //     content: '订单请在1个小时内完成提交！'
+                    // }
+                });
+            } else if (sy == 0 && zd == 0) {
+                api.notification({
+                    sound: '',
+                    // notify: {
+                    //     title: '恭喜您，接单成功！',
+                    //     content: '订单请在1个小时内完成提交！'
+                    // }
+                });
+            }
+        }
+
+        function isTips() {
+            api.ajax({
+                url: myurl + '/index.php/User/Suggestion/getjrmsg',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.jrbz == 0) {
+                        api.openFrame({
+                            name: 'frame_accept_tips',
+                            url: './frame_accept_tips.html',
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: "auto",
+                                h: "auto"
+                            },
+                            pageParam: {
+                                name: 'frame_accept_tips'
+                            },
+                            bounces: false,
+                            bgColor: 'rgba(0,0,0,0)',
+                            vScrollBarEnabled: true,
+                            hScrollBarEnabled: true
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function bindLostTips(status) {
+            if (status == -1) {
+                api.toast({
+                    msg: '审核失败，请重新绑定',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else if (status == 0) {
+                api.toast({
+                    msg: '请等待审核结果',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else {
+                api.toast({
+                    msg: '请先绑定账号',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

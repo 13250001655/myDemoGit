@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+            background: #fff;
+        }
+
+        .eye-icon {
+            top: 7px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head1">
+        <a class="left" tapmode onclick="api.closeWin();">&#xe606;</a>
+        <div>会员注册</div>
+    </header>
+    <div class="register_content">
+        <ul>
+            <li><i class="tel-icon"></i><input type="tel" name="username" id="username" class="register_input" pattern="[0-9]*" placeholder="请输入手机号"></li>
+            <li><i class="psw-icon"></i><input type="password" name="password" id="password" class="register_input" placeholder="请输入密码"><i class="eye-icon" tapmode onclick="changePswStatus(this);"></i></li>
+            <li><i class="psw-icon"></i><input type="password" name="repassword" id="repassword" class="register_input" placeholder="请再次输入密码"><i class="eye-icon" tapmode onclick="changePswStatus(this);"></i></li>
+            <li><i class="yzm-icon"></i><input type="text" name="invite_code" id="invite_code" class="register_input" placeholder="请输入邀请码"></li>
+            <li><i class="yzm-icon"></i><input type="text" name="vcode" id="vcode" class="code_input" placeholder="请输入验证码"><a id="get_code" tapmode onclick="getCode()" class="get_code">获取验证码</a></li>
+            <li><input type="button" value="注册" tapmode onclick="register()" class="register_btn"></li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/jquery.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = document.querySelector('#header');
+        $api.fixStatusBar(header);
+        var h = $api.offset(document.querySelector('#header')).h;
+    };
+
+    function register() {
+        var username = $api.byId("username").value;
+        var password = $api.byId("password").value;
+        var repassword = $api.byId("repassword").value;
+        var vcode = $api.byId("vcode").value;
+        var invite_code = $api.byId("invite_code").value;
+
+
+        if (username.length != 11) {
+            api.toast({
+                msg: '手机号码位11位',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (!new RegExp("^0?(13|15|16|17|18|14|19)[0-9]{9}$").test(username)) {
+            api.toast({
+                msg: '请输入手机号码',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+
+        if (password.length == 0) {
+            api.toast({
+                msg: '请输入密码',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (password.length < 6 || password.length > 20) {
+            api.toast({
+                msg: '密码长度在6-20个字符之间',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (repassword != password) {
+            api.toast({
+                msg: '两次密码输入不一致',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (vcode.length == 0) {
+            api.toast({
+                msg: '请输入验证码',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+
+        api.showProgress();
+        api.ajax({
+            url: myurl + '/index.php/User/Public/register/',
+            method: 'post',
+            data: {
+                values: {
+                    "username": username,
+                    "password": password,
+                    "vcode": vcode,
+                    "invite_code": invite_code
+                }
+            }
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                if (ret.status == 1) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    setTimeout(function() {
+                        api.closeToWin({
+                            name: 'root'
+                        });
+                    }, 1000);
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            } else {
+                api.toast({
+                    msg: '网络错误！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+
+    }
+
+    function getCode() {
+        var username = $api.byId("username").value;
+        if (username.length != 11) {
+            api.toast({
+                msg: '手机号码位11位',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (!new RegExp("^0?(13|15|16|17|18|14|19)[0-9]{9}$").test(username)) {
+            api.toast({
+                msg: '请输入手机号码',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+
+        leftTime = 60;
+        $("#get_code").attr("disabled", true).css("pointer-events", "none");
+        var leftSet = setInterval(function() {
+            $("#get_code").html('剩余' + leftTime + '秒');
+            leftTime--;
+            if (leftTime < 1) {
+                clearInterval(leftSet);
+                $("#get_code").removeAttr("disabled");
+                $("#get_code").css("pointer-events", "auto");
+                $("#get_code").text("获取验证码");
+            }
+
+        }, 1000);
+
+
+        api.ajax({
+            url: myurl + '/index.php/User/Public/send_phone_code/',
+            method: 'post',
+            data: {
+                values: {
+                    "phone": username,
+                }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.status == 1) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            } else {
+                api.toast({
+                    msg: '网络错误！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+</script>
+
+</html>

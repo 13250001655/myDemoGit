@@ -1,0 +1,3776 @@
+html, body {
+    font-size: 14px;
+    height: 100%;
+    background: #f2f2f2;
+}
+
+.hover {
+    opacity: .8;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+}
+
+input {
+    outline: none;
+}
+
+input::-webkit-input-placeholder {
+    font-size: 14px;
+}
+
+input[type=button], input[type=submit], input[type=file], button {
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+select {
+    outline: none;
+}
+
+textarea {
+    outline: none;
+}
+
+img {
+    border: 0px;
+    max-width: 100%;
+}
+
+.flex-wrap {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex-con {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.flex-vertical {
+    -webkit-box-orient: vertical;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+}
+
+#wrap {
+    height: 100%;
+}
+
+.mfix {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+}
+
+.mt40 {
+    margin-top: 40px;
+}
+
+#header {
+    background: #04b848;
+}
+
+
+/*基础*/
+
+.head1 {
+    width: 100%;
+    height: 50px;
+    background: #04b848;
+    color: #fff;
+    overflow: hidden;
+}
+
+.head1 a.left {
+    width: 10%;
+    text-align: center;
+    color: #fff;
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    display: block;
+    font-family: iconfont !important;
+    font-size: 20px;
+}
+
+.head1 div {
+    width: 80%;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    float: left;
+    line-height: 50px;
+}
+
+.head2 {
+    padding: 0px 10px;
+    width: 100%;
+    height: 50px;
+    background: #04b848;
+    overflow: hidden;
+    border-bottom: 1px solid #F2F2F2;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.head2 a.left {
+    width: 40%;
+    text-align: center;
+    color: #fff;
+    height: 50px;
+    line-height: 50px;
+    float: left;
+    display: block;
+    font-size: 16px;
+    text-align: left;
+    ;
+}
+
+.head2 a.left span {
+    font-family: iconfont !important;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.head2 div {
+    width: 20%;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    float: left;
+    line-height: 50px;
+}
+
+.head2 a.right {
+    width: 40%;
+    text-align: right;
+    color: #fff;
+    height: 50px;
+    line-height: 50px;
+    float: right;
+    display: block;
+    font-size: 16px;
+}
+
+.head2 a.right span {
+    font-family: iconfont !important;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+#mainer {
+    width: 100%;
+}
+
+
+/*登录  */
+
+.login_txt {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background-color: #04b848;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.login_head {
+    padding-bottom: 20px;
+}
+
+.login_head img {
+    margin-right: 20px;
+    display: block;
+    width: 100%;
+}
+
+.login_content {
+    padding: 0px 0px;
+}
+
+.login_content ul {
+    width: 100%;
+}
+
+.login_content ul li {
+    width: 100%;
+    overflow: hidden;
+    padding-top: 10px;
+    position: relative;
+}
+
+.login_content ul li .tel-icon {
+    position: absolute;
+    left: 14px;
+    top: 19px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../image/tel-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.login_content ul li .psw-icon {
+    position: absolute;
+    left: 14px;
+    top: 19px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../image/psw-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.login_content ul li .see-psw-icon {
+    position: absolute;
+    right: 14px;
+    top: 19px;
+    display: block;
+    width: 22px;
+    height: 18px;
+    background-image: url(../image/see-psw-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.login_content ul li .login_input {
+    text-indent: 44px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.login_content ul li .login_btn {
+    display: block;
+    opacity: 0.7;
+    width: 120px;
+    height: 44px;
+    line-height: 44px;
+    background: #04b848;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 22px;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+
+.login_foot {
+    padding: 0px 10px;
+    text-align: center;
+    line-height: 30px;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.login_foot a {
+    color: #04b848;
+}
+
+.register_content {}
+
+.register_content ul {
+    width: 100%;
+}
+
+.register_content ul li {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 5px 0px;
+    border-bottom: 1px solid #ddd;
+}
+
+.register_content ul li .register_input {
+    text-indent: 36px;
+    width: 100%;
+    padding: 0px 10px;
+    height: 40px;
+    border: 0px;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+.register_content ul li .code_input {
+    text-indent: 36px;
+    width: 70%;
+    padding: 0px 10px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    float: left;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.register_content ul li .get_code {
+    width: 30%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: #04b848;
+    float: left;
+    text-align: center;
+    display: block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 0px 10px;
+}
+
+.register_content ul li .register_btn {
+    display: block;
+    width: 40%;
+    height: 40px;
+    line-height: 40px;
+    background: #04b848;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+
+.register_content ul li:last-child {
+    border: none;
+}
+
+.register_content ul li .tel-icon {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../image/tel-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.register_content ul li .yzm-icon {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../image/yzm-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.register_content ul li .psw-icon {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../image/psw-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.register_content ul li .see-psw-icon {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    display: block;
+    width: 22px;
+    height: 18px;
+    background-image: url(../image/see-psw-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+/*修改密码*/
+
+.passwordlist {
+    width: 100%;
+    background: #fff;
+}
+
+.passwordlist li {
+    padding: 0px 10px;
+    border-bottom: 1px solid #f2f2f2;
+    overflow: hidden;
+    position: relative;
+}
+
+.passwordlist li .input {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 14px;
+    text-indent: 34px;
+}
+
+.passwordlist .psw-icon {
+    position: absolute;
+    left: 14px;
+    top: 15px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../image/psw-icon.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+/*首页*/
+
+.box1 {
+    /*padding: 10px;*/
+    background: #fff;
+    border-radius: 3px 3px 0px 0px;
+}
+
+.box1 .box1_c {
+    /*box-shadow: 0px 1px 3px #dedede;*/
+    background: #04b848;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.box1 .box1_c1 {
+    /*width: 100%;*/
+    overflow: hidden;
+    background: #04b848;
+    margin: 0 15px 0 15px;
+    padding: 15px 0;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    /*border-radius: 3px 3px 0px 0px;*/
+    border-bottom: 1px solid #fff;
+}
+
+.box1 .box1_c1 .yj {
+    width: 100%;
+    float: left;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    /*border-right: 1px solid #fff;*/
+}
+
+.box1 .box1_c1 .yj p.i {
+    font-family: iconfont !important;
+    font-size: 30px;
+    line-height: 30px;
+}
+
+.box1 .box1_c1 .yj p.p {
+    font-size: 18px;
+}
+
+.box1 .box1_c1 .yj p {
+    line-height: 20px;
+}
+
+.box1 .box1_c1 .bj {
+    width: 50%;
+    float: right;
+    text-align: center;
+}
+
+.box1 .box1_c1 .bj {
+    width: 50%;
+    float: left;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+.box1 .box1_c1 .bj p.i {
+    font-family: iconfont !important;
+    font-size: 30px;
+    line-height: 30px;
+}
+
+.box1 .box1_c1 .bj p.p {
+    font-size: 18px;
+}
+
+.box1 .box1_c1 .bj p {
+    line-height: 20px;
+}
+
+.box1 .box1_c .today-rewards {
+    padding: 10px 15px;
+}
+
+.box1 .box1_c .today-rewards div {
+    line-height: 24px;
+}
+
+.box1 .box1_c .today-rewards div span {
+    color: #fff;
+}
+
+.box1 .box1_c .today-rewards div span:last-child {
+    float: right;
+}
+
+.box1 .box1_c .today-rewards div span:first-child {
+    float: left;
+}
+
+.box1 .box1_c .today-rewards div span i {
+    font-style: normal;
+}
+
+.box1 .box1_c .service-info span i {
+    font-style: normal;
+}
+
+.box1 .box1_c .service-info {
+    color: #fff;
+    padding: 6px 15px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.box1 .box1_c .service-info span .qq-icon {
+    font-family: iconfont !important;
+    font-size: 16px;
+    padding-right: 4px;
+    vertical-align: top;
+}
+
+.box1 .box1_c .service-info span:first-child {
+    float: left;
+}
+
+.box1 .box1_c .service-info span:last-child {
+    float: right;
+}
+
+.box1 .box1_c2 {
+    width: 100%;
+    padding: 5px 0px;
+    overflow: hidden;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.box1 .box1_c2 .rwsr {
+    width: 50%;
+    float: left;
+    padding-left: 10%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-right: 1px solid #ccc;
+}
+
+.box1 .box1_c2 .rwsr p.i {
+    text-align: left;
+    font-family: iconfont !important;
+    font-size: 16px;
+    text-indent: 0px;
+}
+
+.box1 .box1_c2 .rwsr p.i span {
+    color: #04b848
+}
+
+.box1 .box1_c2 .rwsr p {
+    font-size: 12px;
+    text-indent: 20px;
+    line-height: 20px;
+    color: #666;
+}
+
+.box1 .box1_c2 .tgjl {
+    width: 50%;
+    float: left;
+    padding-left: 10%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.box1 .box1_c2 .tgjl p.i {
+    text-align: left;
+    font-family: iconfont !important;
+    font-size: 16px;
+    text-indent: 0px;
+}
+
+.box1 .box1_c2 .tgjl p.i span {
+    color: #04b848
+}
+
+.box1 .box1_c2 .tgjl p {
+    font-size: 12px;
+    text-indent: 20px;
+    line-height: 20px;
+    color: #666;
+}
+
+.box2 {
+    /*margin: 10px 0px;*/
+    background: #fff;
+    overflow: hidden;
+}
+
+.box2 .pic {
+    /*width: 10%;*/
+    /*float: left;*/
+    /*line-height: 30px;*/
+    text-align: center;
+    font-family: iconfont !important;
+    font-size: 20px;
+    color: #04b848;
+    padding-left: 10px;
+    vertical-align: top;
+}
+
+.box2 .txt {
+    /*width: 90%;*/
+    /*float: left;*/
+    font-size: 14px;
+    /*font-weight: bold;*/
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.box2 #notice {
+    padding: 10px 0;
+}
+
+.box2 #notice li {
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.box2 #notice li .notice-txt {
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 10px;
+    color: #04b848;
+}
+
+
+/*.box2 .txt marquee {
+    line-height: 50px;
+    float: left;
+    width: 100%;
+}
+
+.box2 .txt marquee span {
+    margin-right: 30px;
+}*/
+
+.box3 {
+    margin: 10px 0px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.box3 ul li {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #F5F7F9;
+}
+
+.box3 ul li span.p1 {
+    width: 10%;
+    float: left;
+    line-height: 50px;
+    text-align: center;
+    font-family: iconfont !important;
+    font-size: 20px;
+    color: #04b848;
+}
+
+.box3 ul li div {
+    text-align: left;
+    width: 80%;
+    float: left;
+    ;
+    overflow: hidden;
+    ;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.box3 ul li span.p2 {
+    width: 10%;
+    float: left;
+    line-height: 50px;
+    text-align: center;
+    font-family: iconfont !important;
+    font-size: 20px;
+    color: #666;
+}
+
+.box4 {
+    overflow: hidden;
+    text-align: center;
+    position: absolute;
+    bottom: 2%;
+    width: 100%;
+}
+
+.box4 input {
+    background: #04b848;
+    color: #fff;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    width: 80px;
+    margin: 0px auto;
+    font-size: 18px;
+    margin-top: 5px;
+    /*font-weight: bolder;*/
+}
+
+.box4 input.close {
+    background: #04b848;
+    color: #fff;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    width: 80px;
+    margin: 0px auto;
+    font-size: 18px;
+    margin-top: 5px;
+    /*font-weight: bolder;*/
+}
+
+.box4 p {
+    line-height: 20px;
+    text-align: center;
+}
+
+.box5 {
+    margin: 10px 0px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.box5 .pic {
+    width: 10%;
+    float: left;
+    line-height: 50px;
+    text-align: center;
+    font-family: iconfont !important;
+    font-size: 20px;
+    color: #04b848;
+}
+
+.box5 .txt {
+    float: right;
+    padding-right: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 50px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.box5 .wechat {
+    line-height: 50px;
+    font-weight: bold;
+    float: left;
+}
+
+
+/*佣金 本金*/
+
+.pricebox1 {
+    padding: 10px;
+    background: #04b848;
+    overflow: hidden;
+}
+
+.pricebox1 p.t1 {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.pricebox1 p.t2 {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    font-size: 20px;
+}
+
+.pricebox1 .c1 {
+    width: 50%;
+    float: left;
+    overflow: hidden;
+}
+
+.pricebox1 .c2 {
+    width: 50%;
+    float: right;
+    overflow: hidden;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-left: 1px solid #fff;
+}
+
+.pricebox1 .c1 .t1 {
+    text-align: center;
+}
+
+.pricebox1 .c1 .t2 {
+    text-align: center;
+}
+
+.pricebox1 .c2 .t1 {
+    text-align: center;
+}
+
+.pricebox1 .c2 .t2 {
+    text-align: center;
+}
+
+.pricedetail {
+    width: 100%;
+    /*margin-top: 10px;*/
+    background: #fff;
+}
+
+.pricedetail_h {
+    padding: 0px 10px;
+    width: 100%;
+    height: 40px;
+    background: #fff;
+    overflow: hidden;
+    line-height: 40px;
+    border-bottom: 1px solid #f2f2f2;
+    /*position: fixed;
+    left: 0px;
+    top: 0px;*/
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.pricedetail_h p {
+    width: 50%;
+    height: 40px;
+    overflow: hidden;
+    float: left;
+    ;
+}
+
+.pricedetail_h p:nth-child(2) {
+    text-align: right;
+}
+
+.pricedetail_c {
+    width: 100%;
+    /*margin-top: 40px;*/
+}
+
+.pricedetail_c ul li {
+    padding: 0px 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.pricedetail_c ul li p {
+    width: 50%;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    float: left;
+}
+
+.pricedetail_c ul li p:nth-child(2) {
+    text-align: right;
+}
+
+.pricedetail_c ul li p.x, .pricedetail_c ul li p.y {
+    width: 100%;
+    overflow: hidden;
+    font-size: 12px;
+    color: #666;
+    border-top: 1px dashed #eee;
+    height: 30px;
+    line-height: 30px;
+    /*padding-top: 5px;*/
+    /*padding-bottom: 10px;*/
+}
+
+
+/*公告*/
+
+.notice_con {
+    width: 100%;
+    overflow: hidden;
+}
+
+.notice_con ul li {
+    padding: 5px 10px;
+}
+
+.notice_con ul li p.t1 {
+    font-size: 14px;
+    color: #333;
+    line-height: 20px;
+    overflow: hidden;
+}
+
+.notice_con ul li p.t1 i {
+    /*float: left;*/
+    font-style: normal;
+}
+
+.notice_con ul li p.t1 i.newin {
+    display: inline-block;
+    padding: 0 5px;
+    color: #fff;
+    border-radius: 5px;
+    background-color: #f28714;
+    margin-left: 10px;
+}
+
+.notice_con ul li p.t1 span {
+    font-family: iconfont !important;
+    font-size: 25px;
+    color: red;
+    line-height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.notice_con ul li p.t2 {
+    font-size: 14px;
+    color: #666;
+    line-height: 20px;
+}
+
+.notice .tit {
+    padding: 0px 10px;
+    padding-top: 10px;
+    line-height: 30px;
+    color: #333;
+    font-size: 14px;
+}
+
+.notice .info {
+    padding: 0px 10px;
+    line-height: 30px;
+    color: #999;
+    font-size: 12px;
+}
+
+.notice .con {
+    padding: 0px 10px;
+    line-height: 20px;
+    color: #333；font-size: 14px;
+    padding-top: 5px;
+    overflow: hidden;
+    ;
+}
+
+.notice .info .notice-type {
+    display: inline-block;
+    padding: 0 5px;
+    color: #fff;
+    border-radius: 5px;
+    background-color: #f28714;
+    margin-left: 10px;
+    font-style: normal;
+    line-height: 22px;
+}
+
+
+/*消息*/
+
+.msg_con {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+.msg_con ul li {
+    padding: 5px 10px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.msg_con ul li p.t1 {
+    color: #333;
+    line-height: 20px;
+    width: 100%;
+    overflow: hidden;
+    ;
+}
+
+.msg_con ul li p.t1 span {
+    float: right;
+    color: #999;
+}
+
+.msg_con ul li p.t2 {
+    color: #04b848;
+    line-height: 20px;
+}
+
+
+/*没有数据*/
+
+.nodata {
+    width: 128px;
+    height: 128px;
+    background: url("../image/tb02.png") no-repeat center center;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -64px;
+    margin-top: -80px;
+}
+
+
+/*任务*/
+
+.taskbox {
+    overflow: hidden;
+}
+
+.taskbox .tit {
+    overflow: hidden;
+    height: 50px;
+    line-height: 50px;
+    background: #fff;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #eee;
+    text-indent: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.taskbox .ftit {
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    background: #fff;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #eee;
+    text-indent: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+.taskbox ul {
+    background: #fff;
+}
+
+.taskbox ul li {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #eee;
+}
+
+.taskbox ul li span.p1 {
+    width: 10%;
+    float: left;
+    line-height: 40px;
+    text-align: center;
+    font-family: iconfont !important;
+    font-size: 20px;
+    color: #04b848;
+}
+
+.taskbox ul li div {
+    text-align: left;
+    float: left;
+    overflow: hidden;
+    width: 75%;
+    font-size: 14px;
+    font-weight: bold;
+    color: #777;
+}
+
+.taskbox ul li span.p2 {
+    width: 6%;
+    float: right;
+    line-height: 40px;
+    text-align: left;
+    font-family: iconfont !important;
+    font-size: 20px;
+    color: #666;
+}
+
+.taskbox ul li span.task-num {
+    width: 24px;
+    float: left;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 50%;
+    background-color: #f00;
+    color: #fff;
+    margin-top: 8px;
+    display: none;
+}
+
+
+/*申诉*/
+
+.appealbox {
+    background: #04b848;
+    overflow: hidden;
+}
+
+.appealbox .tit {
+    overflow: hidden;
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #eee;
+    text-indent: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.appealbox .tab {
+    width: 100%;
+    height: 50px;
+    overflow: hidden;
+}
+
+.appealbox .tab ul li {
+    width: 50%;
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    ;
+    font-size: 16px;
+    color: #666;
+}
+
+.appealbox .tab ul li span {
+    border-bottom: 2px solid #FFffff;
+    line-height: 47px;
+    display: inline-block;
+    ;
+}
+
+.appealbox .tab ul li.active span {
+    border-bottom: 2px solid #04b848;
+}
+
+
+/*推广*/
+
+.extensionbox1 {
+    margin-top: 10px;
+    overflow: hidden;
+    background: #fff;
+    padding: 0px 10px;
+    font-size: 14px;
+}
+
+.extensionbox1 .txt1 {
+    width: 50%;
+    float: left;
+    overflow: hidden;
+    line-height: 50px;
+}
+
+.extensionbox1 .txt2 {
+    width: 50%;
+    float: left;
+    overflow: hidden;
+    line-height: 50px;
+    text-align: right;
+}
+
+.extensionbox1 .txt2 span {
+    color: #04b848;
+}
+
+.extensionbox1 .txt3 {
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 15px;
+    color: #04b848;
+}
+
+.extensionbox2 {
+    margin-top: 10px;
+    overflow: hidden;
+    background: #fff;
+    padding: 0px 10px;
+    font-size: 14px;
+}
+
+.extensionbox2 .tit {
+    width: 100%;
+    line-height: 50px;
+    border-bottom: 1px solid #ddd;
+}
+
+.extensionbox2 .tit i {
+    font-size: 12px;
+    padding-left: 10px;
+    color: #999;
+    font-style: normal;
+}
+
+.extensionbox2 .tit i span {
+    color: #04b848;
+}
+
+.extensionbox2 .con {
+    width: 100%;
+    overflow: hidden;
+    ;
+    padding: 8px 0px;
+    text-align: center;
+    color: #04b848;
+}
+
+.extensionbox2 .con .con_l {
+    width: 50%;
+    float: left;
+    border-box;
+    border-right: 1px solid #ddd;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.extensionbox2 .con .con_l p {
+    line-height: 20px;
+}
+
+.extensionbox2 .con .con_r {
+    width: 50%;
+    float: left;
+}
+
+.extensionbox2 .con .con_r p {
+    line-height: 20px;
+}
+
+.extensionbox3 {
+    margin-top: 20px;
+    overflow: hidden;
+    padding: 0px 10px;
+}
+
+.extensionbox3 input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    background: #04b848;
+    border-radius: 40px;
+}
+
+.extension_record {
+    width: 100%;
+    overflow: hidden;
+    ;
+}
+
+.extension_recordlist_h {
+    padding: 0px 10px;
+    width: 100%;
+    height: 40px;
+    font-size: 12px;
+    background: #fff;
+    overflow: hidden;
+    line-height: 40px;
+    border-top: 1px solid #e3e3e3;
+    border-bottom: 1px solid #e3e3e3;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.extension_recordlist_h p {
+    width: 33.33%;
+    height: 40px;
+    overflow: hidden;
+    float: left;
+    text-align: center;
+}
+
+.extension_recordlist_c {
+    width: 100%;
+    font-size: 12px;
+}
+
+.extension_recordlist_c ul li {
+    border-bottom: 1px solid #e3e3e3;
+    padding: 0px 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.extension_recordlist_c ul li p {
+    width: 33.33%;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    float: left;
+    text-align: center;
+}
+
+
+/*我的*/
+
+.user_msg {
+    padding: 0px 20px;
+    background: #04b848;
+    line-height: 25px;
+    padding-top: 10px;
+    text-align: right;
+    font-family: iconfont !important;
+    font-size: 25px;
+    color: #fff;
+}
+
+.user_head {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    /*background: #04b848 url(../image/wave-bot.png) repeat-x center bottom;*/
+    /*background-size: 80%;*/
+    /*float: left;*/
+    position: relative;
+    background-color: #04b848;
+}
+
+.user_head .pic {
+    width: 90px;
+    height: 90px;
+    border-radius: 90px;
+    background: #fff;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    overflow: hidden;
+    ;
+}
+
+.user_head .pic img {
+    width: 90px;
+    height: 90px;
+    border-radius: 90px;
+}
+
+.user_head .txt {
+    padding-left: 110px;
+    overflow: hidden;
+    height: 90px;
+    padding-top: 0px;
+    font-size: 14px;
+}
+
+.user_head .txt p:first-child {
+    padding-top: 15px;
+}
+
+.user_head .txt p {
+    line-height: 30px;
+    color: #fff;
+}
+
+.user_head .user-code {
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
+    width: 50px;
+}
+
+.user_content {
+    padding: 20px;
+    padding-top: 30px;
+    overflow: hidden;
+}
+
+.user_content ul li {
+    width: 48%;
+    float: left;
+    margin-bottom: 4%;
+    font-size: 16px;
+    box-shadow: 0px 0px 3px #dedede;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.user_content ul li:nth-child(2n) {
+    float: right;
+}
+
+.user_content ul li span {
+    font-family: iconfont !important;
+    padding-right: 5px;
+    font-size: 30px;
+    color: #04b848;
+}
+
+.user_content ul li:nth-child(1) span {
+    font-size: 20px;
+}
+
+.user_content ul li:nth-child(3) span {
+    font-size: 25px;
+}
+
+.user_btn {
+    padding: 20px;
+    padding-top: 0px;
+    overflow: hidden;
+}
+
+.user_btn input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    background: #04b848;
+    border-radius: 40px;
+}
+
+
+/*绑定账户信息*/
+
+.accountbox {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: #fff;
+    font-size: 14px;
+}
+
+.accountbox .tit {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: #04b848;
+    color: #fff;
+    text-align: center;
+}
+
+.accountbox ul li {
+    padding: 0px 10px;
+    overflow: hidden;
+    ;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.accountbox ul li div {
+    width: 40%;
+    float: left;
+    color: #666;
+}
+
+.accountbox ul li div span {
+    font-family: iconfont !important;
+    font-size: 20px;
+    float: left;
+    margin-right: 5px;
+}
+
+.accountbox ul li div span.c1 {
+    color: #04b848;
+}
+
+.accountbox ul li div span.c2 {
+    color: #FF692F;
+}
+
+.accountbox ul li div span.c3 {
+    color: #C81522;
+}
+
+.accountbox ul li div span.c4 {
+    color: #E02E24;
+}
+
+.accountbox ul li span.arrow {
+    width: 60%;
+    float: left;
+    text-align: right;
+    color: #04b848;
+    line-height: 50px;
+}
+
+.accountbox ul li span.arrow i {
+    font-family: iconfont !important;
+    font-size: 20px;
+    font-style: normal;
+    color: #666;
+    float: right;
+}
+
+.account_info_con {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+.account_info_con .tit {
+    padding: 10px;
+    background: #04b848;
+    color: #fff;
+}
+
+.account_info_con .tit p {
+    line-height: 20px;
+}
+
+.account_info_con ul li {
+    padding: 10px 10px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #f2f2f2;
+    position: relative;
+}
+
+.account_info_con ul li span.tb1 {
+    width: 40px;
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-family: iconfont !important;
+    font-size: 40px;
+    line-height: 40px;
+    color: #FF692F;
+    ;
+}
+
+.account_info_con ul li span.tb2 {
+    width: 40px;
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-family: iconfont !important;
+    font-size: 40px;
+    line-height: 40px;
+    color: #C81522;
+}
+
+.account_info_con ul li span.tb3 {
+    width: 40px;
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-family: iconfont !important;
+    font-size: 40px;
+    line-height: 40px;
+    color: #E02E24;
+}
+
+.account_info_con ul li div {
+    padding: 0px 45px;
+    padding-right: 60px;
+    height: 40px;
+    line-height: 20px;
+}
+
+.account_info_con ul li div p {
+    font-size: 12px;
+    color: #666;
+}
+
+.account_info_con ul li div p.t1 {
+    font-size: 14px;
+    color: #333;
+}
+
+.account_info_con ul li span.btn {
+    width: 50px;
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+.chk_1 {
+    display: none;
+}
+
+.chk_1+label {
+    display: inline-block;
+    width: 55px;
+    height: 30px;
+    background: url(../image/chk_1.png) no-repeat left top;
+    margin-top: 10px;
+}
+
+.chk_1:checked+label {
+    background: url(../image/chk_1_1.png) no-repeat left top;
+}
+
+
+/*绑定银行卡*/
+
+.certlist {
+    width: 100%;
+    background: #fff;
+}
+
+.certlist li {
+    padding: 0px 10px;
+    border-bottom: 1px solid #f2f2f2;
+    overflow: hidden;
+    ;
+}
+
+.certlist li input {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 14px;
+}
+
+.certlist li p {
+    width: 100%;
+    overflow: hidden;
+    ;
+    line-height: 40px;
+    float: left;
+    color: #aaa;
+}
+
+.certlist li .pic_l {
+    width: 40%;
+    float: left;
+    padding-bottom: 10px;
+}
+
+.certlist li .pic_r {
+    width: 40%;
+    float: right;
+}
+
+.accountbtn {
+    padding: 0px 20px;
+    margin-top: 20px;
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+
+.accountbtn input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    background: #04b848;
+    border-radius: 40px;
+}
+
+
+/*绑定银行卡*/
+
+.bankinfo {
+    padding: 10px;
+    overflow: hidden;
+    background: #fff;
+    color: #666;
+}
+
+.bankinfo div {
+    padding-left: 30px;
+    background: url("../image/tb01.png") no-repeat left top;
+    line-height: 20px;
+    overflow: hidden;
+    min-height: 25px;
+}
+
+.banklist {
+    width: 100%;
+    background: #fff;
+}
+
+.banklist li {
+    padding: 0px 10px;
+    border-bottom: 1px solid #f2f2f2;
+    overflow: hidden;
+    font-size: 14px;
+    position: relative;
+}
+
+.banklist li span.iname {
+    width: 60px;
+    display: block;
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    line-height: 45px;
+    color: #666;
+}
+
+.banklist li span.arrow {
+    width: 15px;
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    line-height: 45px;
+    text-align: right;
+    font-family: iconfont !important;
+}
+
+.banklist li div {
+    padding: 0px 15px 0 65px;
+    height: 45px;
+    overflow: hidden;
+}
+
+.banklist li div input {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    color: #333;
+}
+
+.banklist li div select {
+    width: 100%;
+    border: 0px;
+    height: 45px;
+    line-height: 45px;
+    color: #666;
+    -moz-appearance: inherit;
+    -webkit-appearance: inherit;
+    background: #fff;
+}
+
+
+/*申述添加*/
+
+.appealaddlist {
+    width: 100%;
+    background: #fff;
+}
+
+.appealaddlist li {
+    padding: 0px 10px;
+    border-bottom: 1px solid #f2f2f2;
+    overflow: hidden;
+    font-size: 14px;
+    position: relative;
+}
+
+.appealaddlist li span.arrow {
+    width: 60px;
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    line-height: 45px;
+    text-align: right;
+    font-family: iconfont !important;
+}
+
+.appealaddlist li div {
+    padding-right: 65px;
+    height: 45px;
+    overflow: hidden;
+}
+
+.appealaddlist li div input {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    color: #333;
+}
+
+.appealaddlist li div select {
+    width: 100%;
+    border: 0px;
+    height: 45px;
+    line-height: 45px;
+    color: #666;
+    -moz-appearance: inherit;
+    -webkit-appearance: inherit;
+    background: #fff;
+}
+
+.appealaddlist li textarea {
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+    resize: none;
+    padding-top: 10px;
+}
+
+.appealaddlist li .pic_l {
+    width: 40%;
+    float: left;
+    padding: 0px;
+    padding-bottom: 10px;
+    height: auto;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.appealaddlist li .pic_l img {
+    max-width: 100%;
+}
+
+.appeallist {
+    width: 100%;
+    background: #fff;
+    position: relative;
+}
+
+.appeallist li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #f2f2f2;
+    overflow: hidden;
+}
+
+.appeallist li .t1 {
+    width: 100%;
+    overflow: hidden;
+    line-height: 25px;
+    color: #333;
+}
+
+.appeallist li .t1 span {
+    float: right;
+    color: #999;
+    font-size: 12px;
+}
+
+.appeallist li .t2 {
+    width: 100%;
+    overflow: hidden;
+    line-height: 25px;
+    font-size: 12px;
+    color: #666;
+}
+
+.appeallist li .t2 span {
+    float: right;
+    color: #04b848;
+}
+
+.appeallist li .t3 {
+    width: 100%;
+    overflow: hidden;
+    line-height: 25px;
+    font-size: 12px;
+    color: #666;
+}
+
+.appeallist li .t3 span {
+    float: right;
+    color: #04b848;
+    text-decoration: underline;
+    ;
+}
+
+.appeal-btn {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.appeal-btn>div {
+    float: left;
+    width: 50%;
+    height: 50px;
+    line-height: 50px;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+}
+
+.appeal-btn>div.appeal-jc {
+    background-color: #a8e063;
+}
+
+.appeal-btn>div.appeal-wy {
+    background-color: #04b848;
+}
+
+
+/*申诉详细*/
+
+.appealdetailbox1 {
+    padding: 0px 10px;
+    overflow: hidden;
+    background: #fff;
+    margin-top: 10px;
+}
+
+.appealdetailbox1 .tit {
+    width: 100%;
+    line-height: 40px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.appealdetailbox1 .con {
+    width: 100%;
+    padding: 10px 0px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 12px;
+}
+
+.appealdetailbox1 .con .pic {
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    left: 0px;
+    top: 10px;
+    overflow: hidden;
+    ;
+}
+
+.appealdetailbox1 .con .txt {
+    padding-left: 85px;
+    overflow: hidden;
+    ;
+    height: 75px;
+}
+
+.appealdetailbox1 .con .txt p {
+    line-height: 25px;
+    overflow: hidden;
+    ;
+    color: #666;
+}
+
+.appealdetailbox1 .con .txt p span {
+    float: right;
+    color: #04b848;
+    text-decoration: underline;
+}
+
+.appealdetailbox1 .btn {
+    width: 100%;
+    padding: 10px 0px;
+    overflow: hidden;
+}
+
+.appealdetailbox1 .btn input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 40px;
+    color: #fff;
+    background: #04b848;
+}
+
+.appealdetailbox1 .bz {
+    width: 100%;
+    padding-bottom: 10px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 12px;
+    color: #666;
+}
+
+.appealdetailbox2 {
+    padding: 0px 10px;
+    background: #fff;
+    margin-top: 10px;
+}
+
+.appealdetailbox2 .tit {
+    width: 100%;
+    line-height: 40px;
+    overflow: hidden;
+    ;
+    border-bottom: 1px solid #ddd;
+}
+
+.appealdetailbox2 .con {
+    padding: 10px 0px;
+    padding-left: 10px;
+    font-size: 12px;
+}
+
+.appealdetailbox2 .con .item {
+    position: relative;
+    border-left: 1px solid #f2f2f2;
+    padding-left: 20px;
+}
+
+.appealdetailbox2 .con .item .t {
+    overflow: hidden;
+    border-bottom: 1px solid #f2f2f2;
+    padding-bottom: 10px;
+    font-size: 13px;
+}
+
+.appealdetailbox2 .con .item .t span {
+    color: #666;
+    font-size: 12px;
+    padding-left: 5px;
+}
+
+.appealdetailbox2 .con .item .c {
+    padding-top: 10px;
+    overflow: hidden;
+    ;
+    line-height: 20px;
+    padding-bottom: 15px;
+    color: #666;
+}
+
+.appealdetailbox2 .con .item .c .p img {
+    width: 54px;
+}
+
+.appealdetailbox2 .con .item .c ul {
+    width: 100%;
+    overflow: hidden;
+    ;
+}
+
+.appealdetailbox2 .con .item .c ul li {
+    width: 100%;
+    border-bottom: 1px solid #f2f2f2;
+    padding: 5px 0px;
+}
+
+.appealdetailbox2 .con .item .c ul p {
+    line-height: 20px;
+}
+
+.appealdetailbox2 .con .item .c ul p.t1 {
+    color: #666;
+}
+
+.appealdetailbox2 .con .item .c ul p.t1 span {
+    float: right;
+    color: #999;
+}
+
+.appealdetailbox2 .con .item .c ul p.p img {
+    width: 54px;
+}
+
+.appealdetailbox2 .con .item .i {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    font-family: iconfont !important;
+    position: absolute;
+    left: -8px;
+    top: 0px;
+    background: #fff;
+    color: #ddd;
+}
+
+.appealdetailbox2 .con .item.on {
+    border-left: 1px solid #04b848;
+}
+
+.appealdetailbox2 .con .item.on .i {
+    color: #04b848;
+}
+
+.appealdetailbox3 {
+    padding: 20px;
+    overflow: hidden;
+}
+
+.appealdetailbox3 a {
+    width: 30%;
+    float: left;
+    margin-right: 5%;
+    overflow: hidden;
+    height: 35px;
+    border-radius: 3px;
+    line-height: 35px;
+    display: block;
+    background: #04b848;
+    color: #fff;
+    text-align: center;
+}
+
+.appealdetailbox3 a.close {
+    background: #ddd;
+    color: #999;
+}
+
+.appealdetailbox3 a:nth-child(3) {
+    margin-right: 0px;
+}
+
+
+/*绑定淘宝*/
+
+.bankinfo1 {
+    padding: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.bankinfo1 .tit {
+    width: 100%;
+    line-height: 50px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.bankinfo1 .tit span {
+    font-family: iconfont !important;
+    color: #FEC913;
+    margin-right: 5px;
+}
+
+.bankinfo1 .con {
+    padding: 5px 0px;
+    line-height: 20px;
+    color: #666;
+}
+
+.bankinfo1 .con span {
+    color: #04b848;
+}
+
+.taobaobox {
+    width: 100%;
+    overflow: hidden;
+    ;
+    margin-top: 10px;
+    background: #fff;
+}
+
+.taobaobox .tit {
+    padding: 0px 10px;
+    line-height: 45px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.taobaobox .con {
+    padding-left: 10px;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+.taobaobox .con ul {
+    width: 100%;
+}
+
+.taobaobox .con ul li {
+    padding-right: 10px;
+    border-bottom: 1px solid #f2f2f2;
+    position: relative;
+    overflow: hidden;
+}
+
+.taobaobox .con ul li span.iname {
+    width: 115px;
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    line-height: 45px;
+    color: #666;
+}
+
+.taobaobox .con ul li div {
+    padding-left: 105px;
+    height: 45px;
+    overflow: hidden;
+}
+
+.taobaobox .con ul li div input {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    color: #333;
+    text-align: right;
+}
+
+.taobaobox .con ul li div input::-webkit-input-placeholder {
+    direction: rtl;
+}
+
+.taobaobox .con ul li div input::-moz-placeholder {
+    direction: rtl;
+}
+
+.taobaobox .con ul li div input:-ms-input-placeholder {
+    direction: rtl;
+}
+
+.taobaobox .con ul li .div1 {
+    padding-left: 115px;
+    /*padding-right: 20px;*/
+    height: 45px;
+    overflow: hidden;
+}
+
+.taobaobox .con ul li div select {
+    width: 100%;
+    border: 0px;
+    height: 45px;
+    line-height: 45px;
+    text-align: right;
+    color: #666;
+    -moz-appearance: inherit;
+    -webkit-appearance: inherit;
+    background: #fff;
+}
+
+.taobaobox .con ul li .get_code {
+    width: 60px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    font-size: 12px;
+    line-height: 45px;
+    display: block;
+    color: #04b848;
+}
+
+.taobaobox .con ul li span.arrow {
+    width: 60px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    text-align: right;
+    line-height: 45px;
+    display: block;
+    font-family: iconfont !important;
+    font-size: 20px;
+}
+
+.taobaobox .con ul li p {
+    width: 100%;
+    overflow: hidden;
+    ;
+    line-height: 40px;
+    float: left;
+    color: #aaa;
+}
+
+.taobaobox .con ul li .pic {
+    width: 78px;
+    height: 98px;
+    overflow: hidden;
+    float: left;
+    margin: 0px 1%;
+    padding-left: 0px;
+    height: auto;
+}
+
+.taobaobox .con ul li .pic img {
+    width: 78px;
+    height: 78px;
+}
+
+.taobaobox .con ul li .pic p {
+    margin: 0px;
+    padding: 0px;
+    line-height: 20px;
+    font-size: 12px;
+    text-align: center;
+    ;
+}
+
+.taobaobox .con ul li p.c1 {
+    color: #04b848;
+    text-align: center;
+    ;
+    font-size: 12px;
+}
+
+
+/*常见问题*/
+
+.questionbox1 {
+    padding: 10px;
+    overflow: hidden;
+    padding-bottom: 0px;
+}
+
+.questionbox1 ul {
+    width: 100%;
+}
+
+.questionbox1 ul li {
+    width: 49%;
+    margin-right: 2%;
+    margin-bottom: 2%;
+    overflow: hidden;
+    float: left;
+}
+
+.questionbox1 ul li:nth-child(2n) {
+    margin-right: 0px;
+}
+
+.questionbox1 ul li img {
+    width: 100%;
+}
+
+.questionbox2 {
+    padding: 10px;
+    overflow: hidden;
+    padding-top: 0px;
+}
+
+.questionbox2 .tit {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.questionbox2 .tit span {
+    font-family: iconfont !important;
+    color: #05c64d;
+    font-size: 20px;
+    padding-right: 5px;
+    font-weight: 100;
+}
+
+.questionbox2 .tit i {
+    font-size: 12px;
+    font-style: normal;
+    color: #666;
+    margin-left: 5px;
+    font-weight: 100;
+}
+
+.questionbox2 .con {
+    color: #666;
+    line-height: 25px;
+}
+
+.questionbtn {
+    padding: 0px 20px;
+    margin-top: 10px;
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+
+.questionbtn a {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    background: #04b848;
+    border-radius: 40px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.questionbtn a span {
+    font-family: iconfont !important;
+    font-size: 18px;
+}
+
+.question_h {
+    width: 100%;
+    overflow: hidden;
+    font-size: 0px;
+}
+
+.question_h img {
+    max-width: 100%;
+}
+
+.questionbox3 {
+    padding: 10px;
+    overflow: hidden;
+    padding-top: 0px;
+    background: #fff;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.questionbox3 .tit {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #ECECEC;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.questionbox3 .con {
+    color: #666;
+    line-height: 25px;
+}
+
+.questionbox3 .con a {
+    padding: 3px 12px;
+    background: #F7F7F8;
+    display: inline-block;
+    float: left;
+    margin-top: 10px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.qsearch {
+    padding: 10px 10px;
+    overflow: hidden;
+    ;
+    padding-bottom: 0px;
+}
+
+.qsearch .con {
+    width：100%;
+    height: 40px;
+    background: #f2f2f2;
+}
+
+.qsearch .con .input {
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 12px;
+    float: left;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.qsearch .con .btn {
+    width: 10%;
+    height: 40px;
+    line-height: 40px;
+    float: left;
+    font-family: iconfont !important;
+    color: #666;
+}
+
+.questionbox4 {
+    padding: 10px;
+    overflow: hidden;
+    padding-top: 0px;
+    background: #fff;
+    margin-top: 0px;
+    font-size: 12px;
+}
+
+.questionbox4 ul li {
+    width: 100%;
+    overflow: hidden;
+    ;
+    border-bottom: 1px dotted red;
+}
+
+.questionbox4 ul li .tit {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    color: #444;
+}
+
+.questionbox4 ul li .tit span {
+    float: right;
+    font-family: iconfont !important;
+    color: #666;
+}
+
+.questionbox4 ul li .con {
+    width: 100%;
+    display: none;
+    overflow: hidden;
+    ;
+    padding: 10px;
+    line-height: 20px;
+    color: #666;
+    background: #eee;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+
+/*设置*/
+
+.setbox {
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+
+.setbox ul li {
+    padding: 0px 10px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid #f2f2f2;
+    color: #666;
+}
+
+.setbox ul li span.icon {
+    width: 20px;
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    line-height: 50px;
+    font-family: iconfont !important;
+    font-size: 16px;
+    color: #04b848;
+}
+
+.setbox ul li div {
+    padding: 0px 25px;
+    overflow: hidden;
+    line-height: 50px;
+}
+
+.setbox ul li span.arrow {
+    width: 20px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    line-height: 50px;
+    font-family: iconfont !important;
+    font-size: 16px;
+    text-align: right;
+}
+
+.loginbtn {
+    width: 100%;
+    height: 50px;
+    color: #04b848;
+    background: #fff;
+    margin-top: 10px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.loginbtn input {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: #04b848;
+    background: #fff;
+}
+
+
+/*版本信息*/
+
+.versionbox {
+    padding: 20px 10px;
+    overflow: hidden;
+}
+
+.versionbox .tit {
+    text-align: center;
+}
+
+.versionbox .con {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.versionbox .con p {
+    line-height: 25px;
+    font-size: 12px;
+    color: #666;
+}
+
+.versionbox .con p.t1 {
+    line-height: 30px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+/*提现*/
+
+.tixianbox1 {
+    padding: 20px;
+    padding-top: 0;
+    overflow: hidden;
+    color: #666;
+    line-height: 20px;
+}
+
+.tixianbox2 {
+    margin: 20px;
+    margin-bottom: 0;
+    overflow: hidden;
+    background: #fff;
+}
+
+.tixianbox2 .tit1 {
+    margin-bottom: 10px;
+    padding: 0px 20px;
+    height: 40px;
+    line-height: 40px;
+    background: #e8e8e8;
+    overflow: hidden;
+}
+
+.tixianbox2 .tit1 span {
+    color: #f00;
+    margin-left: 5px;
+}
+
+.tixianbox2 .tit2 {
+    padding: 0px 20px;
+    overflow: hidden;
+    line-height: 50px;
+}
+
+.tixianbox2 .tit2 input {
+    width: 100%;
+    border-bottom: 1px solid #f2f2f2;
+    height: 50px;
+    line-height: 50px;
+}
+
+.tixianbox2 .tit3 {
+    padding: 0px 20px;
+    overflow: hidden;
+}
+
+.tixianbox2 .tit3 p {
+    line-height: 40px;
+    color: #666;
+}
+
+.tixianbox2 .tit3 .p {
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.tixianbox2 .tit3 .p span {
+    width: 10%;
+    float: left;
+    display: inline-block;
+    line-height: 40px;
+    font-size: 18px;
+}
+
+.tixianbox2 .tit3 .p input {
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+}
+
+
+/*.tixianbox2 .tit3 .t{ height: 40px; line-height: 40px; font-size: 14px;}*/
+
+.tixianbox2 .tit3 .t span {
+    float: right;
+}
+
+.tixianbox2 .tit3 .t i {
+    font-style: normal;
+    color: #FE7B10;
+}
+
+.tixianbox2 .txbtn {
+    padding: 10px 20px;
+    overflow: hidden;
+}
+
+.tixianbox2 .txbtn input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: #04b848;
+    border-radius: 40px;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+.tixianbox2 .tit4 {
+    padding: 20px 20px;
+    overflow: hidden;
+    text-align: center;
+}
+
+
+/*任务列表*/
+
+.tasklist {
+    width: 100%;
+    overflow: hidden;
+}
+
+.tasklist li {
+    padding: 10px;
+    height: 90px;
+    overflow: hidden;
+    margin-top: 10px;
+    background: #fff;
+    position: relative;
+    font-size: 12px;
+}
+
+.tasklist li .pic {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.tasklist li .txt {
+    padding-left: 100px;
+    padding-top: 5px;
+    height: 84px;
+}
+
+.tasklist li .txt .w1 {
+    width: 100%;
+    height: 28px;
+    overflow: hidden;
+}
+
+.tasklist li .txt .w1 span {
+    float: right;
+    color: #666;
+}
+
+.tasklist li .txt .w1>a {
+    color: #666;
+}
+
+.tasklist li .txt .w1>a i {
+    font-family: iconfont !important;
+    font-style: normal;
+    font-size: 16px;
+    padding-right: 5px;
+    color: #04b848;
+}
+
+.tasklist li .txt .w2 {
+    width: 100%;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    color: #FE6925;
+}
+
+.tasklist li .txt .w2 span {
+    float: right;
+}
+
+.tasklist li .txt .w2 span i {
+    font-style: normal;
+}
+
+.tasklist li .txt .w2 span a {
+    display: inline-block;
+    ;
+    height: 28px;
+    padding: 0px 10px;
+    background: #04b848;
+    color: #fff;
+    line-height: 28px;
+    float: right;
+    margin-left: 3px;
+    border-radius: 3px;
+}
+
+.tasklist li .txt .w2 font.f1 {
+    font-size: 14px;
+}
+
+.tasklist li .txt .w3 {
+    width: 100%;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    color: #FE6925;
+}
+
+.tasklist li .txt .w3 span {
+    float: right;
+}
+
+.tasklist li .txt .w3 span i {
+    font-style: normal;
+}
+
+.tasklist li .txt .w3 font.f2 {
+    font-size: 12px;
+    color: #666;
+}
+
+
+/*任务详情*/
+
+.taskboxdetail1 {
+    padding: 0px 10px;
+    background: #fff;
+    overflow: hidden;
+    font-size: 12px;
+    color: #555;
+}
+
+.taskboxdetail1 p.tit1 {
+    width: 100%;
+    line-height: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.taskboxdetail1 p.tit1 span {
+    float: right;
+}
+
+.taskboxdetail1 p.tit1 i {
+    font-style: normal;
+    color: #ff0000
+}
+
+.taskboxdetail1 p.tit2 {
+    width: 100%;
+    line-height: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}
+
+.taskboxdetail1 p.tit2 span {
+    float: right;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.taskboxdetail1 p.tit2 span i {
+    font-style: normal;
+    color: #ff0000
+}
+
+.taskboxdetail1 .item {
+    width: 100%;
+    overflow: hidden;
+}
+
+.taskboxdetail1 .item .tit {
+    line-height: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.taskboxdetail1 .item .pic {
+    width: 20%;
+    padding-bottom: 20%;
+    position: relative;
+    ;
+    float: left;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.taskboxdetail1 .item .pic img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    max-width: 100%;
+}
+
+.taskboxdetail1 .item .txt {
+    width: 75%;
+    overflow: hidden;
+    float: right;
+    padding: 10px 0px;
+}
+
+.taskboxdetail1 .item .txt p.t1 {
+    line-height: 25px;
+}
+
+.taskboxdetail1 .item .txt p.t2 {
+    line-height: 25px;
+}
+
+.taskboxdetail1 .item .txt p i {
+    font-style: normal;
+    color: #ff0000
+}
+
+.taskboxdetail1 .con {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+    border-top: 1px solid #f2f2f2;
+    padding-top: 10px;
+    color: #555;
+}
+
+.taskboxdetail1 .con p {
+    line-height: 25px;
+    overflow: hidden;
+}
+
+.taskboxdetail1 .con p i {
+    font-style: normal;
+    color: #ff0000
+}
+
+.taskboxdetail1 .con .pics {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0px;
+}
+
+.taskboxdetail1 .con .pics .p {
+    width: 32%;
+    margin-right: 2%;
+    padding-bottom: 32%;
+    float: left;
+    overflow: hidden;
+    position: relative;
+}
+
+.taskboxdetail1 .con .pics .p img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    width: 100%;
+}
+
+.taskboxdetail1 .con .pics .p:nth-child(3) {
+    margin-right: 0px;
+}
+
+.taskboxdetail1 .con .btns {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0px;
+}
+
+.taskboxdetail1 .con .btns a {
+    width: 32%;
+    margin-right: 2%;
+    float: left;
+    overflow: hidden;
+    height: 35px;
+    border-radius: 3px;
+    line-height: 35px;
+    display: block;
+    background: #04b848;
+    color: #fff;
+    text-align: center;
+}
+
+.taskboxdetail1 .con .special-item {
+    padding: 4px 0;
+}
+
+.taskboxdetail1 .con .special-item .p {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 4px;
+}
+
+.taskboxdetail1 .con .special-item .p img {
+    height: 50px;
+}
+
+.taskboxdetail1 .con .btns a:nth-child(3) {
+    margin-right: 0px;
+}
+
+.taskboxdetail1 .con .btns a.close {
+    background: #ddd;
+    color: #999;
+}
+
+.taskboxdetail1 .taskcopy {
+    color: #6B89C2;
+    border: 1px solid #6B89C2;
+    text-align: center;
+    line-height: 40px;
+    margin-top: 5px;
+}
+
+.taskboxdetail2 {
+    background: #fff;
+    overflow: hidden;
+    font-size: 12px;
+    color: #555;
+    margin-top: 10px;
+}
+
+.taskboxdetail2 .tit {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    color: #fff;
+    background: #04b848;
+    text-align: center;
+    font-size: 14px;
+}
+
+.taskboxdetail2 .con {
+    padding: 10px;
+    overflow: hidden;
+}
+
+.taskboxdetail2 .con .item {
+    width: 100%;
+    line-height: 40px;
+    overflow: hidden;
+    height: 40px;
+    margin: 5px 0px;
+}
+
+.taskboxdetail2 .con .item span {
+    float: right;
+}
+
+.taskboxdetail2 .con .item span .p {
+    width: 54px;
+    height: 40px;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.taskboxdetail2 .con .item span .p img {
+    width: 100%;
+    height: 100%;
+}
+
+.taskboxdetail2 .con .item span input {
+    /*text-align: right;*/
+    line-height: 24px;
+    border: 1px solid #ccc;
+    padding: 0 4px;
+    font-size: 12px;
+    width: 150px;
+}
+
+.taskboxdetail2 .con .item span input::-webkit-input-placeholder {
+    /*direction: rtl;*/
+    color: #999;
+    font-size: 12px;
+}
+
+.taskboxdetail2 .con .item span input::-moz-placeholder {
+    /*direction: rtl;*/
+    color: #999;
+    font-size: 12px;
+}
+
+.taskboxdetail2 .con .item span input:-ms-input-placeholder {
+    /*direction: rtl;*/
+    color: #999;
+    font-size: 12px;
+}
+
+.taskboxdetail2 .con p.t1 {
+    color: #ff0000;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+.taskboxdetail2 .con p.t2 {
+    text-align: right;
+    line-height: 20px;
+    font-size: 14px;
+    color: #ff0000;
+}
+
+.taskboxdetail2 .con p.t2 a {
+    display: inline-block;
+    ;
+    padding: 3px 10px;
+    background: #04b848;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.taskboxdetail2 .con p.t2 a.close {
+    background: #ddd;
+    color: #999;
+}
+
+.taskboxdetail2.close .tit {
+    background: #ddd;
+}
+
+.taskboxdetail2.close .con {
+    color: #aaa;
+}
+
+.taskboxdetail2 .con .item1 {
+    width: 100%;
+    line-height: 30px;
+    overflow: hidden;
+    ;
+    margin: 5px 0px;
+}
+
+.taskboxdetail2 .con .item1 .gg {
+    width: 100%;
+    line-height: 30px;
+    overflow: hidden;
+}
+
+.taskboxdetail2 .con .item1 .hp {
+    width: 100%;
+    line-height: 20px;
+    overflow: hidden;
+    padding-top: 6px;
+}
+
+.taskboxdetail2 .con .item1 .p {
+    height: 40px;
+    float: left;
+    line-height: 30px;
+    overflow: hidden;
+    margin-right: 3px;
+}
+
+.taskboxdetail2 .con .item1 .p img {
+    height: 40px;
+}
+
+.taskboxdetail2 .con .item1 .vv {
+    width: 100%;
+    overflow: hidden;
+    ;
+}
+
+.taskboxdetail2 .con .item1 .vv p {
+    height: auto;
+    ;
+    line-height: 20px;
+    padding: 5px 0px;
+}
+
+.taskboxdetail2 .con .item1 .vv p a {
+    color: #04b848;
+    height: auto;
+    word-wrap: break-word;
+    display: block;
+    width: 100%;
+}
+
+.fdfd {
+    position: fixed;
+    left: 0px;
+    top: -21px;
+    background: #fff;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+#footer {
+    border-top: 1px solid #ccc;
+    height: 60px;
+    overflow: hidden;
+}
+
+#footer ul li {
+    text-align: center;
+    overflow: hidden;
+    float: left;
+    width: 50%;
+    padding: 5px 0px;
+}
+
+#footer ul li span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #666;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    font-family: iconfont !important;
+    position: relative;
+}
+
+#footer ul li.active {
+    color: #04b848;
+}
+
+#footer ul li.active span {
+    color: #04b848;
+}
+
+
+/*弹出框*/
+
+.make {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    display: none;
+}
+
+.dialog_cate {
+    width: 260px;
+    padding: 10px 10px;
+    height: 290px;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    background: #fff;
+    display: none;
+}
+
+.dialog_cate .tit {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    ;
+    color: #666;
+}
+
+.dialog_cate .con {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.dialog_cate .con ul li {
+    width: 30%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+    color: #666;
+    float: left;
+    text-align: center;
+    border: 1px solid #f2f2f2;
+    font-size: 12px;
+    line-height: 35px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.dialog_cate .con ul li:nth-child(3n) {
+    margin-right: 0px;
+}
+
+.dialog_cate .con ul li.on {
+    color: #04b848;
+    border: 1px solid #04b848;
+    background: #04b848;
+    color: #fff;
+}
+
+.dialog_cate .con input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: #04b848;
+    color: #fff;
+}
+
+
+/*划动tab*/
+
+#scoreMenuNav {
+    border: 0px solid red;
+}
+
+#scoreMenuNav ul {
+    overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    background-color: #ffffff;
+    padding-top: 0.1rem;
+    position: relative;
+}
+
+#scoreMenuNav ul::-webkit-scrollbar {
+    display: none
+}
+
+#scoreMenuNav li {
+    line-height: 1.8rem;
+    text-align: center;
+    margin: auto 10px;
+    display: inline-block;
+    border-bottom: 0px solid #fff;
+}
+
+#scoreMenuNav li.actives {
+    /*border-bottom: 2px solid red;*/
+    color: red;
+}
+
+.active-menu {
+    /*border-bottom: 2px solid red !important;*/
+    color: red;
+}
+
+#scoreMenuNav .nav-line {
+    height: 0px;
+    background-color: 1px solid green;
+    border-bottom: 2px solid blue !important;
+    position: absolute;
+    bottom: 0px;
+    /*transition:0.3s width ease-out;*/
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    /*-webkit-transform:translate(10px);
+    /*animation: moveL 1s;
+    /*-moz-animation: moveL 1s;	/* Firefox */
+    /*-webkit-animation: moveL 1s;	/* Safari 和 Chrome */
+    /*-o-animation: moveL 1s;	 Opera */
+    /*animation-fill-mode:forwards;*/
+}
+
+@font-face {
+    font-family: 'iconfont';
+    src: url('font/iconfont.eot');
+    src: url('font/iconfont.eot?#iefix') format('embedded-opentype'), url('font/iconfont.woff') format('woff'), url('font/iconfont.ttf') format('truetype'), url('font/iconfont.svg#iconfont') format('svg');
+}
+
+.wechat-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.wechat-container .wechat-inner {
+    position: absolute;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.wechat-container .wechat-inner .wechat-title {
+    background-color: #04b848;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.wechat-container .wechat-inner .wechat-content {
+    padding: 20px 10px;
+    background-color: #fff;
+}
+
+.wechat-container .wechat-inner .wechat-content #wechat-pic {
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+.wechat-container .wechat-inner .wechat-content .wechat-desc {
+    text-align: center;
+    padding-top: 15px;
+    line-height: 20px;
+}
+
+.wechat-container .wechat-inner #wechat-number {
+    background-color: #eee;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #04b848;
+    font-size: 16px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.example-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.example-bg .example-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 5%;
+}
+
+.example-bg .example-container .example-title {
+    font-size: 18px;
+    padding-bottom: 10px;
+    font-size: 14px;
+}
+
+.example-bg .example-container .example-desc {
+    padding-bottom: 16px;
+    line-height: 20px;
+}
+
+.example-bg .example-container .see-example {
+    font-size: 14px;
+    color: #04b848;
+    float: right;
+}
+
+#eos {
+    max-width: 100%;
+    display: block;
+}
+
+.example-bg .example-close-btn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 30px;
+    color: #333;
+}
+
+.nodata-tips {
+    text-align: center;
+    padding: 10px 0;
+    color: #666;
+}
+
+.achieving-tasks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.achieving-tasks .achieving-tasks-inner {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    width: 90%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 3.75%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-title {
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.achieving-tasks .achieving-tasks-inner ul {
+    /*max-height: 300px;*/
+    /*overflow-y: scroll;*/
+}
+
+.achieving-tasks .achieving-tasks-inner ul li {
+    line-height: 40px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.achieving-tasks .achieving-tasks-inner ul li span:first-child {
+    float: left;
+}
+
+.achieving-tasks .achieving-tasks-inner ul li span:last-child {
+    float: right;
+}
+
+.achieving-tasks .achieving-tasks-inner ul li #shop-name, .achieving-tasks .achieving-tasks-inner ul li #task-type, .achieving-tasks .achieving-tasks-inner ul li #store-require {
+    color: #04b848;
+}
+
+.achieving-tasks .achieving-tasks-inner ul li #df-money, .achieving-tasks .achieving-tasks-inner ul li #task-money {
+    color: #e31818;
+}
+
+.achieving-tasks .achieving-tasks-inner ul li img {
+    float: left;
+    width: 32%;
+    height: 50px;
+    margin-right: 2%;
+    margin-top: 10px;
+}
+
+.achieving-tasks .achieving-tasks-inner ul li img:last-child {
+    margin-right: 0;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-btns {
+    padding-top: 15px;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-btns .tasks-btns-container {
+    width: 28%;
+    float: left;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-btns .tasks-btns-container:nth-child(2) {
+    width: 44%;
+    float: left;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-btns .tasks-btns-container>div {
+    width: 70px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background-color: #4bda67;
+    border-radius: 17px;
+    color: #fff;
+    margin: 0 auto;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-btns .tasks-btns-container>div.nomore-btn {
+    width: 100%;
+}
+
+.achieving-tasks .achieving-tasks-inner .achieving-tasks-btns .tasks-btns-container>div:last-child {
+    background-color: #04b848;
+}
+
+.activity-task-box {
+    padding: 15px;
+}
+
+.activity-task-box .activity-task-txt {
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 8px;
+}
+
+.activity-task-box .activity-task-container>img {
+    float: left;
+    padding-right: 10px;
+    padding-top: 4px;
+}
+
+.activity-task-box .activity-task-container .invite-txt {
+    padding-bottom: 4px;
+    font-weight: bold;
+}
+
+.activity-task-box .activity-task-container .invite-txt span {
+    color: #f01d2c;
+}
+
+.activity-task-box .activity-task-container .invite-desc {
+    color: #666;
+    line-height: 18px;
+}
+
+.share-rewards-box {
+    padding: 15px;
+}
+
+.share-rewards-box .share-rewards-txt {
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 8px;
+}
+
+.share-rewards-box .share-rewards-container>div {
+    float: left;
+    width: 49%;
+    position: relative;
+}
+
+.share-rewards-box .share-rewards-container>div+div {
+    margin-left: 2%;
+}
+
+.share-rewards-box .share-rewards-container>div p {
+    color: #fff;
+    position: absolute;
+    left: 10px;
+}
+
+.share-rewards-box .share-rewards-container>div .p1 {
+    top: 10px;
+}
+
+.share-rewards-box .share-rewards-container>div .p2 {
+    top: 30px;
+}
+
+.share-rewards-box .share-rewards-container>div .share {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20%;
+}
+
+.accept-task-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    margin-left: -40px;
+    z-index: 999999;
+}
+
+.accept-task-btn>input {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    background-color: #04c54d;
+    border-radius: 50%;
+}
+
+.option-container ul {
+    padding: 15px 0;
+}
+
+.option-container ul li {
+    float: left;
+    text-align: center;
+}
+
+.option-container ul.option-info li {
+    width: 20%;
+}
+
+.option-container ul.function li {
+    width: 25%;
+}
+
+.option-container ul li p {
+    height: 20px;
+    line-height: 20px;
+}
+
+.option-container ul li p:first-child {
+    padding-bottom: 4px;
+}
+
+.option-container ul li img {
+    height: 20px;
+}
+
+.click-me {
+    position: absolute;
+    right: 15px;
+    bottom: 0;
+    width: 40%;
+    max-width: 221px;
+}
+
+.eye-icon {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 19px;
+    width: 40px;
+    height: 26px;
+    background-image: url(../image/eye-open.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.eye-icon.active {
+    background-image: url(../image/eye-close.png);
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>全部</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <ul class="tasklist" id="tasklist">
+
+    </ul>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getList();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        //获取数据
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/getorderlist/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        status: 100,
+                        pt_id: api.pageParam.pt_id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    //alert(ret);
+                    var data = ret.data;
+                    var str = "";
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            // 审号任务
+                            if (data[i]['selfaudit'] == 1 || data[i]['selfaudit'] == 3) {
+                                // 1审号中   3审号不通过
+                                str = str + '<li>';
+                            } else if (data[i]['selfaudit'] == 0 || data[i]['selfaudit'] == 2) {
+                                // 0不审号   2通过
+                                str = str + '<li tapmode onclick="openTaskDetail(' + data[i]["id"] + ')">';
+                            } else {
+                                str = str + '<li tapmode onclick="openTaskDetail(' + data[i]["id"] + ')">';
+                            }
+
+                            str = str + '<div class="pic"><img src="' + geturl(data[i]["imageurl"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            str = str + '<div class="w1">';
+                            str = str + '<span>' + getLocalTime(data[i]["order_time"]) + '</span>';
+                            if (data[i]['category_id'] < 100) {
+                                if (data[i]["commonkey"] == 2) {
+                                    str = str + '<a>文字好评任务</a>';
+                                } else if (data[i]["commonkey"] == 3) {
+                                    str = str + '<a>图片好评任务</a>';
+                                } else if (data[i]["commonkey"] == 4) {
+                                    str = str + '<a>视频好评任务</a>';
+                                } else {
+                                    str = str + '<a>普通好评任务</a>';
+                                }
+                            } else {
+                                str = str + '<a>浏览任务</a>';
+                            }
+                            str = str + '</div>';
+                            str = str + '<div class="w2">';
+                            str = str + '<span><i>' + data[i]["_status"] + '</i></span>';
+                            str = str + '<font class="f1">￥' + data[i]["yj_price"] + '</font>';
+                            str = str + '</div>';
+                            str = str + '<div class="w3">';
+
+                            if (data[i]["status"] == 2) {
+                                str = str + '<span>接单时间：<i>' + getLocalTime(data[i]["order_time"]) + '</i></span>';
+                            } else if (data[i]["status"] == 3) {
+                                str = str + '<span>付款时间：<i>' + getLocalTime(data[i]["chatpay_time"]) + '</i></span>';
+                            } else if (data[i]["status"] == 4) {
+                                if (data[i]["fk_time"] != 0) {
+                                    str = str + '<span>返款时间：<i>' + getLocalTime(data[i]["fk_time"]) + '</i></span>';
+                                }
+                            } else if (data[i]["status"] == 5) {
+                                str = str + '<span>发货时间：<i>' + getLocalTime(data[i]["fh_time"]) + '</i></span>';
+                            } else if (data[i]["status"] == 6) {
+                                str = str + '<span>好评时间：<i>' + getLocalTime(data[i]["hp_time"]) + '</i></span>';
+                            } else if (data[i]["status"] == 7) {
+                                str = str + '<span>完成时间：<i>' + getLocalTime(data[i]["yj_time"]) + '</i></span>';
+                            }
+
+                            if (data[i]['category_id'] < 100) {
+                                if (data[i]["status"] <= 2) {
+                                    var bj_price = data[i]["bj_price"];
+                                    str = str + '<font class="f2">垫资 ￥' + computedPrice(bj_price) + '</font>';
+                                } else {
+                                    str = str + '<font class="f2">垫资 ￥' + data[i]["bj_price"] + '</font>';
+                                }
+                            } else {
+                                str = str + '<font class="f2">垫资 ￥' + data[i]["bj_price"] + '</font>';
+                            }
+
+                            str = str + '</div>';
+                            str = str + '</div>';
+                            str = str + '</li>';
+                        }
+                        $api.html($api.byId('tasklist'), str);
+                    } else {
+                        $api.html($api.byId('tasklist'), "<li>暂无数据！</li>");
+                    }
+
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi;
+        }
+
+        function openTaskDetail(orderid) {
+            api.openWin({
+                name: 'window_task_detail',
+                url: './window_task_detail.html',
+                pageParam: {
+                    name: 'window_task_detail',
+                    id: orderid
+                }
+            });
+
+        }
+    </script>
+</body>
+
+</html>

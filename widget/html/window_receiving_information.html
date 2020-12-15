@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>修改收货信息</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="api.closeWin();"><span>&#xe606;</span>修改收货信息</a>
+
+    </header>
+    <div class="tixian">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            NVNavigationBar_open();
+            openFrame();
+        };
+
+        function NVNavigationBar_open() {
+            var items = [{
+                title: '淘宝',
+                bg: '#ffffff',
+                // bgSelected: '#04b848'
+            }, {
+                title: '京东',
+                bg: '#ffffff',
+                // bgSelected: '#04b848'
+            }, {
+                title: '拼多多',
+                bg: '#ffffff',
+                // bgSelected: '#04b848'
+            }];
+
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+
+            fnsetFrameGroupIndex('receiving_group', 0);
+            var navigationBar = api.require('NVNavigationBar');
+            navigationBar.open({
+                rect: {
+                    x: 0,
+                    y: h + 50,
+                    w: api.frameWidth,
+                    h: 30,
+                },
+                styles: {
+                    orientation: 'horizontal',
+                    bg: '',
+                    bgAlpha: 1,
+                    font: {
+                        size: 14,
+                        sizeSelected: 14,
+                        color: '#333333',
+                        colorSelected: '#04b848',
+                        alpha: 1
+                    },
+                    itemSize: {
+                        w: api.winWidth / 3,
+                    }
+                },
+                items: items,
+                fixedOn: api.frameName,
+                id: 'receiving_group',
+                selectedIndex: 0,
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.eventType == 'click') {
+                        fnsetFrameGroupIndex('receiving_group', ret.index);
+                    }
+                } else {}
+            });
+        }
+
+        function openFrame() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+
+            api.openFrameGroup({
+                name: 'receiving_group',
+                rect: {
+                    x: 0,
+                    y: 80 + h,
+                    w: "auto",
+                    h: "auto"
+                },
+                preload: 0,
+                scrollEnabled: true,
+                bounces: false,
+                frames: [{
+                    name: 'frame_receiving_tb',
+                    url: 'frame_receiving_tb.html',
+                    pageParam: {
+                        name: 'frame_receiving_tb'
+                    },
+                    // bounces: true,
+                    // customRefreshHeader: 'UIPullRefresh'
+                }, {
+                    name: 'frame_receiving_jd',
+                    url: 'frame_receiving_jd.html',
+                    pageParam: {
+                        name: 'frame_receiving_jd'
+                    },
+                    // bounces: true,
+                    // customRefreshHeader: 'UIPullRefresh'
+                }, {
+                    name: 'frame_receiving_pdd',
+                    url: 'frame_receiving_pdd.html',
+                    pageParam: {
+                        name: 'frame_receiving_pdd'
+                    },
+                    // bounces: true,
+                    // customRefreshHeader: 'UIPullRefresh'
+                }]
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.index > -1) {
+                        fnNvnsetSelected(ret.index);
+                    }
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+
+        function fnNvnsetSelected(index) {
+            var NVNavigationBar = api.require('NVNavigationBar');
+            NVNavigationBar.setSelected({
+                id: 'receiving_group',
+                index: index,
+                selected: true,
+                // reload: true
+            }, function(ret) {
+
+            });
+        }
+
+        function fnsetFrameGroupIndex(name, index) {
+            api.setFrameGroupIndex({
+                name: name,
+                index: index,
+                scroll: true,
+                // reload: true
+            });
+        }
+    </script>
+</body>
+
+</html>

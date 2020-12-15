@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>佣金提现</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            background-color: #fff;
+        }
+
+        .box1 {
+            margin-top: 10px;
+        }
+
+        .box1 .box1_c {
+            border: none;
+            box-shadow: none;
+            background-color: #fff;
+            padding-bottom: 0;
+            margin: 0 20px;
+        }
+
+        .box1 .box1_c .box1_c1 {
+            width: 100%;
+            float: left;
+            border-radius: 20px;
+            margin: 0;
+            border: none;
+            background-color: #04b848;
+        }
+
+        .box1 .box1_c .box1_c1 .yj {
+            width: 100%;
+        }
+
+        .box1 .box1_c .box1_c1 .bj {
+            width: 100%;
+        }
+
+        .box1 .box1_c .box1_c1.box1_cr {
+            float: right;
+            background-color: #4bda67;
+        }
+
+        #charge {
+            color: #f00;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box1">
+        <div class="box1_c clearfix">
+            <div class="box1_c1 box1_cl">
+                <div class="yj">
+                    <p class="i">&#xe63a;</p>
+                    <p>可提现佣金</p>
+                    <p id="can_yj" class="p">0.00</p>
+                </div>
+            </div>
+            <!-- <div class="box1_c1 box1_cr">
+                <div class="bj">
+                    <p class="i">&#xe61c;</p>
+                    <p>可提现本金</p>
+                    <p id="can_bj" class="p">0.00</p>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="tixianbox2">
+        <div class="tit1">到账银行卡<span id="bank">暂未绑定银行卡</span></div>
+        <div class="tit3">
+            <div class="t">
+                <p>可提现佣金：￥<i id="yj_price">0.00</i></p>
+                <p>实际到账佣金：￥<i id="sjyj_price">0.00</i>（免手续费）</p>
+                <p style="display: none;">手续费：￥<i id="sxf_price">0.00</i></p>
+            </div>
+            <div class="p"><input type="text" onkeyup="sxf()" name="num" id="num" placeholder="请输入提现金额（整数）"></div>
+        </div>
+        <div class="tit2"><input type="password" name="password" id="password" placeholder="请输入登录密码"></div>
+        <div class="txbtn">
+            <input type="button" name="dobtn" tapmode onclick="postTx()" value="立即提现">
+        </div>
+        <!-- <div class="tit4">
+            1-3个工作日到账，周末节假日顺延
+        </div> -->
+    </div>
+    <div class="tixianbox1">
+        <!-- 每月可提现2次 -->
+        <p style="display: none;">佣金提现说明：</p>
+        <p style="display: none;">佣金提现收取<span id="charge_bak">0</span>%的手续费</p>
+        <p style="display: none;">预计1-3个工作日到账，节假日顺延</p>
+        <p style="color: #333;">提现说明：</p>
+        <p>1.佣金满<i id="charge">0</i>金（1金=1元）起提，平台24小时内完成提现审核</p>
+        <!-- <p>2.本金可随时提现，平台24小时内完成提现审核</p> -->
+        <p>2.申请提现后，相应金币进入冻结不可用状态</p>
+        <p>3.提现免手续费，有任何问题请联系平台客服</p>
+        <p>4.佣金每月可提现3次</p>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getShow();
+        }
+
+        function getShow() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Pay/gettixian/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var member = ret.member;
+                        var config = ret.config;
+                        $api.html($api.byId("yj_price"), member.yongjin_price);
+                        // $api.html($api.byId("charge"), config.charge * 100);
+
+                        $api.html($api.byId("charge"), config.charge);
+                        $api.html($api.byId("can_yj"), member.yongjin_price);
+                        // $api.html($api.byId("can_bj"), member.price);
+
+                        if (isempty(member.cert_number)) {
+                            api.toast({
+                                msg: '请先绑定身份证',
+                                duration: 1000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.closeWin();
+                            }, 1000);
+                            return false;
+                        }
+
+                        if (isempty(member.bank_number)) {
+                            api.toast({
+                                msg: '请先绑定银行卡',
+                                duration: 1000,
+                                location: 'bottom'
+                            });
+                            setTimeout(function() {
+                                api.closeWin();
+                            }, 1000);
+                        } else {
+                            $api.html($api.byId("bank"), member.bank_name + '（' + member.bank_number.substr(member.bank_number.length - 4) + '）');
+
+                        }
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    alert(JSON.stringify(err));
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+        }
+
+        function postTx() {
+            if (document.getElementById("password").value == "") {
+                api.toast({
+                    msg: '请输入登录密码',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            var price = document.getElementById("num").value * 1;
+            var max_price = $api.html($api.byId("yj_price")) * 1;
+            if (!new RegExp("^[1-9][0-9]*$").test(price)) {
+                document.getElementById("num").value = "";
+                $api.html($api.byId("sjyj_price"), '0.00');
+                api.toast({
+                    msg: '提现金额是正整数',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            } else if (price == 0) {
+                document.getElementById("num").value = "";
+                $api.html($api.byId("sjyj_price"), '0.00');
+                api.toast({
+                    msg: '提现金额不能是0',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            } else if (price > max_price) {
+                document.getElementById("num").value = "";
+                $api.html($api.byId("sjyj_price"), '0.00');
+                api.toast({
+                    msg: '提现金额不能大于现有余额' + max_price,
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Pay/posttx/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        password: $api.val($api.byId("password")),
+                        userid: $api.getStorage("userid"),
+                        tixian_type: 1,
+                        price: $api.val($api.byId("num"))
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 1000,
+                        location: 'bottom'
+                    });
+
+                    if (ret.status == 1) {
+                        setTimeout(function() {
+                            // api.closeWin();
+                            getShow();
+                            var jsfun = 'getShow()';
+                            api.execScript({
+                                name: 'window_tixian',
+                                frameName: 'frame_tixian_benjin',
+                                script: jsfun
+                            });
+
+                            var jsfun1 = 'getPrice()';
+                            api.execScript({
+                                name: 'window_fund_details',
+                                frameName: 'frame_yongjin',
+                                script: jsfun1
+                            });
+
+                            var jsfun2 = 'getList()';
+                            api.execScript({
+                                name: 'window_fund_details',
+                                frameName: 'frame_yongjin',
+                                script: jsfun2
+                            });
+
+                            var jsfun3 = 'getIndex()';
+                            api.execScript({
+                                name: 'index',
+                                frameName: 'frame_index',
+                                script: jsfun3
+                            });
+                            api.execScript({
+                                name: 'index',
+                                frameName: 'frame_user',
+                                script: jsfun3
+                            });
+
+                        }, 1000);
+                    }
+
+                } else {
+                    alert(JSON.stringify(err));
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        //手续费
+        function sxf() {
+            var price = document.getElementById("num").value * 1;
+            var max_price = $api.html($api.byId("yj_price")) * 1;
+            if (!new RegExp("^[1-9][0-9]*$").test(price)) {
+                document.getElementById("num").value = "";
+                $api.html($api.byId("sjyj_price"), '0.00');
+                api.toast({
+                    msg: '提现金额是正整数',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            } else if (price > max_price) {
+                document.getElementById("num").value = "";
+                $api.html($api.byId("sjyj_price"), '0.00');
+                api.toast({
+                    msg: '提现金额不能大于现有余额' + max_price,
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else {
+                // var charge = $api.html($api.byId("charge")) * 1;
+                // var sxf_price = price * charge / 100;
+                // var sxf_price = sxf_price.toFixed(2);
+                // $api.html($api.byId("sxf_price"), sxf_price);
+                // $api.html($api.byId("sjyj_price"), (price - sxf_price).toFixed(2));
+                var value = Number($api.val($api.byId('num'))).toFixed(2);
+                $api.html($api.byId('sjyj_price'), value);
+            }
+
+        }
+    </script>
+</body>
+
+</html>

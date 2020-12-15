@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="backIndex();"><span>&#xe606;</span>个人消息</a>
+    </header>
+    <div class="notice">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_personal_notice',
+                url: './frame_personal_notice.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: api.frameHeight - 50 - h
+                },
+                pageParam: {
+                    name: 'frame_personal_notice'
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+
+        }
+
+        function backIndex() {
+            api.closeWin();
+            var jsfun = 'getUnreadAmount()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun
+            });
+        }
+    </script>
+</body>
+
+</html>

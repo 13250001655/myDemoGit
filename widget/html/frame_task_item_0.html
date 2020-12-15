@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>待操作</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <ul class="tasklist" id="tasklist">
+        <!-- <li>
+      <div class="pic"><img src="../image/aui-icon.png"></div>
+      <div class="txt">
+          <div class="w1">
+              <span>2018-09-13</span>
+              <a><i>&#xe604;</i>WFFJOE69*3</a>
+          </div>
+          <div class="w2">
+              <span>平台返款<a>待操作</a></span>
+              <font class="f1">￥12</font>
+          </div>
+          <div class="w3">
+              <span>提交倒计时<i>00:59:59</i></span>
+              <font class="f2">垫资 ￥752.00</font>
+          </div>
+      </div>
+   </li>
+   <li>
+      <div class="pic"><img src="../image/aui-icon.png"></div>
+      <div class="txt">
+          <div class="w1">
+              <span>2018-09-13</span>
+              <a><i>&#xe604;</i>WFFJOE69*3</a>
+          </div>
+          <div class="w2">
+              <span>平台返款<a>待操作</a></span>
+              <font class="f1">￥12</font>
+          </div>
+          <div class="w3">
+              <span>提交倒计时<i>00:59:59</i></span>
+              <font class="f2">垫资 ￥752.00</font>
+          </div>
+      </div>
+   </li> -->
+    </ul>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function() {
+            getList();
+            isTips();
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f2f2f2',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                getList();
+                isTips();
+                //关闭
+                api.refreshHeaderLoadDone();
+            });
+        }
+
+        function isTips() {
+            api.ajax({
+                url: myurl + '/index.php/User/Suggestion/getjrmsg',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.jrbz == 0) {
+                        api.openFrame({
+                            name: 'frame_accept_tips',
+                            url: './frame_accept_tips.html',
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: "auto",
+                                h: "auto"
+                            },
+                            pageParam: {
+                                name: 'frame_accept_tips'
+                            },
+                            bounces: false,
+                            bgColor: 'rgba(0,0,0,0)',
+                            vScrollBarEnabled: true,
+                            hScrollBarEnabled: true
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        //获取数据
+        function getList() {
+            for (var i = 0; i < 1000; i++) {
+                clearInterval(i);
+            }
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Task/getorderlist/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        status: 2,
+                        pt_id: api.pageParam.pt_id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    //alert(ret);
+                    var data = ret.data;
+                    var str = "";
+                    if (data.length > 0) {
+                        var domArr = [];
+                        for (var i = 0; i < data.length; i++) {
+                            // 审号任务
+                            if (data[i]['selfaudit'] == 1 || data[i]['selfaudit'] == 3) {
+                                // 1审号中   3审号不通过
+                                str = str + '<li>';
+                            } else if (data[i]['selfaudit'] == 0 || data[i]['selfaudit'] == 2) {
+                                // 0不审号   2通过
+                                str = str + '<li tapmode onclick="openTaskDetail(' + data[i]["id"] + ')">';
+                            } else {
+                                str = str + '<li tapmode onclick="openTaskDetail(' + data[i]["id"] + ')">';
+                            }
+
+                            str = str + '<div class="pic"><img src="' + geturl(data[i]["imageurl"]) + '"></div>';
+                            str = str + '<div class="txt">';
+                            str = str + '<div class="w1">';
+                            str = str + '<span>' + getLocalTime(data[i]["order_time"]) + '</span>';
+                            if (data[i]['category_id'] < 100) {
+                                if (data[i]["commonkey"] == 2) {
+                                    str = str + '<a>文字好评任务</a>';
+                                } else if (data[i]["commonkey"] == 3) {
+                                    str = str + '<a>图片好评任务</a>';
+                                } else if (data[i]["commonkey"] == 4) {
+                                    str = str + '<a>视频好评任务</a>';
+                                } else {
+                                    str = str + '<a>普通好评任务</a>';
+                                }
+                            } else {
+                                str = str + '<a>浏览任务</a>';
+                            }
+                            str = str + '</div>';
+                            str = str + '<div class="w2">';
+
+                            if (data[i]['selfaudit'] == 1) {
+                                str = str + '<span>平台返款<a style="color: #d5e02d;">审号中</a></span>';
+                            } else if (data[i]['selfaudit'] == 3) {
+                                str = str + '<span>平台返款<a style="color: #f00;">审号失败</a></span>';
+                            } else {
+                                str = str + '<span>平台返款<a>待操作</a></span>';
+                            }
+
+                            str = str + '<font class="f1">￥' + data[i]["yj_price"] + '</font>';
+                            str = str + '</div>';
+                            str = str + '<div class="w3">';
+
+                            if (data[i]['selfaudit'] == 1 || data[i]['selfaudit'] == 3) {
+                                // 1审号中   3审号不通过
+                                str = str + '<span id="t_djs_' + data[i]["id"] + '">审号倒计时 <i id="djs_' + data[i]["id"] + '">00:59:59</i></span>';
+                            } else if (data[i]['selfaudit'] == 0 || data[i]['selfaudit'] == 2) {
+                                // 0不审号   2通过
+                                str = str + '<span id="t_djs_' + data[i]["id"] + '">提交倒计时 <i id="djs_' + data[i]["id"] + '">00:59:59</i></span>';
+                            } else {
+                                str = str + '<span id="t_djs_' + data[i]["id"] + '">提交倒计时 <i id="djs_' + data[i]["id"] + '">00:59:59</i></span>';
+                            }
+
+                            if (data[i]['category_id'] < 100) {
+                                var bj_price = data[i]["bj_price"];
+                                str = str + '<font class="f2">垫资 ￥' + computedPrice(bj_price) + '</font>';
+                            } else {
+                                str = str + '<font class="f2">垫资 ￥' + data[i]["bj_price"] + '</font>';
+                            }
+
+                            str = str + '</div>';
+                            str = str + '</div>';
+                            str = str + '</li>';
+
+                            // timer(parseInt(data[i]['order_time']) + 3600, 'djs_' + data[i]["id"]);
+                            var domObj = {};
+
+                            if (data[i]['selfaudit'] == 1 || data[i]['selfaudit'] == 3) {
+                                // 1审号中   3审号不通过
+                                domObj['order_time'] = parseInt(data[i]['order_time']) + 3600;
+                            } else if (data[i]['selfaudit'] == 0 || data[i]['selfaudit'] == 2) {
+                                // 0不审号   2通过
+                                domObj['order_time'] = parseInt(data[i]['expiration_date']);
+                            } else {
+                                domObj['order_time'] = parseInt(data[i]['expiration_date']);
+                            }
+
+                            domObj['order_id'] = data[i]["id"];
+                            domObj['order_number'] = data[i]["order_number"];
+                            domObj['order_dom'] = 'djs_' + data[i]["id"];
+                            var time = Math.round(new Date().getTime() / 1000).toString();
+                            domObj['order_intDiff'] = parseInt(domObj['order_time']) - parseInt(time);
+                            domArr.push(domObj);
+                        }
+                        timer(domArr);
+                        $api.html($api.byId('tasklist'), str);
+                    } else {
+                        $api.html($api.byId('tasklist'), "<li>暂无数据！</li>");
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi;
+        }
+
+        function openTaskDetail(orderid) {
+            api.openWin({
+                name: 'window_task_detail',
+                url: './window_task_detail.html',
+                pageParam: {
+                    name: 'window_task_detail',
+                    id: orderid
+                }
+            });
+
+        }
+
+        // function timer(endtime, id) {
+        //     var time = Math.round(new Date().getTime() / 1000).toString();
+        //     intDiff = parseInt(endtime) - parseInt(time);
+        //     //alert(intDiff);
+        //     if (intDiff > 0) {
+        //         var ttt = window.setInterval(function() {
+        //             var day = 0,
+        //                 hour = 0,
+        //                 minute = 0,
+        //                 second = 0; //时间默认值
+        //             if (intDiff > 0) {
+        //                 day = Math.floor(intDiff / (60 * 60 * 24));
+        //                 hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+        //                 minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+        //                 second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+        //             }
+        //             if (hour <= 9) {
+        //                 hour = '0' + hour;
+        //             }
+        //             if (minute <= 9) {
+        //                 minute = '0' + minute;
+        //             }
+        //             if (second <= 9) {
+        //                 second = '0' + second;
+        //             }
+        //             $('#' + id).html(hour + ":" + minute + ":" + second);
+        //             intDiff--;
+        //         }, 1000);
+        //     } else {
+        //         setTimeout(function() {
+        //             $('#t_' + id).html("系统已撤销");
+        //         }, 1000);
+        //     }
+        // }
+
+        function timer(domArr) {
+            setInterval(function() {
+                for (var i = 0; i < domArr.length; i++) {
+                    var intDiff = domArr[i]['order_intDiff'];
+                    if (intDiff > 0) {
+                        var day = 0,
+                            hour = 0,
+                            minute = 0,
+                            second = 0; //时间默认值
+                        day = Math.floor(intDiff / (60 * 60 * 24));
+                        hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                        minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                        second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                        hour = day * 24 + hour;
+                        if (hour <= 9) {
+                            hour = '0' + hour;
+                        }
+                        if (minute <= 9) {
+                            minute = '0' + minute;
+                        }
+                        if (second <= 9) {
+                            second = '0' + second;
+                        }
+                        $('#' + domArr[i]['order_dom']).html(hour + ":" + minute + ":" + second);
+
+                        intDiff--;
+                        domArr[i]['order_intDiff'] = intDiff;
+                    } else {
+                        resetTaskStatus();
+                    }
+                }
+            }, 1000);
+        }
+
+        function resetTaskStatus() {
+            api.ajax({
+                url: myurl + '/index.php/User/Integral/order_time',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                var jsfun = 'getList()';
+                api.execScript({
+                    name: 'window_task_list_on',
+                    frameName: 'frame_task_item_4',
+                    script: jsfun
+                });
+                var jsfun_1 = 'getTaskNum()';
+                api.execScript({
+                    name: 'window_task_list_on',
+                    script: jsfun_1
+                });
+                getList();
+            });
+        }
+
+        function changeStatus(order_id, order_number) {
+            api.ajax({
+                url: myurl + '/index.php/user/Integral/get_time',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: order_id
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    api.notification({
+                        notify: {
+                            title: '订单已过期',
+                            content: '订单编号：' + order_number + '由于没有在1个小时之内进行提交，已被系统撤销！'
+                        }
+                    });
+
+                    api.toast({
+                        msg: '订单编号： ' + order_number + ' 由于没有在1个小时之内进行提交，已被系统撤销！',
+                        duration: 5000,
+                        location: 'bottom'
+                    });
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

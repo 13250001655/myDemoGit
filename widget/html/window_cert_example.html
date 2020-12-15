@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>截图示例</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="api.closeWin();"><span>&#xe606;</span>绑定要求</a>
+    </header>
+    <img src="../image/cert-example.jpg" id="eos" />
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function () {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+        }
+    </script>
+</body>
+
+</html>

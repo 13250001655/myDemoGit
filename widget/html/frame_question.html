@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>问题分类</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    body{background:#fff; height:auto;}
+    </style>
+</head>
+<body>
+  <div class="questionbox1">
+      <ul>
+          <li tapmade onclick="openCategory(4,'账户管理')"><img src="../image/question_li_bg01.jpg"></li>
+          <li tapmade onclick="openCategory(5,'订单操作')"><img src="../image/question_li_bg02.jpg"></li>
+          <li tapmade onclick="openCategory(6,'返款问题')"><img src="../image/question_li_bg03.jpg"></li>
+          <li tapmade onclick="openCategory(7,'其他问题')"><img src="../image/question_li_bg04.jpg"></li>
+      </ul>
+  </div>
+  <div class="questionbox2">
+      <div class="tit"><span>&#xe605;</span>在线客服<i>(每日9:00-22:00)</i></div>
+      <div class="con">
+          所有常见问题都有相应的解决方案，请参考常见问题自主解决；如果常见问题无法解决您的问题再咨询客服。<br />由于客服咨询量较大，请尽可能的描述清楚您的问题，以便快速解决。
+      </div>
+  </div>
+  <div class="questionbtn">
+      <a tapmode onclick="openQQ()" data-number="" id="doqq"><span>&#xe601;</span> QQ咨询</a>
+  </div>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script>
+apiready=function(){
+    getQQ();
+}
+function openCategory(news_cid,classname)
+{
+    api.openWin({
+        name: 'window_question_category',
+        url: './window_question_category.html',
+        pageParam: {
+            name: 'window_question_category',
+            cid:news_cid,
+            name:classname
+        }
+    });
+
+}
+//获取买手客服QQ
+function getQQ()
+{
+    api.showProgress();
+    api.ajax({
+        url: myurl+'/index.php/User/Api/getqq/',
+        method: 'post',
+        data: {
+            values: {
+              username:$api.getStorage("username"),
+              userid:$api.getStorage("userid"),
+            }
+        }
+    },function(ret, err){
+        api.hideProgress();
+        if (ret) {
+            $api.attr($api.byId("doqq"), 'data-number', ret.qq);
+        } else {
+            api.toast({
+                msg: '网络错误',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }
+    });
+
+}
+function openQQ()
+{
+    var system = api.systemType;
+    var qq = $api.attr($api.byId("doqq"), 'data-number');
+    //alert(qq);
+    if (system == 'android') {
+        api.openApp({
+            uri: 'mqqwpa://im/chat?chat_type=wpa&uin=' + qq
+        }, function(ret, err) {
+            if (ret) {
+                //alert(JSON.stringify(ret));
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+    } else if (system == 'ios') {
+        api.openApp({
+            appParam: {
+                'chat_type': 'wpa',
+                'uin': qq,
+                'version': 1,
+                'src_type': 'web'
+            },
+            iosUrl: 'mqq://im/chat',
+        }, function(ret, err) {
+            if (ret) {
+                //alert(JSON.stringify(ret));
+            } else {
+                //alert(JSON.stringify(err));
+            }
+        });
+    }
+
+}
+
+</script>
+</body>
+</html>

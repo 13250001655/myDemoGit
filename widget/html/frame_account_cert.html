@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <form id="dataForm">
+        <p style="color: #666; padding: 10px 10px 4px 10px; background-color: #fff;">
+            根据国家网信办新规，平台进行实名安全工作，当您的账户出现风险时，在必要时系统会要求您进行更高级别的认证。</p>
+        <p style="color: #666; padding: 0 10px 0 10px; background-color: #fff;">我们承诺保障您账户的资金安全，且不会泄漏您的个人隐私，请您积极配合。</p>
+        <p style="color: #f00; padding: 10px 10px 0; background-color: #fff; font-size: 16px; line-height: 20px;">如果前置摄像无法上传请使用后置拍摄</p>
+        <ul class="certlist">
+            <li>
+                <p>身份证照片（正面）</p>
+                <div class="pic_l" tapmode onclick="showCertAction('身份证正面照','cert_img', '1')"><img id="cert_img"
+                        src="../image/file-img.png" /></div>
+                <!-- <div class="pic_r"><img src="../image/cert.jpg" /></div> -->
+                <input type="hidden" name="cert_img" id="input_cert_img">
+            </li>
+            <li>
+                <p>手持身份证手比2姿势照片</p>
+                <div class="pic_l" tapmode onclick="showCertAction('手持身份证手比2姿势照片','my_img', '2')"><img id="my_img"
+                        src="../image/file-img.png" /></div>
+                <input type="hidden" name="my_img" id="input_my_img">
+            </li>
+            <li>
+                <p style="color: #e31818;">以下信息上传后身份证照片（正面）后可自动识别</p>
+            </li>
+            <li><input type="text" name="nickname" id="nickname" value="" required="required" placeholder="请输入你的真实姓名">
+            </li>
+            <li><input type="text" name="cert_number" id="cert_number" value="" required="required"
+                    placeholder="请输入身份证号码"></li>
+            <li><input type="text" name="address" id="address" value="" required="required" placeholder="请输入住址"></li>
+            <li><input type="text" name="birthday" id="birthday" value="" required="required" placeholder="请输入出生日期">
+            </li>
+            <li><input type="text" name="sex" id="sex" value="" required="required" placeholder="请输入性别"></li>
+            <li><input type="text" name="nation" id="nation" value="" required="required" placeholder="请输入民族"></li>
+        </ul>
+        <p class="lostTips" style="display: none; color: #f00; text-align: center; padding-top: 15px;"></p>
+        <div class="accountbtn"><input type="button" id="dobtn" tapmode onclick="postCert()" value="提交" /></div>
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function () {
+            getCert();
+            openBindExample();
+
+            var baiduTextReader = api.require('baiduTextReader');
+            baiduTextReader.requestToken({}, function (ret, err) {
+                if (ret) {
+                    // alert(JSON.stringify(ret));
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+
+        function openBindExample() {
+            api.openFrame({
+                name: 'frame_cert_example',
+                url: './frame_cert_example.html',
+                rect: {
+                    x: 0,
+                    y: api.pageParam.h,
+                    w: "auto",
+                    h: "auto"
+                },
+                pageParam: {
+                    name: 'frame_cert_example'
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+        }
+
+        function getCert() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getmember/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function (ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    //alert(JSON.stringify( data ));
+                    if (!isempty(data["nickname"])) {
+                        $api.val($api.byId("nickname"), data["nickname"]);
+                    }
+                    if (!isempty(data["cert_number"])) {
+                        $api.val($api.byId("cert_number"), data["cert_number"]);
+                    }
+                    if (!isempty(data["address"])) {
+                        $api.val($api.byId("address"), data["address"]);
+                    }
+                    if (!isempty(data["birthday"])) {
+                        $api.val($api.byId("birthday"), data["birthday"]);
+                    }
+                    if (!isempty(data["sex"])) {
+                        $api.val($api.byId("sex"), data["sex"]);
+                    }
+                    if (!isempty(data["nation"])) {
+                        $api.val($api.byId("nation"), data["nation"]);
+                    }
+                    if (!isempty(data["cert_img"])) {
+                        $api.val($api.byId("input_cert_img"), data["cert_img"]);
+                        $api.attr($api.byId("cert_img"), "src", data["cert_img"]);
+                    }
+                    if (!isempty(data["my_img"])) {
+                        $api.val($api.byId("input_my_img"), data["my_img"]);
+                        $api.attr($api.byId("my_img"), "src", data["my_img"]);
+                    }
+
+                    if (data["identity_audit"] == -1) {
+                        $api.html($api.dom('.lostTips'), data['identity_content']);
+                        $api.css($api.dom('.lostTips'), 'display: block');
+                    } else {
+                        $api.html($api.dom('.lostTips'), '');
+                        $api.css($api.dom('.lostTips'), 'display: none');
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+
+        function postCert() {
+            if ($("#nickname").val() == "") {
+                api.toast({
+                    msg: '请输入你的真实实名',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#cert_number").val() == "") {
+                api.toast({
+                    msg: '请输入身份证号码',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#address").val() == "") {
+                api.toast({
+                    msg: '请输入你的住址',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#birthday").val() == "") {
+                api.toast({
+                    msg: '请输入你的出生日期',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#sex").val() == "") {
+                api.toast({
+                    msg: '请输入你的性别',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#nation").val() == "") {
+                api.toast({
+                    msg: '请输入所属民族',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#input_cert_img").val() == "") {
+                api.toast({
+                    msg: '请上传身份证正面照',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#input_my_img").val() == "") {
+                api.toast({
+                    msg: '请上传手持身份证手比2姿势照片',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            var param = dataFrom("dataForm");
+
+            api.showProgress();
+
+            api.ajax({
+                url: myurl + '/index.php/User/Account/postcert/',
+                method: 'post',
+                data: {
+                    values: param
+                }
+            }, function (ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                    if (ret.status == 1) {
+                        var jsfun = 'getAccount()';
+                        api.execScript({
+                            name: 'window_account',
+                            frameName: 'frame_account',
+                            script: jsfun
+                        });
+                        setTimeout(function () {
+                            api.closeWin();
+                        }, 2000);
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+        //获取form数据
+        function dataFrom(id) {
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid")
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function (i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+
+        //拍照和从相册中选择
+        function showCertAction(tit, id, isDiscriminate) {
+            var has = hasPermission_global('camera');
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '相机' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function (ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission_global('camera');
+                    }
+                });
+                return false;
+            }
+
+            var has = hasPermission_global('storage');
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '储存' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function (ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission_global('storage');
+                    }
+                });
+                return false;
+            }
+
+            // var items = ['拍照', '从手机相册选择'];
+            var items = ['拍照'];
+            var reg = new RegExp("^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$");
+            var imageUrl = $api.attr($api.byId(id), "src");
+            if (reg.test(imageUrl)) //是url
+            {
+                // items = ['拍照', '从手机相册选择', '查看大图'];
+                items = ['拍照', '查看大图'];
+            }
+
+            api.actionSheet({
+                title: tit,
+                cancelTitle: '取消',
+                buttons: items
+            }, function (ret, err) {
+                if (ret) {
+                    getCertImages(ret.buttonIndex, id, items.length, isDiscriminate);
+                }
+            });
+        }
+
+        function getCertImages(sourceType, id, cc, isDiscriminate) {
+            if (sourceType == 1) { // 拍照
+                //获取一张图片
+                api.getPicture({
+                    sourceType: 'camera', //拍照
+                    encodingType: 'png',
+                    mediaValue: 'pic',
+                    allowEdit: false,
+                    destinationType: 'base64', //返回base64地址
+                    quality: 80,
+                    saveToPhotoAlbum: true
+                }, function (ret, err) {
+                    //var imgSrc = ret.base64Data;  如果是base64，要用这个属性获取地址
+                    // 获取拍照数据并处理
+                    if (ret) {
+                        //alert( JSON.stringify(ret ))
+                        saveCertImg(ret.base64Data, id, isDiscriminate);
+                        // var imgSrc = ret.data;
+                        // if (imgSrc != "") {
+                        //     var ele=$api.dom('#'+id);
+                        //     $api.attr(ele,'src',imgSrc);
+                        // }
+                    }
+
+                });
+            } else if (sourceType == 2) { // 查看大图
+                if (cc == 2) {
+                    openCertPicture(id);
+                }
+            }
+
+        }
+
+        function saveCertImg(path, id, isDiscriminate) {
+            api.showProgress();
+            //上传剪辑后的图像到服务器
+            api.ajax({
+                // report : false,
+                url: myurl + '/index.php/User/Public/user_upload/',
+                //这里是我们约定好的后台上传图片的位置 ，你可以根据你的需求来改
+                method: 'post',
+                cache: 'false',
+                dataTpye: 'json',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        pic: path
+                    }
+                }
+            }, function (ret, err) {
+                if (ret.status == 1) {
+                    api.hideProgress();
+                    var ele = $api.dom('#' + id);
+                    $api.attr(ele, 'src', myurl + ret.picture);
+                    var ele1 = $api.dom('#input_' + id);
+                    $api.val(ele1, myurl + ret.picture);
+                    if (isDiscriminate == '1') {
+                        api.showProgress();
+                        // 识别身份证
+                        api.download({
+                            url: myurl + ret.picture,
+                            report: false,
+                            cache: false,
+                            allowResume: true,
+                            savePath: 'fs://frontcert.png'
+                        }, function (ret, err) {
+                            api.hideProgress();
+                            if (ret.state == 1) {
+                                var baiduTextReader = api.require('baiduTextReader');
+                                baiduTextReader.recIdCardFrontFromImage({
+                                    image: ret.savePath
+                                }, function (ret, err) {
+                                    if (ret) {
+                                        var result = ret['words_result'];
+                                        var nickname = result['姓名'] ? result['姓名']['words'] : '';
+                                        var cert_number = result['公民身份号码'] ? result['公民身份号码']['words'] : '';
+                                        var address = result['住址'] ? result['住址']['words'] : '';
+                                        var birthday = result['出生'] ? result['出生']['words'] : '';
+                                        var sex = result['性别'] ? result['性别']['words'] : '';
+                                        var nation = result['民族'] ? result['民族']['words'] : '';
+
+                                        var discriminate_type = '';
+                                        if (nickname) {
+                                            $api.val($api.byId("nickname"), nickname);
+                                        } else {
+                                            discriminate_type += '姓名未能识别成功，请重试！\n';
+                                        }
+
+                                        if (cert_number) {
+                                            $api.val($api.byId("cert_number"), cert_number);
+                                        } else {
+                                            discriminate_type += '身份证号码未能识别成功，请重试！\n';
+                                        }
+
+                                        if (address) {
+                                            $api.val($api.byId("address"), address);
+                                        } else {
+                                            discriminate_type += '住址未能识别成功，请重试！\n';
+                                        }
+
+                                        if (birthday) {
+                                            $api.val($api.byId("birthday"), birthday);
+                                        } else {
+                                            discriminate_type += '出生日期未能识别成功，请重试！\n';
+                                        }
+
+                                        if (sex) {
+                                            $api.val($api.byId("sex"), sex);
+                                        } else {
+                                            discriminate_type += '性别未能识别成功，请重试！\n';
+                                        }
+
+                                        if (nation) {
+                                            $api.val($api.byId("nation"), nation);
+                                        } else {
+                                            discriminate_type += '民族未能识别成功，请重试！\n';
+                                        }
+
+                                        if (discriminate_type) {
+                                            alert(discriminate_type);
+                                        }
+                                    } else {
+                                        // alert(JSON.stringify(err));
+                                        api.toast({
+                                            msg: '识别身份证信息失败，请重试',
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                });
+                            } else {
+                                api.toast({
+                                    msg: '下载失败',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    } else { }
+                } else {
+                    api.hideProgress();
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+        };
+
+        function openCertPicture(id) {
+            var imageUrl = $api.attr($api.byId(id), "src");
+            var imageBrowser = api.require('imageBrowser');
+            imageBrowser.openImages({
+                imageUrls: [imageUrl,], //图片的URL组成的数组
+                showList: false, //是否以九宫格方式显示图片,默认值：true(效果：点击某个图片后，先以九宫形式显示所有图片，然后单击哪张显示哪张)
+                activeIndex: 0, //当不用九宫格方式显示时，当前要显示的图片在集合中的索引
+                tapClose: false //当showList为false时，本参数有效。若本参数为true，则不显示顶部导航条，且单击图片时退出本模块。若本参数为false，则显示顶部导航条，且单击图片隐藏/显示顶部导航条
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head1">
+        <div style="width: 100%; float: none;">登录</div>
+    </header>
+
+    <div class="login_head">
+        <img id="login-banner" src="./image/login-banner.jpg" />
+    </div>
+    <div class="login_content">
+        <ul>
+            <li><i class="tel-icon"></i><input type="tel" name="username" id="username" class="login_input" pattern="[0-9]*" placeholder="请输入手机号"></li>
+            <li><i class="psw-icon"></i><input type="password" name="password" id="password" class="login_input" placeholder="请输入密码"><i class="eye-icon" tapmode onclick="changePswStatus(this);"></i></li>
+            <li><input type="button" value="登录" tapmode onclick="login()" class="login_btn"></li>
+        </ul>
+    </div>
+    <div class="login_foot"><a tapmode onclick="openForgetpassword()">忘记密码？</a> | 还没有账号？<a tapmode onclick="openRegister()">立即注册</a></div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.addEventListener({
+            name: 'smartupdatefinish'
+        }, function(ret, err) {
+            api.alert({
+                title: '云修复完成',
+                msg: '将重启应用',
+            }, function(ret, err) {
+                if (ret) {
+                    api.rebootApp();
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        });
+
+        confirmPerStorage('storage');
+
+        var header = document.querySelector('#header');
+        $api.fixStatusBar(header);
+        if (!isempty($api.getStorage("username"))) {
+            $api.val($api.byId("username"), $api.getStorage("username"));
+            $api.val($api.byId("password"), $api.getStorage("password"));
+        }
+        resetTaskStatus();
+
+        if (isempty($api.getStorage("isVoiceOpen"))) {
+            $api.setStorage('isVoiceOpen', 1);
+        }
+
+        if (isempty($api.getStorage("isShakeOpen"))) {
+            $api.setStorage('isShakeOpen', 1);
+        }
+    };
+
+    function login() {
+        var username = $api.byId('username').value;
+        var password = $api.byId('password').value;
+        if (username.length != 11) {
+            api.toast({
+                msg: '手机号码位11位',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (!new RegExp("^0?(13|15|16|17|18|14|19)[0-9]{9}$").test(username)) {
+            api.toast({
+                msg: '请输入手机号码',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (password.length == 0) {
+            api.toast({
+                msg: '请输入密码',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        api.showProgress();
+        api.ajax({
+            url: myurl + '/index.php/User/Public/login/',
+            method: 'post',
+            data: {
+                values: {
+                    "username": username,
+                    "password": password
+                },
+            }
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                // alert( JSON.stringify( ret ) );
+                if (ret.status == 1) {
+                    api.toast({　　　　　　
+                        msg: '登录成功',
+                        　　　　　　duration: '2000',
+                        　　　　　　localtion: 'bottom'　　　　　　
+                    });
+                    $api.setStorage('isLogin', true);
+                    $api.setStorage('username', ret.username);
+                    $api.setStorage('userid', ret.userid);
+                    $api.setStorage('password', password);
+                    // 打开货返公告提醒
+                    $api.setStorage('hadOpened', 1);
+                    // 打开主页消息提示
+                    $api.setStorage('isIndexShow', 1);
+
+                    setTimeout(function() {
+                        api.openWin({　　　　
+                            name: 'index',
+                            　　　　url: 'index.html',
+                            　　　　bounces: false,
+                            reload: 1,
+                            slidBackEnabled: false,
+                            　　　　animation: {　　　　
+                                type: "push",
+                                　　　　duration: 300　　　　
+                            }　　　　
+                        });
+                    }, 1000);
+                } else {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+
+            } else {
+                api.toast({
+                    msg: '网络错误！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            }
+        });
+
+    }
+
+    function openRegister() {
+        api.alert({
+            title: '平台免费注册',
+            msg: '平台免费注册，不收取任何费用；如果有人向你收费，与平台无关，请找你的介绍人；同时平台需要身份证实名认证，如不能接受，请勿注册。',
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.buttonIndex == 1) {
+                    api.openWin({
+                        name: 'register',
+                        url: './register.html',
+                        pageParam: {
+                            name: 'register'
+                        },
+                        animation: {
+                            type: "push",
+                            subType: "from_right",
+                            duration: 300
+                        }
+                    });
+                }
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function openForgetpassword() {
+        api.openWin({
+            name: 'forgetpassword',
+            url: './forgetpassword.html',
+            pageParam: {
+                name: 'forgetpassword'
+            },
+            animation: {
+                type: "push",
+                subType: "from_right",
+                duration: 300
+            }
+        });
+    }
+
+    function resetTaskStatus() {
+        api.ajax({
+            url: myurl + '/index.php/User/Integral/order_time',
+            method: 'post',
+            data: {
+                values: {
+                    username: $api.getStorage("username"),
+                    userid: $api.getStorage("userid")
+                }
+            }
+        }, function(ret, err) {
+
+        });
+    }
+
+    function confirmPerStorage(perm) {
+        var has = hasStoragePermission(perm);
+        if (!has || !has[0] || !has[0].granted) {
+            api.confirm({
+                title: '提醒',
+                msg: '没有获得' + '储存' + "权限\n是否前往设置？\n不开启存储权限部分功能将无法使用！",
+                buttons: ['去设置', '取消']
+            }, function(ret, err) {
+                if (1 == ret.buttonIndex) {
+                    reqStoragePermission(perm);
+                }
+            });
+            return false;
+        }
+        return true;
+    }
+
+    function hasStoragePermission(one_per) {
+        var perms = new Array();
+        if (one_per) {
+            perms.push(one_per);
+        } else {
+            var prs = document.getElementsByName("p_list");
+            for (var i = 0; i < prs.length; i++) {
+                if (prs[i].checked) {
+                    perms.push(prs[i].value);
+                }
+            }
+        }
+        var rets = api.hasPermission({
+            list: perms
+        });
+        if (!one_per) {
+            return;
+        }
+        return rets;
+    }
+
+    function reqStoragePermission(one_per) {
+        var perms = new Array();
+        if (one_per) {
+            perms.push(one_per);
+        } else {
+            var prs = document.getElementsByName("p_list_r");
+            for (var i = 0; i < prs.length; i++) {
+                if (prs[i].checked) {
+                    perms.push(prs[i].value);
+                }
+            }
+        }
+        api.requestPermission({
+            list: perms,
+            code: 100001
+        }, function(ret, err) {
+            if (ret['list'][0]['granted']) {}
+        });
+    }
+</script>
+
+</html>

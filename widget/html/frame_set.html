@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="setbox">
+        <ul>
+            <li tapmode onclick="openPassword()"><span class="icon">&#xe700;</span>
+                <div>密码修改</div><span class="arrow">&#xe603;</span></li>
+            <li><span class="icon">&#58889;</span>
+                <div style="float: left;">接单声音提醒</div><span class="btn" style="float: right;"><input type="checkbox" id="is_voice" class="chk_1" onclick="isVoice();" /><label tapmode for="is_voice"></label></span></li>
+            <li><span class="icon">&#59584;</span>
+                <div style="float: left;">接单震动提醒</div><span class="btn" style="float: right;"><input type="checkbox" id="is_shake" class="chk_1" onclick="isShake();" /><label tapmode for="is_shake"></label></span></li>
+        </ul>
+    </div>
+
+    <div class="loginbtn"><input type="button" id="dobtn" tapmode onclick="loginout();" value="退出账号" /></div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getSetting();
+        }
+
+        function loginout() {
+            $api.setStorage('isLogin', false);
+            $api.setStorage('username', "");
+            $api.setStorage('userid', "");
+            api.closeToWin({
+                name: 'root'
+            });
+        }
+
+        function openPassword() {
+            api.openWin({
+                name: 'window_password',
+                url: './window_password.html',
+                pageParam: {
+                    name: 'window_password'
+                }
+            });
+        }
+
+        function getSetting() {
+            if ($api.getStorage("isVoiceOpen") == 1) {
+                document.getElementById("is_voice").checked = true;
+            } else {
+                document.getElementById("is_voice").checked = false;
+            }
+
+            if ($api.getStorage("isShakeOpen") == 1) {
+                document.getElementById("is_shake").checked = true;
+            } else {
+                document.getElementById("is_shake").checked = false;
+            }
+        }
+
+        function isVoice() {
+            if (document.getElementById("is_voice").checked) {
+                $api.setStorage('isVoiceOpen', 1);
+            } else {
+                $api.setStorage('isVoiceOpen', 0);
+            }
+        }
+
+        function isShake() {
+            if (document.getElementById("is_shake").checked) {
+                $api.setStorage('isShakeOpen', 1);
+            } else {
+                $api.setStorage('isShakeOpen', 0);
+            }
+        }
+    </script>
+</body>
+
+</html>

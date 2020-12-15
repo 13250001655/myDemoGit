@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>申诉中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .task-nav {
+            margin-top: 6px;
+            background-color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .task-nav .nav-controll {
+            float: left;
+            text-align: center;
+            height: 42px;
+            line-height: 42px;
+            width: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .task-nav .nav-controll.active {
+            color: #04b848;
+        }
+
+        .task-nav .nav-controll>p {
+            position: absolute;
+            top: 3px;
+            right: 50%;
+            margin-right: -68px;
+            background-color: #f00;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            color: #fff;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="closeAppeal();"><span>&#xe606;</span>申诉中心</a>
+    </header>
+    <div class="task-nav clearfix">
+        <div class="nav-controll active" onclick="openFrame(0);">我收到的申诉
+            <p id="sd-point"></p>
+        </div>
+        <div class="nav-controll" onclick="openFrame(1);">我发起的申诉
+            <p id="fq-point"></p>
+        </div>
+    </div>
+    <div class="account">
+
+    </div>
+    <div class="appeal-btn clearfix">
+        <div class="appeal-jc" tapmode onclick="ssjc();">申诉教程</div>
+        <div class="appeal-wy" tapmode onclick="wyss();">我要申诉</div>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            // NVNavigationBar_open();
+            // openFrame();
+            openFrame(0);
+            getAppealListNum();
+        };
+
+        function closeAppeal() {
+            var jsfun = 'getAppealNum()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun
+            });
+            api.closeWin();
+        }
+
+        function openFrame(index) {
+            var domAll = $api.domAll('.nav-controll');
+            for (var i = 0; i < domAll.length; i++) {
+                if ($api.hasCls(domAll[i], 'active')) {
+                    $api.removeCls(domAll[i], 'active');
+                }
+            }
+            $api.addCls(domAll[index], 'active');
+
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_appeal_' + index,
+                url: './frame_appeal_' + index + '.html',
+                rect: {
+                    x: 0,
+                    y: 107 + h,
+                    w: 'auto',
+                    h: api.frameHeight - h - 107 - 50
+                },
+                pageParam: {
+                    name: 'frame_appeal_' + index
+                },
+                bounces: false,
+                reload: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+            getAppealListNum();
+        }
+
+        function getAppealListNum() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Appeal/getAppealTotalNum',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        // 我收到的申诉
+                        var bts_num = data.bts_num;
+                        if (bts_num > 0) {
+                            if (bts_num > 999) {
+                                bts_num = '999';
+                            }
+                            $api.html($api.byId('sd-point'), bts_num);
+                            $api.css($api.byId('sd-point'), 'display: block');
+                        } else {
+                            $api.css($api.byId('sd-point'), 'display: none');
+                        }
+
+                        // 我发起的投诉
+                        var ts_num = data.ts_num;
+                        if (ts_num > 0) {
+                            if (ts_num > 999) {
+                                ts_num = '999';
+                            }
+                            $api.html($api.byId('fq-point'), ts_num);
+                            $api.css($api.byId('fq-point'), 'display: block');
+                        } else {
+                            $api.css($api.byId('fq-point'), 'display: none');
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        // function NVNavigationBar_open() {
+        //     var items = [{
+        //         title: '我发起的申诉',
+        //         bg: '#ffffff'
+        //     }, {
+        //         title: '我收到的申诉',
+        //         bg: '#ffffff'
+        //     }];
+        //
+        //     var header = document.querySelector('#header');
+        //     $api.fixStatusBar(header);
+        //     var h = $api.offset(document.querySelector('#header')).h;
+        //
+        //     fnsetFrameGroupIndex('appeal_group', 0);
+        //     var navigationBar = api.require('NVNavigationBar');
+        //     navigationBar.open({
+        //         rect: {
+        //             x: 0,
+        //             y: h + 50,
+        //             w: api.frameWidth,
+        //             h: 42,
+        //         },
+        //         styles: {
+        //             orientation: 'horizontal',
+        //             bg: '',
+        //             bgAlpha: 1,
+        //             font: {
+        //                 size: 14,
+        //                 sizeSelected: 14,
+        //                 color: '#333333',
+        //                 colorSelected: '#04b848',
+        //                 alpha: 1
+        //             },
+        //             itemSize: {
+        //                 w: api.winWidth / 2,
+        //             }
+        //         },
+        //         items: items,
+        //         fixedOn: api.frameName,
+        //         id: 'appeal_group',
+        //         selectedIndex: 0,
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             if (ret.eventType == 'click') {
+        //                 fnsetFrameGroupIndex('appeal_group', ret.index);
+        //             }
+        //         } else {}
+        //     });
+        // }
+        //
+        // function openFrame() {
+        //     var header = document.querySelector('#header');
+        //     $api.fixStatusBar(header);
+        //     var h = $api.offset(document.querySelector('#header')).h;
+        //     api.openFrameGroup({
+        //         name: 'appeal_group',
+        //         rect: {
+        //             x: 0,
+        //             y: 90 + h,
+        //             w: "auto",
+        //             h: api.frameHeight - h - 90 - 50
+        //         },
+        //         scrollEnabled: true,
+        //         frames: [{
+        //             name: 'frame_appeal_0',
+        //             url: 'frame_appeal_0.html',
+        //             pageParam: {
+        //                 name: 'frame_appeal_0'
+        //             },
+        //             // bounces: true,
+        //             // customRefreshHeader: 'UIPullRefresh'
+        //         }, {
+        //             name: 'frame_appeal_1',
+        //             url: 'frame_appeal_1.html',
+        //             pageParam: {
+        //                 name: 'frame_appeal_1'
+        //             },
+        //             // bounces: true,
+        //             // customRefreshHeader: 'UIPullRefresh'
+        //         }]
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             if (ret.index > -1) {
+        //                 fnNvnsetSelected(ret.index);
+        //             }
+        //         } else {
+        //             alert(JSON.stringify(err));
+        //         }
+        //     });
+        // }
+        //
+        // function fnNvnsetSelected(index) {
+        //     var NVNavigationBar = api.require('NVNavigationBar');
+        //     NVNavigationBar.setSelected({
+        //         id: 'appeal_group',
+        //         index: index,
+        //         selected: true
+        //     }, function(ret) {
+        //
+        //     });
+        // }
+        //
+        // function fnsetFrameGroupIndex(name, index) {
+        //     api.setFrameGroupIndex({
+        //         name: name,
+        //         index: index,
+        //         scroll: true
+        //     });
+        // }
+
+        function ssjc() {
+            api.openWin({
+                name: 'window_appeal_course',
+                url: './window_appeal_course.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_appeal_course'
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        function wyss() {
+            api.openWin({
+                name: 'window_task',
+                url: './window_task.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_task'
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

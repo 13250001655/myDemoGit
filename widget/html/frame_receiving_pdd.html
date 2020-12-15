@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>拼多多收货地址</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            background-color: #fff;
+        }
+
+        .no-account {
+            font-size: 16px;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .receiving-box {
+            padding: 0 3.75%;
+        }
+
+        .receiving-box .receiving-tips {
+            padding-top: 10px;
+        }
+
+        .receiving-box .receiving-tips .red {
+            color: #e31818;
+        }
+
+        .receiving-box .receiving-tips p:first-child {
+            padding-top: 10px;
+        }
+
+        .receiving-box .receiving-tips p:last-child {
+            padding-top: 6px;
+            line-height: 20px;
+        }
+
+        .receiving-box .receiving-inner-box {
+            padding-top: 10px;
+        }
+
+        .receiving-box .receiving-inner-box>input {
+            width: 100%;
+            padding-top: 6px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .receiving-box .receiving-inner-box>p {
+            padding-top: 10px;
+            padding-bottom: 6px;
+        }
+
+        .receiving-box .post-receiving-btn {
+            height: 40px;
+            line-height: 40px;
+            color: #fff;
+            font-size: 16px;
+            background-color: #04b848;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <p class="no-account" style="display: none;">暂未绑定账号</p>
+    <form id="dataForm" class="receiving-box">
+        <!-- <div class="receiving-tips">
+            <p>需要先绑定相关账号</p>
+        </div>
+
+        <div class="receiving-inputbox">
+            <div class="receiving-inner-box">
+                <p>账号：<span id="account_name_1"></span></p>
+                <input type="text" name="receiving_name_1" id="receiving_name_1" value="" placeholder="请输入收货人姓名" />
+                <input type="tel" name="receiving_tel_1" id="receiving_tel_1" value="" placeholder="请输入收货人手机" />
+                <input type="tel" name="receiving_city_1" id="receiving_city_1" value="" placeholder="请选择收货人城市" readonly tapmode onclick="openCity(this);" />
+                <input type="tel" name="receiving_address_1" id="receiving_address_1" value="" placeholder="收货人地址（街道、门牌）" />
+            </div>
+        </div>
+
+        <div class="receiving-tips" style="padding-bottom: 20px;">
+            <p class="red">乱填写、填写错误都会导致无法做任务</p>
+        </div>
+
+        <div class="post-receiving-btn" tapmode onclick="postReceiving();">确认提交</div> -->
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function() {
+            getShow();
+        }
+
+        function postReceiving() {
+            // 收货信息判断
+            if ($api.trim($("#receiving_name_1").val()) == "") {
+                api.toast({
+                    msg: '请输入收货人姓名',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($api.trim($("#receiving_tel_1").val()) == "") {
+                api.toast({
+                    msg: '请输入收货人手机',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (!new RegExp("^0?(13|15|16|17|18|14|19)[0-9]{9}$").test($("#receiving_tel_1").val())) {
+                api.toast({
+                    msg: '手机号码格式不正确',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($api.trim($("#receiving_city_1").val()) == "") {
+                api.toast({
+                    msg: '请输入收货人所在省市县/区',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($api.trim($("#receiving_address_1").val()) == "") {
+                api.toast({
+                    msg: '请输入收货人所在地址',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            var param = dataFrom("dataForm");
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Account/editAddressInfo',
+                method: 'post',
+                data: {
+                    values: param
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    if (ret.status == 1) {
+                        getShow();
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        //获取form数据
+        function dataFrom(id) {
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid"),
+                platform_id: 3
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function(i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+
+        function getShow() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Account/getAccountInfo',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        platform_id: 3
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        var str = '';
+                        if (data.length > 0) {
+                            str += '<div class="receiving-tips">';
+                            str += '<p>需要先绑定相关账号</p>';
+                            str += '<div class="receiving-inputbox">';
+                            if (data[0]) {
+                                str += '<div class="receiving-inner-box" id="box1">';
+                                str += '<p>账号：<span id="account_name_1">' + data[0]['accname'] + '</span></p>';
+                                str += '<input type="text" name="list[0][name]" id="receiving_name_1" placeholder="收货人姓名" value="' + data[0]['nickname'] + '" />';
+                                str += '<input type="tel" name="list[0][tel]" id="receiving_tel_1" placeholder="收货人手机" value="' + data[0]['phone'] + '" />';
+                                str += '<input type="text" name="list[0][city]" id="receiving_city_1" placeholder="收货人所在省市县/区" value="' + data[0]['city'] + '" />';
+                                str += '<input type="text" name="list[0][address]" id="receiving_address_1" placeholder="收货人所在地址（街道、门牌）" value="' + data[0]['address'] + '" />';
+                                str += '<input type="hidden" name="list[0][id]" value="' + data[0]['id'] + '" />';
+                                str += '</div>';
+                            }
+                            str += '</div>';
+                            str += '<div class="receiving-tips" style="padding-bottom: 20px;"><p class="red">乱填写、填写错误都会导致无法做任务</p></div>';
+                            str += '<div class="post-receiving-btn" tapmode onclick="postReceiving();">确认提交</div>';
+                            $api.html($api.byId('dataForm'), str);
+
+                            $api.css($api.dom('.no-account'), 'display: none');
+                        } else {
+                            $api.css($api.dom('.no-account'), 'display: block');
+                        }
+                    } else {
+                        $api.css($api.dom('.no-account'), 'display: block');
+                    }
+                } else {
+                    alert(JSON.stringify(err));
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+        }
+
+        // function openCity(self) {
+        //     $(self).blur();
+        //     var UIActionSelector = api.require('UIActionSelector');
+        //     UIActionSelector.open({
+        //         datas: 'widget://res/city.json',
+        //         layout: {
+        //             row: 5,
+        //             col: 3,
+        //             height: 30,
+        //             size: 12,
+        //             sizeActive: 14,
+        //             rowSpacing: 5,
+        //             colSpacing: 10,
+        //             maskBg: 'rgba(0,0,0,0.2)',
+        //             bg: '#fff',
+        //             color: '#888',
+        //             colorActive: '#f00',
+        //             colorSelected: '#f00'
+        //         },
+        //         animation: true,
+        //         cancel: {
+        //             text: '取消',
+        //             size: 12,
+        //             w: 90,
+        //             h: 35,
+        //             bg: '#fff',
+        //             bgActive: '#ccc',
+        //             color: '#888',
+        //             colorActive: '#fff'
+        //         },
+        //         ok: {
+        //             text: '确定',
+        //             size: 12,
+        //             w: 90,
+        //             h: 35,
+        //             bg: '#fff',
+        //             bgActive: '#ccc',
+        //             color: '#888',
+        //             colorActive: '#fff'
+        //         },
+        //         title: {
+        //             text: '请选择',
+        //             size: 12,
+        //             h: 44,
+        //             bg: '#eee',
+        //             color: '#888'
+        //         },
+        //         fixedOn: api.frameName
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             var cityValue = '';
+        //             if (ret.level1) {
+        //                 cityValue += ret.level1;
+        //             }
+        //             if (ret.level2) {
+        //                 cityValue += ' ' + ret.level2;
+        //             }
+        //             if (ret.level3) {
+        //                 cityValue += ' ' + ret.level3;
+        //             }
+        //             if (cityValue) {
+        //                 $api.val(self, cityValue);
+        //             }
+        //         } else {
+        //             api.toast({
+        //                 msg: '选择失败',
+        //                 duration: 2000,
+        //                 location: 'bottom'
+        //             });
+        //         }
+        //     });
+        // }
+    </script>
+</body>
+
+</html>

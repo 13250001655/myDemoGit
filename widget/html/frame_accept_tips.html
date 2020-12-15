@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>接单规则</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            background-color: transparent;
+        }
+
+        .back-tips {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .back-tips .back-tips-container {
+            position: absolute;
+            top: 20%;
+            left: 5%;
+            width: 90%;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 3.75%;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        .back-tips .back-tips-container .back-tips-title {
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .back-tips .back-tips-container .back-tips-desc {
+            padding-top: 10px;
+            line-height: 20px;
+        }
+
+        .back-tips .back-tips-container .back-tips-desc>span {
+            color: #e31818;
+        }
+
+        .back-tips .back-tips-container .back-tips-btns {
+            padding-top: 15px;
+        }
+
+        .back-tips .back-tips-container .back-tips-btns>div {
+            width: 86px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            color: #fff;
+            border-radius: 17px;
+            float: left;
+            background-color: #04b848;
+        }
+
+        .back-tips .back-tips-container .back-tips-btns>div:last-child {
+            width: 120px;
+            float: right;
+            background-color: #4bda67;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 货返公告 -->
+    <div class="back-tips" tapmode onclick="iSee();">
+        <div class="back-tips-container" tapmode onclick="stopClose(event);">
+            <p class="back-tips-title">接单提醒</p>
+            <p class="back-tips-desc">您当前发货中有 <span id="bishu_num1">0</span> 笔 为指定评语任务，请必须先查看订单评语要求后再确认收货评价！</p>
+            <p class="back-tips-desc">您当前有 <span id="bishu_num2">0</span> 笔 为要求追评，请进入追评任务里进行操作！</p>
+            <p style="display: none;" class="back-tips-desc">您当前有 <span id="bishu_num3">0</span> 笔 为预售任务，请控制好付款时间！</p>
+            <p class="back-tips-desc">本平台所有任务不可以直接在淘宝收货评价，必须等相应订单物流显示签收后，先返回平台查看是否有指定好评，再去淘宝根据商家要求好评内容进行相应的好评操作并截图，最后返回平台确认好评！</p>
+            <div class="back-tips-btns clearfix">
+                <div class="goto-see" tapmode onclick="iSee();">确定</div>
+                <div class="i-see" tapmode onclick="noTips();">今日不再提醒</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+
+    <script>
+        apiready = function() {
+            getList();
+        }
+
+        function iSee() {
+            api.closeFrame({
+                name: 'frame_accept_tips'
+            });
+        }
+
+        function getList() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Suggestion/getjdmsg',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        $api.html(($api.byId('bishu_num1')), ret.zdpy);
+                        $api.html(($api.byId('bishu_num2')), ret.yqzp);
+                        $api.html(($api.byId('bishu_num3')), ret.ysrw);
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function noTips() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Integral/get_remindtoday',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                api.closeFrame({
+                    name: 'frame_accept_tips'
+                });
+                if (ret) {
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function stopClose(event) {
+            event.stopPropagation();
+        }
+    </script>
+</body>
+
+</html>

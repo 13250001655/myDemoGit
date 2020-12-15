@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .bankinfo1 .con .warn-tips {
+            color: #e31818;
+        }
+
+        .see-require {
+            width: 100%;
+            font-size: 18px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            color: #f00;
+            background-color: #a8e063;
+        }
+
+        .erweima-container {
+            background-color: #fff;
+            padding: 14px 0 10px;
+            text-align: center;
+        }
+
+        .erweima-container .erweima-pic #erweima-pic {
+            width: 50%;
+        }
+
+        .erweima-container .erweima-tips {
+            padding: 10px 10px 0;
+            color: #f00;
+            line-height: 20px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .erweima-container .erweima-tips i {
+            color: #00f;
+            font-style: normal;
+        }
+
+        .tbzhxxrz {
+            font-size: 18px;
+            padding-top: 14px;
+            padding-left: 10px;
+            margin-top: 10px;
+            background-color: #fff;
+        }
+
+        #url-container {
+            margin-top: 10px;
+            background: #fff;
+            display: none;
+        }
+
+        #url-container #taobao-url {
+            padding: 10px;
+            text-align: center;
+            background-color: #398BFB;
+            color: #fff;
+        }
+
+        #url-container .url-tip {
+            color: #f00;
+            line-height: 18px;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .tb_empower {
+            padding-top: 10px;
+        }
+
+        .taobaobox .con ul li .real-tips {
+            color: #f00;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bankinfo1">
+        <div class="tit"><span>&#xe615;</span>注意事项</div>
+        <div class="con">
+            账号审核时间周一至周五<span>9:00 - 18:00</span>，账号提交后5个工作日内完成审核，如遇周末或节假日顺延，审核工作人工进行，用户请耐心等待！
+        </div>
+    </div>
+
+    <!-- <div id="url-container">
+        <div id="taobao-url" tapmode onclick="openUrlOnBrowser();">点我授权</div>
+        <div class="tb_empower" tapmode onclick="openPicture('tb_empower')"><img id="tb_empower" /></div>
+        <p class="url-tip">请按图示4步操作，授权完成即可继续填写账号信息。注意：下面填写的账号信息要和以上授权登录的账号要一致，不一致的审核不通过</p>
+    </div> -->
+
+    <div class="bankinfo1" style="margin-top: 0;">
+        <div class="con">
+            <p class="warn-tips">请正确填写信息，收货信息必须和淘宝收货地址一致，恶意乱填写，导致举报申诉的，一律永久冻结账户处理。</p>
+            <p class="warn-tips">警告：收货人姓名手机收货地址都不能有重复，绑定两个账号的，收货信息必须填写不一样！</p>
+        </div>
+    </div>
+
+    <form id="dataForm">
+        <div class="taobaobox">
+            <div class="tit">账号信息</div>
+            <div class="con">
+                <ul>
+                    <li><span class="iname">请输入淘宝会员名</span>
+                        <div><input type="text" name="accname" id="accname" value="" placeholder="请输入"></div>
+                    </li>
+                    <li><span class="iname">收货人姓名</span>
+                        <div><input type="text" name="nickname" id="nickname" value="" placeholder="请输入"></div>
+                    </li>
+                    <li><span class="iname">收货人手机</span>
+                        <div><input type="text" name="phone" id="phone" value="" placeholder="请输入"></div>
+                    </li>
+                    <li><span class="iname">请输入验证码</span>
+                        <div class="div1" style="padding-right: 70px;"><input type="text" name="vcode" id="vcode" placeholder="请输入"></div><a id="get_code" tapmode onclick="getCode()" class="get_code">获取验证码</a>
+                    </li>
+                    <li><span class="iname">请输入所在省市县/区</span>
+                        <!-- <div class="div1"><input type="text" name="city" readonly id="city" tapmode onclick="openCity()" value="请选择城市"></div><span class="arrow" tapmode onclick="openCity()">&#xe603;</span> -->
+                        <div class="div1"><input type="text" name="city" id="city" value="" placeholder="请输入"></div>
+                    </li>
+                    <li><span class="iname">请输入详细地址</span>
+                        <div><input type="text" name="address" id="address" value="" placeholder="请输入"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="taobaobox">
+            <div class="tit">账号属性(与实名认证的省份信息一致)</div>
+            <div class="con">
+                <ul>
+                    <li><span class="iname">性别</span>
+                        <div><select id="sex" name="sex" dir="rtl">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select></div>
+                    </li>
+                    <li><span class="iname">年龄</span>
+                        <div><input type="number" name="age" id="age" placeholder="请输入"></div>
+                    </li>
+                    <li><span class="iname">信誉</span>
+                        <div>
+                            <select id="level" name="level" dir="rtl">
+                                <option value="">请选择信誉</option>
+                                <option value="2星">2星</option>
+                                <option value="3星">3星</option>
+                                <option value="4星">4星</option>
+                                <option value="5星">5星</option>
+                                <option value="1钻">1钻</option>
+                                <option value="2钻">2钻</option>
+                                <option value="3钻">3钻</option>
+                                <option value="4钻">4钻</option>
+                                <option value="5钻">5钻</option>
+                                <option value="皇冠及以上">皇冠及以上</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li><span class="iname">购物类目</span>
+                        <div><input type="text" name="limitcategory" readonly tapmode id="limitcategory" onclick="openClass()" value="" placeholder="经常购买的3-5个购物类别"></div>
+                    </li>
+                    <li><span class="iname">淘气值</span>
+                        <div>
+                            <select id="jifen" name="jifen" dir="rtl">
+                                <option value="">请选择淘气值</option>
+                                <option value="1000以下">1000以下</option>
+                                <option value="1000-1500">1000-1500</option>
+                                <option value="1500-2000">1500-2000</option>
+                                <option value="2000以上">2000以上</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li><span class="iname">订单号</span>
+                        <div><input type="text" name="order_number" id="order_number" value="" placeholder="请输入最新一笔淘宝订单号"></div>
+                    </li>
+                    <li>
+                        <p class="real-tips">务必填写真实的淘宝订单号，否则审核将不予通过</p>
+                    </li>
+                    <li>
+                        <p style="color: #e31818;">乱填写、填写错误都会导致无法做任务</p>
+                        <div class="seeEOS-container clearfix" style="padding-left: 0;">
+                            <p style="width: 80px; float: left;">点击上传图片</p>
+                            <p style="width: 60px; float: right; text-align: right; color: #04b848;" class="seeEOS" tapmode onclick="seeEOS(1);">查看图例</p>
+                        </div>
+                        <div class="pic" tapmode onclick="showAction('上传信誉等级','level_img')"><img id="level_img" src="../image/file-img.png" />
+                            <p>信誉等级</p>
+                        </div>
+                        <input type="hidden" name="level_img" id="input_level_img">
+
+                        <div class="pic" tapmode onclick="showAction('上传实名认证','shiming_img')"><img id="shiming_img" src="../image/file-img.png" />
+                            <p>实名认证</p>
+                        </div>
+                        <input type="hidden" name="shiming_img" id="input_shiming_img">
+
+                        <div class="pic" tapmode onclick="showAction('上传花呗','huabei_img')"><img id="huabei_img" src="../image/file-img.png" />
+                            <p>花呗</p>
+                        </div>
+                        <input type="hidden" name="huabei_img" id="input_huabei_img">
+
+                        <div class="pic" tapmode onclick="showAction('上传淘气值','jifen_img')"><img id="jifen_img" src="../image/file-img.png" />
+                            <p>淘气值</p>
+                        </div>
+                        <input type="hidden" name="jifen_img" id="input_jifen_img">
+
+                        <p class="c1">花呗：选填，开通花呗账号接单可获得更多佣金</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="see-require" tapmode onclick="seeEOS(1);">进入查看绑定要求</div>
+
+        <!-- <p class="tbzhxxrz">淘宝账号信息认证</p>
+        <div class="erweima-container">
+            <div class="erweima-pic">
+                <img onclick="savePicToAlbum(this);" id="erweima-pic" src="" />
+            </div>
+            <p class="erweima-tips">点击这个二维码，将该<i>二维码保存到手机</i>，用需要绑定的<i>淘宝号扫码“确认登录”</i>后即可点击下方的<i>“提交”</i>，并于<i>一小时内</i>联系客服审核！</p>
+        </div> -->
+
+        <p class="lostTips" style="display: none; color: #f00; text-align: center; padding-top: 15px;"></p>
+        <div class="accountbtn"><input type="button" id="dobtn" onclick="postTaobao()" value="提交" /></div>
+        <input type="hidden" name="id" id="id" value="0" />
+    </form>
+    <div id="make" class="make"></div>
+    <div id="dialog_cate" class="dialog_cate">
+        <div class="tit">请选择您经常购物的3-5个类目</div>
+        <div class="con">
+            <ul>
+                <li>服装鞋包</li>
+                <li>手机数码</li>
+                <li>家用电器</li>
+                <li>美妆饰品</li>
+                <li>母婴用品</li>
+                <li>家居建材</li>
+                <li>百货食品</li>
+                <li>运动户外</li>
+                <li>文化娱乐</li>
+                <li>生活服务</li>
+                <li>汽摩配件</li>
+                <li>游戏话费</li>
+            </ul>
+            <input id="dialog_btn" type="button" value="确定">
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        var is_click = 1;
+        apiready = function() {
+            getAccount();
+            // getTaobaoImg();
+            // $api.attr($api.byId('tb_empower'), 'src', myurl + '/Uploads/tb_empower.png');
+        }
+
+        function getAccount() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getaccount/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        platform_id: '1,4',
+                        index: api.pageParam.index
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret.status == 1) {
+                    var data = ret.data;
+                    if (data) {
+                        $("#id").val(data["id"]);
+                        $("#accname").val(data["accname"]);
+                        $("#nickname").val(data["nickname"]);
+                        $("#phone").val(data["phone"]);
+                        $("#city").val(data["city"]);
+                        $("#address").val(data["address"]);
+                        $("#sex").val(data["sex"]);
+                        $("#age").val(data["age"]);
+                        $("#level").val(data["level"]);
+                        $("#order_number").val(data["order_number"]);
+                        $("#limitcategory").val(data["limitcategory"]);
+                        $("#jifen").val(data["jifen"]);
+
+                        if (!isempty(data["level_img"])) {
+                            $("#level_img").attr("src", data["level_img"]);
+                            $("#input_level_img").val(data["level_img"]);
+                        }
+
+                        if (!isempty(data["shiming_img"])) {
+                            $("#shiming_img").attr("src", data["shiming_img"]);
+                            $("#input_shiming_img").val(data["shiming_img"]);
+                        }
+
+                        if (!isempty(data["huabei_img"])) {
+                            $("#huabei_img").attr("src", data["huabei_img"]);
+                            $("#input_huabei_img").val(data["huabei_img"]);
+                        }
+
+                        if (!isempty(data["jifen_img"])) {
+                            $("#jifen_img").attr("src", data["jifen_img"]);
+                            $("#input_jifen_img").val(data["jifen_img"]);
+                        }
+
+                        if (data["status"] == -1) {
+                            $api.html($api.dom('.lostTips'), data['content']);
+                            $api.css($api.dom('.lostTips'), 'display: block');
+                        } else {
+                            $api.html($api.dom('.lostTips'), '');
+                            $api.css($api.dom('.lostTips'), 'display: none');
+                        }
+
+                        // if (data["status"] != 1) {
+                        //     $api.css($api.byId('url-container'), 'display: block;');
+                        // } else {
+                        //     $api.css($api.byId('url-container'), 'display: none;');
+                        //     is_click = 1;
+                        // }
+                    }
+                } else if (ret.status == 0) {
+                    // $api.css($api.byId('url-container'), 'display: block;');
+                }
+            });
+        }
+
+        //淘宝 账号
+        function postTaobao() {
+            if (is_click == 0) {
+                api.toast({
+                    msg: '请先点击“点我授权”按钮跳转到网页并进行授权操作',
+                    duration: 5000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#accname").val() == "") {
+                api.toast({
+                    msg: '请输入淘宝会员名',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#nickname").val() == "") {
+                api.toast({
+                    msg: '请输入收货人姓名',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#phone").val() == "") {
+                api.toast({
+                    msg: '请输入收货人手机',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#vcode").val() == "") {
+                api.toast({
+                    msg: '请输入验证码',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#city").val() == "") {
+                api.toast({
+                    msg: '请输入所在省市县/区',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#address").val() == "") {
+                api.toast({
+                    msg: '请输入详细地址',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#sex").val() == "") {
+                api.toast({
+                    msg: '请选择性别',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#age").val() == "") {
+                api.toast({
+                    msg: '请输入年龄',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#level").val() == "") {
+                api.toast({
+                    msg: '请选择信誉',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#order_number").val() == "") {
+                api.toast({
+                    msg: '请输入最新一笔淘宝订单号',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#limitcategory").val() == "") {
+                api.toast({
+                    msg: '请选择购物类目',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#jifen").val() == "") {
+                api.toast({
+                    msg: '请输入淘气值',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#input_level_img").val() == "") {
+                api.toast({
+                    msg: '请上传信用等级',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#input_shiming_img").val() == "") {
+                api.toast({
+                    msg: '请上传实名认证',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#input_jifen_img").val() == "") {
+                api.toast({
+                    msg: '请上传淘气值',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            var param = dataFrom("dataForm");
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Account/posttaobao/',
+                method: 'post',
+                data: {
+                    values: param
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                //alert(JSON.stringify(err));
+                //alert(JSON.stringify(ret));
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                    if (ret.status == 1) {
+                        var jsfun = 'getAccount()';
+                        api.execScript({
+                            name: 'window_account',
+                            frameName: 'frame_account',
+                            script: jsfun
+                        });
+                        var jsfun_1 = 'getAccount_1()';
+                        api.execScript({
+                            name: 'window_account',
+                            frameName: 'frame_account',
+                            script: jsfun_1
+                        });
+                        var jsfun_2 = 'getList()';
+                        api.execScript({
+                            name: 'window_account_taobao_info',
+                            frameName: 'frame_account_taobao_info',
+                            script: jsfun_2
+                        });
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 2000);
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+        //获取form数据
+        function dataFrom(id) {
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid"),
+                index: api.pageParam.index
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function(i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+
+        // function openCity() {
+        //     var UIActionSelector = api.require('UIActionSelector');
+        //     UIActionSelector.open({
+        //         datas: 'widget://res/city.json',
+        //         layout: {
+        //             row: 5,
+        //             col: 3,
+        //             height: 30,
+        //             size: 12,
+        //             sizeActive: 14,
+        //             rowSpacing: 5,
+        //             colSpacing: 10,
+        //             maskBg: 'rgba(0,0,0,0.2)',
+        //             bg: '#fff',
+        //             color: '#888',
+        //             colorActive: '#f00',
+        //             colorSelected: '#f00'
+        //         },
+        //         animation: true,
+        //         cancel: {
+        //             text: '取消',
+        //             size: 12,
+        //             w: 90,
+        //             h: 35,
+        //             bg: '#fff',
+        //             bgActive: '#ccc',
+        //             color: '#888',
+        //             colorActive: '#fff'
+        //         },
+        //         ok: {
+        //             text: '确定',
+        //             size: 12,
+        //             w: 90,
+        //             h: 35,
+        //             bg: '#fff',
+        //             bgActive: '#ccc',
+        //             color: '#888',
+        //             colorActive: '#fff'
+        //         },
+        //         title: {
+        //             text: '请选择',
+        //             size: 12,
+        //             h: 44,
+        //             bg: '#eee',
+        //             color: '#888'
+        //         },
+        //         fixedOn: api.frameName
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             var cityValue = '';
+        //             if (ret.level1) {
+        //                 cityValue += ret.level1;
+        //             }
+        //             if (ret.level2) {
+        //                 cityValue += ' ' + ret.level2;
+        //             }
+        //             if (ret.level3) {
+        //                 cityValue += ' ' + ret.level3;
+        //             }
+        //             if (cityValue) {
+        //                 $api.val($api.byId("city"), cityValue);
+        //             }
+        //         } else {
+        //             api.toast({
+        //                 msg: '选择失败',
+        //                 duration: 2000,
+        //                 location: 'bottom'
+        //             });
+        //         }
+        //     });
+        // }
+
+        function openClass() {
+            $(".make").show();
+            $(".dialog_cate").show();
+
+            $(".dialog_cate li").css('pointer-events', 'none');
+            var timer = setTimeout(function() {
+                $(".dialog_cate li").css('pointer-events', 'auto');
+                clearTimeout(timer);
+            }, 300);
+        }
+
+        $(".dialog_cate li").click(function() {
+            $(this).toggleClass("on");
+
+            if ($(".dialog_cate li.on").length > 5) {
+                $(this).toggleClass("on");
+                api.toast({
+                    msg: '不能超过5个分类',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+        });
+
+        $("#dialog_btn").click(function() {
+            if ($(".dialog_cate li.on").length < 3) {
+                api.toast({
+                    msg: '至少选择3个分类',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            $(".make").hide();
+            $(".dialog_cate").hide();
+
+            var str = "";
+            for (var i = 0; i < 12; i++) {
+                if ($(".dialog_cate li:eq(" + i + ")").hasClass("on")) {
+                    str = str + $(".dialog_cate li:eq(" + i + ")").html() + ",";
+                }
+            }
+            if (str != "") {
+                str = str.substr(0, str.length - 1);
+            }
+            $("#limitcategory").val(str);
+
+        });
+
+        function getCode() {
+            var username = $api.byId("phone").value;
+            if (username.length != 11) {
+                api.toast({
+                    msg: '手机号码位11位',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if (!new RegExp("^0?(13|15|16|17|18|14|19)[0-9]{9}$").test(username)) {
+                api.toast({
+                    msg: '请输入手机号码',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            leftTime = 60;
+            $("#get_code").attr("disabled", true).css("pointer-events", "none");
+            var leftSet = setInterval(function() {
+                $("#get_code").html('剩余' + leftTime + '秒');
+                leftTime--;
+                if (leftTime < 1) {
+                    clearInterval(leftSet);
+                    $("#get_code").removeAttr("disabled");
+                    $("#get_code").css("pointer-events", "auto");
+                    $("#get_code").text("获取验证码");
+                }
+
+            }, 1000);
+            api.ajax({
+                url: myurl + '/index.php/User/Public/send_phone_code/',
+                method: 'post',
+                data: {
+                    values: {
+                        "phone": username,
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function seeEOS(pt_num) {
+            api.openWin({
+                name: 'window_eos',
+                url: './window_eos.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_eos',
+                    pt_no: pt_num
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        // function getTaobaoImg() {
+        //     api.showProgress();
+        //     api.ajax({
+        //         url: myurl + '/index.php/User/Api/tbimg/',
+        //         method: 'post',
+        //         data: {
+        //             values: {
+        //                 username: $api.getStorage("username"),
+        //                 userid: $api.getStorage("userid")
+        //             }
+        //         }
+        //     }, function(ret, err) {
+        //         api.hideProgress();
+        //         if (ret) {
+        //             $api.attr($api.byId('erweima-pic'), 'src', geturl(ret.data.tbimg));
+        //         } else {
+        //             api.toast({
+        //                 msg: '二维码获取失败，请连接网络后重试！',
+        //                 duration: 2000,
+        //                 location: 'bottom'
+        //             });
+        //         }
+        //     });
+        // }
+
+        // 保存图片
+        // function savePicToAlbum(self) {
+        //     var src = $api.attr(self, 'src');
+        //     if (!isempty(src)) {
+        //         var items = ['保存二维码到相册'];
+        //         api.actionSheet({
+        //             title: "保存二维码",
+        //             cancelTitle: '取消',
+        //             buttons: items
+        //         }, function(ret, err) {
+        //             if (ret.buttonIndex == 1) {
+        //                 api.showProgress();
+        //                 api.download({
+        //                     url: src,
+        //                     report: false,
+        //                     cache: false,
+        //                     allowResume: true,
+        //                     savePath: 'fs://tbimg_hhj.png',
+        //                 }, function(ret, err) {
+        //                     if (ret.state == 1) {
+        //                         api.saveMediaToAlbum({
+        //                             path: ret.savePath
+        //                         }, function(ret, err) {
+        //                             api.hideProgress();
+        //                             if (ret && ret.status) {
+        //                                 api.toast({
+        //                                     msg: '保存成功',
+        //                                     duration: 2000,
+        //                                     location: 'bottom'
+        //                                 });
+        //                             } else {
+        //                                 api.toast({
+        //                                     msg: '保存失败',
+        //                                     duration: 2000,
+        //                                     location: 'bottom'
+        //                                 });
+        //                             }
+        //                         });
+        //                     } else {
+        //                         api.hideProgress();
+        //                         api.toast({
+        //                             msg: '下载失败',
+        //                             duration: 2000,
+        //                             location: 'bottom',
+        //                         });
+        //                     }
+        //                 });
+        //             }
+        //         });
+        //     } else {
+        //         api.toast({
+        //             msg: '网络错误！',
+        //             duration: 2000,
+        //             location: 'bottom'
+        //         });
+        //     }
+        // }
+        //
+        // function openUrlOnBrowser() {
+        //     api.showProgress();
+        //     api.ajax({
+        //         url: myurl + '/index.php/User/Account/category_upload',
+        //         method: 'post',
+        //         data: {
+        //             values: {
+        //                 username: $api.getStorage("username"),
+        //                 userid: $api.getStorage("userid")
+        //             }
+        //         }
+        //     }, function(ret, err) {
+        //         api.hideProgress();
+        //         if (ret) {
+        //             if (ret.status == 0) {
+        //                 api.toast({
+        //                     msg: ret.msg,
+        //                     duration: 2000,
+        //                     location: 'bottom'
+        //                 });
+        //                 var data = ret.data;
+        //                 if (data) {
+        //                     if (api.systemType == 'android') {
+        //                         //Android中的使用方法如下：
+        //                         api.openApp({
+        //                             androidPkg: 'android.intent.action.VIEW',
+        //                             // mimeType: 'text/html',
+        //                             uri: data
+        //                         }, function(ret, err) {});
+        //                     } else {
+        //                         //iOS中的使用方法如下：
+        //                         api.openApp({
+        //                             iosUrl: data
+        //                         });
+        //                     }
+        //                     is_click = 1;
+        //                 }
+        //             }
+        //         } else {
+        //             api.toast({
+        //                 msg: '网络错误',
+        //                 duration: 2000,
+        //                 location: 'bottom'
+        //             });
+        //         }
+        //     });
+        // }
+    </script>
+</body>
+
+</html>

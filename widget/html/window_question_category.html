@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>问题分类</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+    body{ background: #fff;}
+    </style>
+</head>
+<body>
+<div id="header"></div>
+<header class="head2">
+    <a class="left" id="classname" tapmode onclick="api.closeWin();"><span>&#xe606;</span>账户管理</a>
+</header>
+<div class="question">
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script>
+apiready=function(){
+  var header = document.querySelector('#header');
+  $api.fixStatusBar(header);
+  var h=$api.offset(document.querySelector('#header')).h;
+    $api.html($api.byId("classname"),"<span>&#xe606;</span>"+api.pageParam.name);
+    api.openFrame({
+        name: 'frame_question_category',
+        url: './frame_question_category.html',
+        rect: {
+            x: 0,
+            y: 50+h,
+            w:"auto",
+            h: api.frameHeight-50-h
+        },
+        pageParam: {
+            name: 'frame_question_category',
+            cid:api.pageParam.cid
+        },
+        bounces: true,
+        bgColor: 'rgba(0,0,0,0)',
+        vScrollBarEnabled: true,
+        hScrollBarEnabled: true
+    });
+
+}
+</script>
+</body>
+</html>

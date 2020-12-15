@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>消息列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        html,
+        body {
+            background-color: #fff;
+        }
+
+        .extension-pic {
+            width: 100%;
+        }
+
+        .red {
+            color: #e31818;
+        }
+
+        .extension-para {
+            padding: 0 3.75%;
+            padding-bottom: 20px;
+        }
+
+        .extension-para .extension-title {
+            padding-bottom: 6px;
+        }
+
+        .extension-para .extension-inner .gift-icon {
+            float: left;
+            padding-right: 3%;
+        }
+
+        .extension-para .extension-inner .extension-para-right {
+            line-height: 20px;
+            padding-top: 3px;
+        }
+
+        .extension-para .extension-inner .extension-para-right i {
+            color: #e31818;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <img class="extension-pic" src="../image/extension-pic.png" alt="" />
+
+    <div class="extension-para">
+        <div class="extension-inner clearfix">
+            <img class="gift-icon" src="../image/gift-icon.png" />
+            <p class="extension-para-right">邀请好友：可得到受邀人每次佣金的二代<i id="bfb_1"></i>+<i id="bfb_2"></i>提成作为额外奖励，终身有效。</p>
+        </div>
+    </div>
+
+    <div class="extension-para">
+        <div class="extension-inner">
+            <p class="extension-para-right">另外有能力推广商家的，可联系客服开通权限，目前平台只招<span class="red">100名</span>招商。名额有限。<br />你邀请的商家每放一单，可获得奖励<span class="red">1</span>元。一个商家每天放<span class="red">50</span>单，你就有<span class="red">50</span>元奖励。邀请<span class="red">10</span>个商家便可轻松过万。</p>
+        </div>
+    </div>
+
+    <div class="extensionbox1">
+        <div class="txt1" style="line-height: 30px;">邀请好友链接</div>
+        <div class="txt3" id="uqurl"></div>
+    </div>
+
+    <div class="extensionbox3" style="margin-top: 0px;">
+        <!-- <input type="button" id="tuiguang_btn" tapmode onclick="openShare()" value="邀请好友"> -->
+        <input type="button" id="tuiguang_btn" tapmode onclick="copy()" value="复制邀请链接">
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            $api.html($api.byId("uqurl"), myurl + '/index.php/User/Public/reg.html?smid=' + $api.getStorage("userid"));
+            getExtension();
+        }
+
+        function getExtension() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/extension',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    var data = ret['data'];
+                    $api.html($api.byId('bfb_1'), data['bfb_1'] + '%');
+                    $api.html($api.byId('bfb_2'), data['bfb_2'] + '%');
+                } else {}
+            });
+        }
+
+        function copy() {
+            //text为需要复制的文本
+            var text = $api.html($api.byId("uqurl"));
+            var clipBoard = api.require('clipBoard');
+            clipBoard.set({
+                value: text
+            }, function(ret, err) {
+                if (ret) {
+                    alert("复制成功")
+                } else {
+                    alert("复制失败，请重试");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

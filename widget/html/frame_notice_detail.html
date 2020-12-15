@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        body {
+            background: #fff;
+            min-height: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="notice" id="noticecon">
+
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            getshow();
+            if (api.pageParam.isShow == 1) {
+                acceptTips();
+            }
+        }
+
+        function getshow() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getshow/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        id: api.pageParam.id
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    if (ret.status == 1) {
+                        var data = ret.data;
+                        var str = '';
+                        str = str + '<div id="tit" class="tit">' + data.title + '</div>';
+                        str = str + '<div class="info">桃花谷   <span id="riqi">' + getLocalTime(data.create_time) + '</span><i class="notice-type">公告</i></div>';
+                        str = str + '<div class="con" id="con">' + data.content + '</div>';
+
+                        $api.html($api.byId("noticecon"), str);
+
+                        var jsfun = 'getList()';
+                        api.execScript({
+                            name: 'window_notice',
+                            frameName: 'frame_notice',
+                            script: jsfun
+                        });
+
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        function getLocalTime(nS) {
+            var time = new Date(parseInt(nS) * 1000);
+            y = time.getFullYear();
+            m = time.getMonth() + 1;
+            d = time.getDate();
+            h = time.getHours();
+            mi = time.getMinutes();
+            s = time.getSeconds();
+
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mi < 10) {
+                mi = "0" + mi;
+            }
+            if (s < 10) {
+                s = "0" + s;
+            }
+            return y + "-" + m + "-" + d + ' ' + h + ':' + mi + ':' + s;
+        }
+
+        function acceptTips() {
+            api.ajax({
+                url: myurl + '/index.php/User/Suggestion/getjrmsg',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.jrbz == 0) {
+                        api.openFrame({
+                            name: 'frame_accept_tips',
+                            url: './frame_accept_tips.html',
+                            rect: {
+                                x: 0,
+                                y: 0,
+                                w: "auto",
+                                h: "auto"
+                            },
+                            pageParam: {
+                                name: 'frame_accept_tips'
+                            },
+                            bounces: false,
+                            bgColor: 'rgba(0,0,0,0)',
+                            vScrollBarEnabled: true,
+                            hScrollBarEnabled: true
+                        });
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

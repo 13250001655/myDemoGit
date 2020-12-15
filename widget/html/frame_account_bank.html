@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .banklist li p {
+            width: 100%;
+            overflow: hidden;
+            line-height: 24px;
+            float: left;
+            color: #aaa;
+        }
+
+        .banklist li .pic_l {
+            width: 40%;
+            height: auto;
+            float: left;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bankinfo">
+        <div>姓名必须和身份证中的一样，务必保证银行卡信息准确，否则会导致转账失败</div>
+    </div>
+    <form id="dataForm">
+        <ul class="banklist">
+            <li>
+                <p>点击拍照上传清晰的银行卡照片，带银行卡卡号的那一面</p>
+                <p style="color: #f00;">上传后可自动识别银行卡卡号以及所属银行</p>
+                <div class="pic_l" tapmode onclick="showBankAction('上传银行卡照片','bank_img', '1')"><img id="bank_img" src="../image/file-img.png" /></div>
+                <input type="hidden" name="bank_img" id="input_bank_img">
+            </li>
+            <li><span class="iname">持 卡 人</span>
+                <div><input type="text" name="bank_user" id="bank_user" value="" placeholder="请输入持卡人姓名"></div>
+            </li>
+            <li><span class="iname">银行卡号</span>
+                <div><input type="text" name="bank_number" id="bank_number" value="" placeholder="请输入银行卡号"></div>
+            </li>
+            <li><span class="iname">确认卡号</span>
+                <div><input type="text" name="rbank_number" id="rbank_number" value="" placeholder="再次输入银行卡号"></div>
+            </li>
+            <li>
+                <span class="iname">所属银行</span>
+                <!-- <div>
+                    <select id="bank_name" name="bank_name">
+                        <option value="">请选择银行</option>
+                        <option value="中国银行">中国银行</option>
+                        <option value="中国农业银行">中国农业银行</option>
+                        <option value="中国工商银行">中国工商银行</option>
+                        <option value="中国建设银行">中国建设银行</option>
+                    </select>
+                </div>
+                <span class="arrow">&#xe603;</span> -->
+                <div><input type="text" name="bank_name" id="bank_name" value="" placeholder="请输入所属银行"></div>
+            </li>
+            <li><span class="iname">所在城市</span>
+                <!-- <div><input type="text" name="bank_city" readonly id="bank_city" tapmode onclick="openCity()" value="" placeholder="请选择所在城市"></div><span class="arrow" tapmode onclick="openCity()">&#xe603;</span></li> -->
+                <div>
+                  <input type="text" name="bank_p" id="bank_p" value="" style="text-indent: 3px; width: 85px; height: 26px; margin-top: 8.5px; border: 1px solid #ccc;"> 省/市
+                  <input type="text" name="bank_c" id="bank_c" value="" style="text-indent: 3px; width: 85px; height: 26px; margin-top: 8.5px; border: 1px solid #ccc;"> 市
+                </div>
+                <!-- <input type="text" name="bank_city" id="bank_city" value="" placeholder="请输入所在省市县/区"> -->
+            </li>
+            <li style="color: #f00; line-height: 20px; padding: 4px 10px;">注意：若是直辖市，例如北京，则所在城市填写两次“北京”即可。</li>
+            <li><span class="iname">支行名称</span>
+                <div><input type="text" name="subbranch_name" id="subbranch_name" value="" placeholder="请输入支行名称"></li>
+        </ul>
+
+        <!-- <p style="background-color: #fff; padding: 10px 10px 0; line-height: 20px; color: #f00;">平台只支持四大银行绑定，</p>
+        <p style="background-color: #fff; padding: 0 10px; line-height: 20px; color: #f00;">1，中国银行。</p>
+        <p style="background-color: #fff; padding: 0 10px; line-height: 20px; color: #f00;">2，中国农业银行。</p>
+        <p style="background-color: #fff; padding: 0 10px; line-height: 20px; color: #f00;">3，中国工商银行。</p>
+        <p style="background-color: #fff; padding: 0 10px 10px 10px; line-height: 20px; color: #f00;">4，中国建设银行。</p> -->
+        <p class="lostTips" style="display: none; color: #f00; text-align: center; padding-top: 15px;"></p>
+        <div class="accountbtn"><input type="button" id="dobtn" tapmode onclick="postBank()" value="提交" /></div>
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function() {
+            getBank();
+
+            var baiduTextReader = api.require('baiduTextReader');
+            baiduTextReader.requestToken({}, function(ret, err) {
+                if (ret) {
+                    // alert(JSON.stringify(ret));
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+
+        function getBank() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getmember/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    //alert(JSON.stringify( data ));
+                    if (!isempty(data["bank_img"])) {
+                        $api.val($api.byId("input_bank_img"), data["bank_img"]);
+                        $api.attr($api.byId("bank_img"), "src", data["bank_img"]);
+                    }
+                    if (data["bank_user"] != "") {
+                        $api.val($api.byId("bank_user"), data["bank_user"]);
+                        // $api.attr($api.byId("bank_user"), 'readonly', 'true');
+                        // $api.css($api.byId("bank_user"), 'color: #666');
+                    }
+                    if (data["bank_number"] != "") {
+                        $api.val($api.byId("bank_number"), data["bank_number"]);
+                        $api.val($api.byId("rbank_number"), data["bank_number"]);
+                    }
+                    if (data["bank_name"] != "") {
+                        $("#bank_name").val(data["bank_name"]);
+                    }
+                    if (data["bank_city"] != "") {
+                        var city = data["bank_city"],
+                            cityArr = city.split(' ');
+                        $api.val($api.byId("bank_p"), cityArr[0]);
+                        $api.val($api.byId("bank_c"), cityArr[1]);
+                    }
+                    if (data["subbranch_name"] != "") {
+                        $api.val($api.byId("subbranch_name"), data["subbranch_name"]);
+                    }
+                    if (data["bank_card"] == -1) {
+                        $api.html($api.dom('.lostTips'), data['bank_content']);
+                        $api.css($api.dom('.lostTips'), 'display: block');
+                    } else {
+                        $api.html($api.dom('.lostTips'), '');
+                        $api.css($api.dom('.lostTips'), 'display: none');
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+
+
+        //修改数据
+        function postBank() {
+            if ($("#input_bank_img").val() == "") {
+                api.toast({
+                    msg: '请上传银行卡正面照',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#bank_user").val().trim() == "") {
+                api.toast({
+                    msg: '请输入持卡人姓名',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#bank_number").val().trim() == "") {
+                api.toast({
+                    msg: '请输入银行卡号',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#rbank_number").val().trim() == "") {
+                api.toast({
+                    msg: '请再次输入银行卡号',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            if ($("#bank_number").val() != $("#rbank_number").val()) {
+                api.toast({
+                    msg: '两次输入的银行卡号不一样',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#bank_name").val().trim() == "") {
+                api.toast({
+                    msg: '请输入所属银行',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#bank_p").val().trim() == "") {
+                api.toast({
+                    msg: '请输入所在省/市',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#bank_c").val().trim() == "") {
+                api.toast({
+                    msg: '请输入所在市',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            if ($("#subbranch_name").val().trim() == "") {
+                api.toast({
+                    msg: '请输入支行名称',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+
+            var param = dataFrom("dataForm");
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Account/postbank/',
+                method: 'post',
+                data: {
+                    values: param
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                    if (ret.status == 1) {
+                        var jsfun = 'getAccount()';
+                        api.execScript({
+                            name: 'window_account',
+                            frameName: 'frame_account',
+                            script: jsfun
+                        });
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 2000);
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+        //获取form数据
+        function dataFrom(id) {
+            var bank_city = $("#bank_p").val().trim() + ' ' + $("#bank_c").val().trim();
+            var values = {
+                "username": $api.getStorage("username"),
+                "userid": $api.getStorage("userid"),
+                "bank_city": bank_city
+            };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function(i, v) {
+                var key = v.name,
+                    value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                } else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+
+        // function openCity() {
+        //     var UIActionSelector = api.require('UIActionSelector');
+        //     UIActionSelector.open({
+        //         datas: 'widget://res/city.json',
+        //         layout: {
+        //             row: 5,
+        //             col: 3,
+        //             height: 30,
+        //             size: 12,
+        //             sizeActive: 14,
+        //             rowSpacing: 5,
+        //             colSpacing: 10,
+        //             maskBg: 'rgba(0,0,0,0.2)',
+        //             bg: '#fff',
+        //             color: '#888',
+        //             colorActive: '#f00',
+        //             colorSelected: '#f00'
+        //         },
+        //         animation: true,
+        //         cancel: {
+        //             text: '取消',
+        //             size: 12,
+        //             w: 90,
+        //             h: 35,
+        //             bg: '#fff',
+        //             bgActive: '#ccc',
+        //             color: '#888',
+        //             colorActive: '#fff'
+        //         },
+        //         ok: {
+        //             text: '确定',
+        //             size: 12,
+        //             w: 90,
+        //             h: 35,
+        //             bg: '#fff',
+        //             bgActive: '#ccc',
+        //             color: '#888',
+        //             colorActive: '#fff'
+        //         },
+        //         title: {
+        //             text: '请选择',
+        //             size: 12,
+        //             h: 44,
+        //             bg: '#eee',
+        //             color: '#888'
+        //         },
+        //         fixedOn: api.frameName
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             var cityValue = '';
+        //             if (ret.level1) {
+        //                 cityValue += ret.level1;
+        //             }
+        //             if (ret.level2) {
+        //                 cityValue += ' ' + ret.level2;
+        //             }
+        //             if (ret.level3) {
+        //                 cityValue += ' ' + ret.level3;
+        //             }
+        //             if (cityValue) {
+        //                 $api.val($api.byId("bank_city"), cityValue);
+        //             }
+        //         } else {
+        //             api.toast({
+        //                 msg: '选择失败',
+        //                 duration: 2000,
+        //                 location: 'bottom'
+        //             });
+        //         }
+        //     });
+        // }
+
+        //拍照和从相册中选择
+        function showBankAction(tit, id, isDiscriminate) {
+            var has = hasPermission_global('camera');
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '相机' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function(ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission_global('camera');
+                    }
+                });
+                return false;
+            }
+
+            var has = hasPermission_global('storage');
+            if (!has || !has[0] || !has[0].granted) {
+                api.confirm({
+                    title: '提醒',
+                    msg: '没有获得' + '储存' + "权限\n是否前往设置？",
+                    buttons: ['去设置', '取消']
+                }, function(ret, err) {
+                    if (1 == ret.buttonIndex) {
+                        reqPermission_global('storage');
+                    }
+                });
+                return false;
+            }
+
+            var items = ['拍照', '从手机相册选择'];
+            var reg = new RegExp("^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$");
+            var imageUrl = $api.attr($api.byId(id), "src");
+            if (reg.test(imageUrl)) //是url
+            {
+                items = ['拍照', '从手机相册选择', '查看大图'];
+            }
+
+            api.actionSheet({
+                title: tit,
+                cancelTitle: '取消',
+                buttons: items
+            }, function(ret, err) {
+                if (ret) {
+                    getBankImages(ret.buttonIndex, id, items.length, isDiscriminate);
+                }
+            });
+        }
+
+        function getBankImages(sourceType, id, cc, isDiscriminate) {
+            if (sourceType == 1) { // 拍照
+                //获取一张图片
+                api.getPicture({
+                    sourceType: 'camera', //拍照
+                    encodingType: 'png',
+                    mediaValue: 'pic',
+                    allowEdit: false,
+                    destinationType: 'base64', //返回base64地址
+                    quality: 80,
+                    saveToPhotoAlbum: true
+                }, function(ret, err) {
+                    if (ret) {
+                        saveBankImg(ret.base64Data, id, isDiscriminate);
+                    }
+
+                });
+            } else if (sourceType == 2) { // 从相册中选择
+                api.getPicture({
+                    sourceType: 'album', //从相册中选择
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    allowEdit: false,
+                    destinationType: 'base64', //返回base64地址
+                    quality: 80,
+                    saveToPhotoAlbum: true
+                }, function(ret, err) {
+                    if (ret) {
+                        saveBankImg(ret.base64Data, id, isDiscriminate);
+                    }
+
+                });
+            } else if (sourceType == 3) { // 查看大图
+                if (cc == 3) {
+                    openBankPicture(id);
+                }
+            }
+        }
+
+        function saveBankImg(path, id, isDiscriminate) {
+            api.showProgress();
+            //上传剪辑后的图像到服务器
+            api.ajax({
+                // report : false,
+                url: myurl + '/index.php/User/Public/user_upload/',
+                //这里是我们约定好的后台上传图片的位置 ，你可以根据你的需求来改
+                method: 'post',
+                cache: 'false',
+                dataTpye: 'json',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        pic: path
+                    }
+                }
+            }, function(ret, err) {
+                if (ret.status == 1) {
+                    var ele = $api.dom('#' + id);
+                    $api.attr(ele, 'src', myurl + ret.picture);
+                    var ele1 = $api.dom('#input_' + id);
+                    $api.val(ele1, myurl + ret.picture);
+                    if (isDiscriminate == '1') {
+                        // 识别身份证
+                        api.download({
+                            url: myurl + ret.picture,
+                            report: false,
+                            cache: false,
+                            allowResume: true,
+                            savePath: 'fs://frontbank.png'
+                        }, function(ret, err) {
+                            if (ret.state == 1) {
+                                var baiduTextReader = api.require('baiduTextReader');
+                                baiduTextReader.recBankCard({
+                                    image: ret.savePath
+                                }, function(ret, err) {
+                                    api.hideProgress();
+                                    if (ret) {
+                                        var result = ret['result'];
+                                        var bank_card_number = result['bank_card_number'];
+                                        // var bank_name = result['bank_name'];
+
+                                        var discriminate_type = '';
+                                        if (bank_card_number) {
+                                            $api.val($api.byId("bank_number"), $api.trimAll(bank_card_number));
+                                            $api.val($api.byId("rbank_number"), $api.trimAll(bank_card_number));
+                                        } else {
+                                            discriminate_type += '银行卡卡号未能识别成功，请重试！\n';
+                                        }
+
+                                        // if (bank_name) {
+                                        //     $api.val($api.byId("bank_name"), bank_name);
+                                        // } else {
+                                        //     discriminate_type += '所属银行未能识别成功，请重试！\n';
+                                        // }
+
+                                        if (discriminate_type) {
+                                            alert(discriminate_type);
+                                        }
+                                    } else {
+                                        api.toast({
+                                            msg: '识别银行卡信息失败，请重试',
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                });
+                            } else {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: '下载失败',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    } else {}
+                } else {
+                    api.hideProgress();
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        };
+
+        function openBankPicture(id) {
+            var imageUrl = $api.attr($api.byId(id), "src");
+            var imageBrowser = api.require('imageBrowser');
+            imageBrowser.openImages({
+                imageUrls: [imageUrl, ], //图片的URL组成的数组
+                showList: false, //是否以九宫格方式显示图片,默认值：true(效果：点击某个图片后，先以九宫形式显示所有图片，然后单击哪张显示哪张)
+                activeIndex: 0, //当不用九宫格方式显示时，当前要显示的图片在集合中的索引
+                tapClose: false //当showList为false时，本参数有效。若本参数为true，则不显示顶部导航条，且单击图片时退出本模块。若本参数为false，则显示顶部导航条，且单击图片隐藏/显示顶部导航条
+            });
+        }
+    </script>
+</body>
+
+</html>

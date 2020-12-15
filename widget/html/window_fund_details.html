@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>资金明细</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2">
+        <a class="left" tapmode onclick="backIndex();"><span>&#xe606;</span>资金明细</a>
+        <a class="right" tapmode onclick="opentx()">提现</a>
+    </header>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script>
+        var fundType = 0;
+        apiready = function() {
+            // fundType = api.pageParam.fundType;
+            // NVNavigationBar_open();
+            openFrame();
+        }
+
+        function openFrame() {
+            var header = document.querySelector('#header');
+            $api.fixStatusBar(header);
+            var h = $api.offset(document.querySelector('#header')).h;
+            api.openFrame({
+                name: 'frame_yongjin',
+                url: './frame_yongjin.html',
+                rect: {
+                    x: 0,
+                    y: 50 + h,
+                    w: "auto",
+                    h: "auto"
+                },
+                pageParam: {
+                    name: 'frame_yongjin'
+                },
+                bounces: true,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+        }
+
+        // function NVNavigationBar_open() {
+        //     var items = [{
+        //         title: '佣金',
+        //         bg: '#ffffff',
+        //     }, {
+        //         title: '本金',
+        //         bg: '#ffffff',
+        //     }];
+        //
+        //     var header = document.querySelector('#header');
+        //     $api.fixStatusBar(header);
+        //     var h = $api.offset(document.querySelector('#header')).h;
+        //
+        //     var navigationBar = api.require('NVNavigationBar');
+        //     navigationBar.open({
+        //         rect: {
+        //             x: 0,
+        //             y: h + 50,
+        //             w: api.frameWidth,
+        //             h: 40,
+        //         },
+        //         styles: {
+        //             orientation: 'horizontal',
+        //             bg: '',
+        //             bgAlpha: 1,
+        //             font: {
+        //                 size: 20,
+        //                 sizeSelected: 20,
+        //                 color: '#333333',
+        //                 colorSelected: '#04b848',
+        //                 alpha: 1
+        //             },
+        //             itemSize: {
+        //                 w: api.winWidth / 2,
+        //             }
+        //         },
+        //         items: items,
+        //         fixedOn: api.frameName,
+        //         id: 'detail_group',
+        //         selectedIndex: api.pageParam.fundType
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             if (ret.eventType == 'click') {
+        //                 fnsetFrameGroupIndex('detail_group', ret.index);
+        //             }
+        //         } else {}
+        //     });
+        // }
+        //
+        // function openFrame() {
+        //     var header = document.querySelector('#header');
+        //     $api.fixStatusBar(header);
+        //     var h = $api.offset(document.querySelector('#header')).h;
+        //
+        //     api.openFrameGroup({
+        //         name: 'detail_group',
+        //         rect: {
+        //             x: 0,
+        //             y: 90 + h,
+        //             w: "auto",
+        //             h: "auto"
+        //         },
+        //         index: api.pageParam.fundType,
+        //         preload: 0,
+        //         scrollEnabled: true,
+        //         bounces: false,
+        //         frames: [{
+        //             name: 'frame_yongjin',
+        //             url: 'frame_yongjin.html',
+        //             pageParam: {
+        //                 name: 'frame_yongjin'
+        //             },
+        //             // bounces: true,
+        //             // customRefreshHeader: 'UIPullRefresh'
+        //         }, {
+        //             name: 'frame_benjin',
+        //             url: 'frame_benjin.html',
+        //             pageParam: {
+        //                 name: 'frame_benjin'
+        //             },
+        //             // bounces: true,
+        //             // customRefreshHeader: 'UIPullRefresh'
+        //         }]
+        //     }, function(ret, err) {
+        //         if (ret) {
+        //             if (ret.index > -1) {
+        //                 fnNvnsetSelected(ret.index);
+        //             }
+        //         } else {
+        //             alert(JSON.stringify(err));
+        //         }
+        //     });
+        // }
+        //
+        // function fnNvnsetSelected(index) {
+        //     var NVNavigationBar = api.require('NVNavigationBar');
+        //
+        //     NVNavigationBar.setSelected({
+        //         id: 'detail_group',
+        //         index: index,
+        //         selected: true,
+        //         reload: true
+        //     }, function(ret) {
+        //         fundType = index;
+        //     });
+        // }
+        //
+        // function fnsetFrameGroupIndex(name, index) {
+        //     api.setFrameGroupIndex({
+        //         name: name,
+        //         index: index,
+        //         scroll: true,
+        //         reload: true
+        //     });
+        // }
+
+        function backIndex() {
+            api.closeWin();
+            var jsfun = 'getIndex()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun
+            });
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun
+            });
+
+            var jsfun_1 = 'getUnreadAmount()';
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_index',
+                script: jsfun_1
+            });
+            api.execScript({
+                name: 'index',
+                frameName: 'frame_user',
+                script: jsfun_1
+            });
+        }
+
+        function opentx() {
+            api.openWin({
+                name: 'window_tixian',
+                url: './window_tixian.html',
+                pageParam: {
+                    name: 'window_tixian',
+                    tixianType: fundType
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

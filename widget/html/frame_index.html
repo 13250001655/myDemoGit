@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
+    <style>
+        html,
+        body {
+            background-color: #fff;
+        }
+
+        .box0 {
+            text-align: right;
+            font-family: iconfont !important;
+            font-size: 25px;
+            color: #fff;
+            padding: 6px;
+            position: relative;
+        }
+
+        .box0 span {
+            color: #666;
+        }
+
+        .box0 p {
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            background-color: #f00;
+            color: #fff;
+            font-size: 12px;
+            text-align: center;
+            line-height: 18px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            display: none;
+        }
+
+        .blank-line {
+            height: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .wechat-icon {
+            display: inline-block;
+            background-image: url(../image/wechat.png);
+            height: 14px;
+            width: 16px;
+            margin-right: 4px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            vertical-align: middle;
+        }
+
+        .activity-task-box .activity-task-container .invite-desc i {
+            color: #f01d2c;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box0">
+        <span tapmode onclick="openPersonalNotice();">&#xe637;</span>
+        <p id="message-num" tapmode onclick="openPersonalNotice();"></p>
+    </div>
+    <div class="box1">
+        <div class="box1_c">
+            <div class="box1_c1">
+                <div class="yj" tapmode onclick="openyj();">
+                    <p class="i">&#xe63a;</p>
+                    <p>我的佣金（金）</p>
+                    <p id="yj_price" class="p">0.00</p>
+                </div>
+                <!-- <div class="bj" tapmode onclick="openbj();">
+                    <p class="i">&#xe61c;</p>
+                    <p>我的本金（金）</p>
+                    <p id="bj_price" class="p">0.00</p>
+                </div> -->
+            </div>
+            <div class="today-rewards">
+                <div class="clearfix">
+                    <span>今日预估收益：<i id="t_yj_price">0</i></span>
+                    <span>未返本金：<i id="t_wfbj">0</i></span>
+                </div>
+                <div class="clearfix">
+                    <span>待完成总收益：<i id="t_dwczsy">0</i></span>
+                </div>
+                <div class="clearfix">
+                    <span>今日推广奖励：<i id="t_tj_price">0</i></span>
+                    <span>总推广奖励：<i id="t_ztgjl">0</i></span>
+                </div>
+            </div>
+            <div class="service-info">
+                <div class="clearfix" style="padding-bottom: 2px;">
+                    <span tapmode onclick="openQQ()" data-number="" id="doqq"><i class="qq-icon">&#xe601;</i>客服QQ：<i id="qq-txt"></i></span>
+                    <span><i class="service-time"></i>工作时间：<i class="time-txt">09:00~20:00</i></span>
+                </div>
+                <div class="clearfix">
+                    <span tapmode onclick="copyWechat()" data-number="" id="dowechat"><i class="wechat-icon"></i>客服微信：<i id="wechat-txt"></i></span>
+                    <span><i class="service-time"></i>工作时间：<i class="time-txt">09:00~20:00</i></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="box2" id="box2">
+        <ul id="notice"></ul>
+    </div>
+
+    <div class="blank-line"></div>
+
+    <div class="activity-task-box" tapmode onclick="openExtension();">
+        <p class="activity-task-txt">活动任务</p>
+        <div class="activity-task-container clearfix">
+            <img src="../image/share-icon.png" />
+            <p class="invite-txt">邀请好友</p>
+            <p class="invite-desc">邀请好友：可得到受邀人每次佣金的二代<i id="bfb_1"></i>+<i id="bfb_2"></i>提成作为额外奖励，终身有效。</p>
+        </div>
+    </div>
+
+    <div class="blank-line"></div>
+
+    <div class="share-rewards-box">
+        <p class="share-rewards-txt">分享-赚收益</p>
+        <div class="share-rewards-container clearfix">
+            <div tapmode onclick="openWechat();">
+                <img src="../image/share-bg.png" />
+                <p class="p1">分享海报</p>
+                <p class="p2">越分享越赚钱</p>
+                <img class="share" src="../image/share-code.png" />
+            </div>
+            <div tapmode onclick="openExtension();">
+                <img src="../image/share-bg.png" />
+                <p class="p1">分享链接</p>
+                <p class="p2">越分享越赚钱</p>
+                <img class="share" src="../image/share-link.png" />
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script type="text/javascript" src="../script/aui-slide.js"></script>
+    <script type="text/javascript">
+        var global_wechat_img = '';
+        var global_unread_amount = 0;
+        var global_index_notice = 0;
+        apiready = function() {
+            getUnreadAmount();
+            getIndex();
+            getQQ();
+            getWechatNum();
+            getWechatImg();
+            getExtension();
+            pollingReview();
+            interval();
+        }
+
+        function getUnreadAmount() {
+            api.ajax({
+                url: myurl + '/index.php/User/Usermessage/statuswd',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        if (ret.count == 0) {
+                            $api.html($api.byId('message-num'), ret.count);
+                            $api.css($api.byId('message-num'), 'display: none');
+                        } else if (ret.count > 0) {
+                            $api.html($api.byId('message-num'), ret.count);
+                            $api.css($api.byId('message-num'), 'display: block');
+                            if (global_unread_amount == 0) {
+                                global_unread_amount++;
+                                openUnreadAmount(ret.count);
+                            }
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+                if (global_index_notice == 0) {
+                    global_index_notice++;
+                    openIndexNotice();
+                }
+            });
+        }
+
+        function openUnreadAmount(count) {
+            api.openFrame({
+                name: 'frame_unread_amount',
+                url: './frame_unread_amount.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    name: 'frame_unread_amount',
+                    amount: count
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: true,
+                hScrollBarEnabled: true
+            });
+        }
+
+        function openWechat() {
+            api.openFrame({
+                name: 'frame_wechat',
+                url: './frame_wechat.html',
+                rect: {
+                    x: 0,
+                    y: api.pageParam.h,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    name: 'frame_wechat',
+                    wechat_img: global_wechat_img
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0)',
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false
+            });
+        }
+
+        function getWechatNum() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/wechat_num/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    $api.html($api.byId('wechat-txt'), ret.data.wechat_num);
+                } else {}
+            });
+        }
+
+        function getExtension() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/extension',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    var data = ret['data'];
+                    $api.html($api.byId('bfb_1'), data['bfb_1'] + '%');
+                    $api.html($api.byId('bfb_2'), data['bfb_2'] + '%');
+                } else {}
+            });
+        }
+
+        function openIndexNotice() {
+            api.ajax({
+                url: myurl + '/index.php/User/Public/systemtip',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.status == 1) {
+                        if (ret.title != '' || ret.content != '') {
+                            api.openFrame({
+                                name: 'frame_index_notice',
+                                url: './frame_index_notice.html',
+                                rect: {
+                                    x: 0,
+                                    y: 0,
+                                    w: 'auto',
+                                    h: 'auto'
+                                },
+                                pageParam: {
+                                    name: 'frame_index_notice'
+                                },
+                                bounces: false,
+                                bgColor: 'rgba(0,0,0,0)',
+                                vScrollBarEnabled: true,
+                                hScrollBarEnabled: true
+                            });
+                        }
+                    }
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function getIndex() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/index/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                        news_cid: 1,
+                        news_num: 3,
+                        ad_cid: 1
+                    }
+                }
+            }, function(ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    //获取新闻内容
+                    var newsdata = ret.news;
+                    var newsstr = "";
+                    if (newsdata.length > 0) {
+                        for (var i = 0; i < newsdata.length; i++) {
+                            newsstr += '<li tapmode onclick="openNotice()"><span class="pic">&#xe609;</span><span class="notice-txt">公告</span><span class="txt">' + newsdata[i]["title"] + '</span></li>';
+                        }
+                        $api.html($api.byId("notice"), newsstr);
+                    } else {
+                        $api.remove($api.byId("box2"));
+                    }
+
+                    //我的金币
+                    var yj_price = ret.yj_price;
+                    if (yj_price == 0) {
+                        yj_price = "0.00";
+                    }
+                    $api.html($api.byId("yj_price"), yj_price);
+
+                    //我的本金
+                    // var bj_price = ret.bj_price;
+                    // if (bj_price == 0) {
+                    //     bj_price = "0.00";
+                    // }
+                    // $api.html($api.byId("bj_price"), bj_price);
+
+                    //今日预估收益
+                    var t_yj_price = ret.t_yj_price;
+                    if (t_yj_price == 0) {
+                        t_yj_price = "0.00";
+                    }
+                    $api.html($api.byId("t_yj_price"), t_yj_price);
+
+                    //未返本金
+                    var t_wf_price = ret.t_wf_price;
+                    if (t_wf_price == 0) {
+                        t_wf_price = "0.00";
+                    }
+                    $api.html($api.byId("t_wfbj"), t_wf_price);
+
+                    //待完成总收益
+                    var t_dwc_price = ret.t_dwc_price;
+                    if (t_dwc_price == 0) {
+                        t_dwc_price = "0.00";
+                    }
+                    $api.html($api.byId("t_dwczsy"), t_dwc_price);
+
+                    //今日推广奖励
+                    var t_tj_price = ret.t_tj_price;
+                    if (t_tj_price == 0) {
+                        t_tj_price = "0.00";
+                    }
+                    $api.html($api.byId("t_tj_price"), t_tj_price);
+
+                    //总推广奖励
+                    var t_ztj_price = ret.t_ztj_price;
+                    if (t_ztj_price == 0) {
+                        t_ztj_price = "0.00";
+                    }
+                    $api.html($api.byId("t_ztgjl"), t_ztj_price);
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        //打开佣金
+        function openyj() {
+            api.openWin({
+                name: 'window_fund_details',
+                url: './window_fund_details.html',
+                pageParam: {
+                    name: 'window_fund_details',
+                    fundType: 0
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        //打开本金
+        function openbj() {
+            api.openWin({
+                name: 'window_fund_details',
+                url: './window_fund_details.html',
+                pageParam: {
+                    name: 'window_fund_details',
+                    fundType: 1
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        //打开公告
+        function openNotice() {
+            api.openWin({
+                name: 'window_notice',
+                url: './window_notice.html',
+                pageParam: {
+                    name: 'window_notice'
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+
+        }
+
+        //轮询追加订单
+        function pollingReview() {
+            var rtime100;
+            rtime100 = setInterval(function() {
+                api.ajax({
+                    url: myurl + '/index.php/User/Reviewmanage/getone/',
+                    method: 'post',
+                    data: {
+                        values: {
+                            username: $api.getStorage("username"),
+                            userid: $api.getStorage("userid")
+                        }
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.status == 1) {
+                            //window.clearInterval(rtime100);
+                            api.notification({
+                                notify: {
+                                    title: '恭喜您，获取到追加订单！',
+                                    content: '订单编号为：' + ret.order_number + '，请及时操作！'
+                                }
+                            });
+                            //openReviewLayer();
+                        }
+                    } else {
+                        //alert( JSON.stringify( err ) );
+                        api.toast({
+                            msg: '网络错误',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+            }, 31000);
+        }
+
+        function openReviewLayer() {
+            var dialogBox = api.require('dialogBox');
+            dialogBox.alert({
+                texts: {
+                    title: '追加订单提示',
+                    content: '您已经获取到追加订单，开始操作该订单吗？',
+                    leftBtnTitle: '取消',
+                    rightBtnTitle: '确认'
+                },
+                styles: {
+                    bg: '#fff',
+                    w: 300,
+                    corner: 2,
+                    title: {
+                        marginT: 20,
+                        icon: 'widget://res/gou.png',
+                        iconSize: 40,
+                        titleSize: 14,
+                        titleColor: '#000'
+                    },
+                    content: {
+                        color: '#000',
+                        size: 14
+                    },
+                    left: {
+                        marginB: 7,
+                        marginL: 20,
+                        w: 130,
+                        h: 35,
+                        corner: 2,
+                        bg: '#f2f2f2',
+                        color: '#666',
+                        size: 12
+                    },
+                    right: {
+                        marginB: 7,
+                        marginL: 10,
+                        w: 130,
+                        h: 35,
+                        corner: 2,
+                        bg: '#398BFB',
+                        color: '#ffffff',
+                        size: 12
+                    }
+                }
+            }, function(ret) {
+
+                var dialogBox = api.require('dialogBox');
+                dialogBox.close({
+                    dialogName: 'alert'
+                });
+
+                if (ret.eventType == 'right') {
+                    api.openWin({
+                        name: 'window_task_list_on',
+                        url: './window_task_list_on.html',
+                        pageParam: {
+                            name: 'window_task_list_on'
+                        }
+                    });
+                }
+            });
+        }
+
+        function interval() {
+            setInterval(function() {
+                // 接收追加评论的消息
+                api.ajax({
+                    url: myurl + '/index.php/user/public/reminder_evaluation',
+                    method: 'post',
+                    data: {
+                        values: {
+                            username: $api.getStorage("username"),
+                            userid: $api.getStorage("userid")
+                        }
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        if (ret.status == 1) {
+                            api.notification({
+                                notify: {
+                                    title: ret.title,
+                                    content: ret.msg
+                                }
+                            });
+                        }
+                    } else {}
+                });
+
+                // 接收申诉的消息
+                api.ajax({
+                    url: myurl + '/index.php/user/Task/appeal_info',
+                    method: 'post',
+                    data: {
+                        values: {
+                            username: $api.getStorage("username"),
+                            userid: $api.getStorage("userid")
+                        }
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        api.notification({
+                            notify: {
+                                title: ret.title,
+                                content: ret.msg
+                            }
+                        });
+                    } else {}
+                });
+            }, 60000);
+        }
+
+        function openAccount() {
+            api.openWin({
+                name: 'window_account',
+                url: './window_account.html',
+                pageParam: {
+                    name: 'window_account'
+                }
+            });
+        }
+
+        function openPersonalNotice() {
+            api.openWin({
+                name: 'window_personal_notice',
+                url: './window_personal_notice.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_personal_notice'
+                }
+            });
+        }
+
+        //获取买手客服QQ
+        function getQQ() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getqq/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    $api.attr($api.byId("doqq"), 'data-number', ret.qq);
+                    $api.html($api.byId('qq-txt'), ret.qq);
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            });
+
+        }
+
+        function openQQ() {
+            var system = api.systemType;
+            var qq = $api.attr($api.byId("doqq"), 'data-number');
+            //alert(qq);
+            if (system == 'android') {
+                api.openApp({
+                    uri: 'mqqwpa://im/chat?chat_type=wpa&uin=' + qq
+                }, function(ret, err) {
+                    if (ret) {
+                        //alert(JSON.stringify(ret));
+                    } else {
+                        // alert(JSON.stringify(err));
+                    }
+                });
+            } else if (system == 'ios') {
+                api.openApp({
+                    appParam: {
+                        'chat_type': 'wpa',
+                        'uin': qq,
+                        'version': 1,
+                        'src_type': 'web'
+                    },
+                    iosUrl: 'mqq://im/chat',
+                }, function(ret, err) {
+                    if (ret) {
+                        //alert(JSON.stringify(ret));
+                    } else {
+                        //alert(JSON.stringify(err));
+                    }
+                });
+            }
+
+        }
+
+        function openExtension() {
+            api.openWin({
+                name: 'window_extension',
+                url: './window_extension.html',
+                reload: true,
+                pageParam: {
+                    name: 'window_extension'
+                },
+                animation: {
+                    type: "push",
+                    subType: "from_right",
+                    duration: 300
+                }
+            });
+        }
+
+        function getWechatImg() {
+            api.ajax({
+                url: myurl + '/index.php/User/Api/wechat_img/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid")
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    global_wechat_img = geturl(ret.data.ewm);
+                } else {}
+            });
+        }
+
+        function copyWechat() {
+            var text = $api.html($api.byId('wechat-txt'));
+            var clipBoard = api.require('clipBoard');
+            clipBoard.set({
+                value: text
+            }, function(ret, err) {
+                if (ret) {
+                    api.confirm({
+                        title: '提醒',
+                        msg: '复制微信号码成功，是否跳转到微信？',
+                        buttons: ['确定', '取消']
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.buttonIndex == 1) {
+                                openWechatApp();
+                            }
+                        } else {
+                            alert(JSON.stringify(err));
+                        }
+                    });
+
+                } else {
+                    alert("复制失败，请重试");
+                }
+            });
+        }
+
+        function openWechatApp() {
+            if (api.systemType == 'android') {
+                api.openApp({
+                    androidPkg: 'com.tencent.mm',
+                    mimeType: 'text/html',
+                    uri: 'wechat://'
+                }, function(ret, err) {
+
+                });
+            } else {
+                api.openApp({
+                    iosUrl: 'weixin://', //打开微信的，其中weixin为微信的URL Scheme
+                    appParam: {
+                        appParam: ''
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

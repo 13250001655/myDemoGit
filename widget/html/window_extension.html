@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>推广奖励</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+        .head2 .my-extension {
+            width: auto;
+            float: right;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header"></div>
+    <header class="head2 clearfix">
+        <a class="left" tapmode onclick="backIndex();"><span>&#xe606;</span>推广佣金</a>
+        <div class="my-extension" tapmode onclick="openRecord();">我的推广(<span id="member_num"></span>)</div>
+    </header>
+    <div class="extension"></div>
+</body>
+
+</html>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = document.querySelector('#header');
+        $api.fixStatusBar(header);
+        var h = $api.offset(document.querySelector('#header')).h;
+        api.openFrame({
+            name: 'frame_extension',
+            url: './frame_extension.html',
+            rect: {
+                x: 0,
+                y: 50 + h,
+                w: "auto",
+                h: "auto"
+            },
+            pageParam: {
+                name: 'frame_extension'
+            },
+            // bounces: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false
+        });
+        getList();
+    };
+
+    function backIndex() {
+        api.closeWin();
+    }
+
+    function openRecord() {
+        api.openWin({
+            name: 'window_extension_record',
+            url: './window_extension_record.html',
+            reload: true,
+            pageParam: {
+                name: 'window_extension_record'
+            }
+        });
+    }
+
+    function getList() {
+        api.showProgress();
+        api.ajax({
+            url: myurl + '/index.php/User/Extension/getextension/',
+            method: 'post',
+            data: {
+                values: {
+                    username: $api.getStorage("username"),
+                    userid: $api.getStorage("userid"),
+                }
+            }
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                $api.html($api.byId("member_num"), ret.member_num + '个');
+            } else {
+                //alert( JSON.stringify( err ) );
+                api.toast({
+                    msg: '网络错误',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            }
+        });
+    }
+</script>

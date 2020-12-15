@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公告列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="bankinfo">
+        <div>为了方便与您联系，请务必填写真实的QQ号</div>
+    </div>
+    <form id="dataForm">
+        <ul class="banklist">
+            <li><span class="iname">QQ号码</span>
+                <div><input type="text" name="qq" id="qq" value="" placeholder="请输入QQ号"></div>
+            </li>
+        </ul>
+        <div class="accountbtn"><input type="button" id="dobtn" tapmode onclick="postQQ()" value="提交" /></div>
+    </form>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script>
+        apiready = function () {
+            getQQ();
+        }
+        function getQQ() {
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Api/getmember/',
+                method: 'post',
+                data: {
+                    values: {
+                        username: $api.getStorage("username"),
+                        userid: $api.getStorage("userid"),
+                    }
+                }
+            }, function (ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    var data = ret.data;
+                    //alert(JSON.stringify( data ));
+                    if (data["qq"] != "") {
+                        $api.val($api.byId("qq"), data["qq"]);
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+
+        function postQQ() {
+            if ($("#qq").val() == "") {
+                api.toast({
+                    msg: '请输入qq',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return false;
+            }
+            var param = dataFrom("dataForm");
+            api.showProgress();
+            api.ajax({
+                url: myurl + '/index.php/User/Account/postqq/',
+                method: 'post',
+                data: {
+                    values: param
+                }
+            }, function (ret, err) {
+                api.hideProgress();
+                if (ret) {
+
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                    if (ret.status == 1) {
+                        var jsfun = 'getAccount()';
+                        api.execScript({
+                            name: 'window_account',
+                            frameName: 'frame_account',
+                            script: jsfun
+                        });
+                        setTimeout(function () {
+                            api.closeWin();
+                        }, 2000);
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '网络错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+        //获取form数据
+        function dataFrom(id) {
+            var values = { "username": $api.getStorage("username"), "userid": $api.getStorage("userid") };
+            var data = $('#' + id).serializeArray();
+            $.each(data, function (i, v) {
+                var key = v.name, value = v.value;
+                if (values[key]) {
+                    values[key] = values[key] + ',' + value;
+                }
+                else {
+                    values[key] = value;
+                }
+            });
+            return values;
+        }
+    </script>
+</body>
+
+</html>
